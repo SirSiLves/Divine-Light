@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[ExecuteInEditMode]
+//[ExecuteInEditMode]
 public class GameManager : MonoBehaviour
 {
 
-    [SerializeField] Board board;
+    [SerializeField] BoardFactory board;
 
 
     // Start is called before the first frame update

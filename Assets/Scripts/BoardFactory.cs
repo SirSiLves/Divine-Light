@@ -1,5 +1,5 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
+using System;
 
 
 public class BoardFactory : MonoBehaviour
@@ -7,46 +7,75 @@ public class BoardFactory : MonoBehaviour
 
     [SerializeField] CellFactory cellPrefab;
 
-    const int BOARD_DIMENSION = 10;
-    
+    private const int BOARD_DIMENSION_Y = 8;
+    private const int BOARD_DIMENSION_X = 10;
 
 
-    public void Create()
+    public int[][] Create()
     {
-        removeCurrentCells();
+        int[][] matrix = new int[BOARD_DIMENSION_Y][]; // jagged array's have better performance
 
-        //create
-        for (int y = 0; y < BOARD_DIMENSION; y++)
+        for (int y = 0; y < BOARD_DIMENSION_Y; y++)
         {
-            for (int x = 0; x < BOARD_DIMENSION; x++)
+            matrix[y] = new int[BOARD_DIMENSION_X];
+
+            for (int x = 0; x < BOARD_DIMENSION_X; x++)
             {
-                // create the cell
+                // standard cell
                 CellFactory newCell = Instantiate(cellPrefab, transform);
-
-                // position
                 newCell.transform.position = new Vector2(transform.position.x + x, transform.position.y + y);
-
-                // scaling
                 newCell.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
-
-                // naming
                 newCell.transform.name = y.ToString() + ',' + x.ToString();
+
+                // intialize matrix
+                matrix[y][x] = 0;
             }
         }
+
+        PrintMatrixToConsole(matrix);
+        return matrix;
     }
 
-    private void removeCurrentCells()
+
+    public static void PrintMatrixToConsole(int[][] matrix)
     {
-        CellFactory[] cells = FindObjectsOfType<CellFactory>();
+        string line = "";
+        int indexY = 0;
 
-        if (cells.Length > 0)
+        Array.Reverse(matrix);
+
+        Array.ForEach(matrix, column =>
         {
-            foreach (CellFactory cell in cells)
-            {
-                DestroyImmediate(cell);
-            }
-        }
+            int indexX = 0;
+            Array.ForEach(column, row => {
+                line += row >= 100 ? line += matrix[indexY][indexX] + "|" : row >= 10 ? line += "0" + matrix[indexY][indexX] + "|"  : line += "00" + matrix[indexY][indexX] + "|";
+
+
+                //if (row >= 100)
+                //{
+                //    line += matrix[indexY][indexX] + "|";
+                //}
+                //else if (row >= 10)
+                //{
+                //    line += "0" + matrix[indexY][indexX] + "|";
+                //}
+                //else
+                //{
+                //    line += "00" + matrix[indexY][indexX] + "|";
+                //}
+
+                indexX++;
+            });
+            line += "\n";
+
+            indexY++;
+        });
+
+        Debug.Log(line);
     }
+
+
+
 
 
 }

@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 4595716538472080}
   - component: {fileID: 114516425935054028}
   m_Layer: 0
-  m_Name: PR_GameManager
+  m_Name: GameManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -43,4 +43,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0dc4c790f7d3c4fe7bc795870fa4d7d5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  board: {fileID: 0}
+  boardFactory: {fileID: 0}

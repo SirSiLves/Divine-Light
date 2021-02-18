@@ -1,17 +1,19 @@
 ﻿using UnityEngine;
 using System;
+using System.Collections.Generic;
 
 
 public class BoardFactory : MonoBehaviour
 {
 
-    [SerializeField] CellFactory cellPrefab;
+    [SerializeField] PieceFactory pieceFactory;
+    [SerializeField] CellFactory cellFactory;
 
     private const int BOARD_DIMENSION_Y = 8;
     private const int BOARD_DIMENSION_X = 10;
 
 
-    public int[][] Create()
+    public void CreateBoard(Matrix matrixObj)
     {
         int[][] matrix = new int[BOARD_DIMENSION_Y][]; // jagged array's have better performance
 
@@ -21,61 +23,43 @@ public class BoardFactory : MonoBehaviour
 
             for (int x = 0; x < BOARD_DIMENSION_X; x++)
             {
-                // standard cell
-                CellFactory newCell = Instantiate(cellPrefab, transform);
-                newCell.transform.position = new Vector2(transform.position.x + x, transform.position.y + y);
-                newCell.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
-                newCell.transform.name = y.ToString() + ',' + x.ToString();
+
+                cellFactory.Create(y, x);
 
                 // intialize matrix
                 matrix[y][x] = 0;
             }
         }
 
-        PrintMatrixToConsole(matrix);
-        return matrix;
+        matrixObj.SetMatrix(matrix);
     }
 
 
-    public static void PrintMatrixToConsole(int[][] matrix)
+    public void CreateDefaultSetUp(Matrix matrixObj)
     {
-        string line = "";
-        int indexY = 0;
+        Dictionary<int, int> defaultSet = pieceFactory.GetDefaultSet();
 
-        Array.Reverse(matrix);
+        int[][] matrix = matrixObj.GetMatrix();
 
-        Array.ForEach(matrix, column =>
+        int index = 0;
+        for (int y = 0; y < matrix.Length; y++)
         {
-            int indexX = 0;
-            Array.ForEach(column, row => {
-                line += row >= 100 ? line += matrix[indexY][indexX] + "|" : row >= 10 ? line += "0" + matrix[indexY][indexX] + "|"  : line += "00" + matrix[indexY][indexX] + "|";
+            for (int x = 0; x < matrix[y].Length; x++)
+            {
+                if (defaultSet.ContainsKey(index))
+                {
+                    int pieceValue = defaultSet[index];
+                    matrix[y][x] = pieceValue;
+                    pieceFactory.InstantiatePiece(y, x, pieceValue);
+                }
+                index++;
+            }
+        }
 
+        Matrix.PrintMatrixToConsole(matrixObj.GetMatrix());
 
-                //if (row >= 100)
-                //{
-                //    line += matrix[indexY][indexX] + "|";
-                //}
-                //else if (row >= 10)
-                //{
-                //    line += "0" + matrix[indexY][indexX] + "|";
-                //}
-                //else
-                //{
-                //    line += "00" + matrix[indexY][indexX] + "|";
-                //}
-
-                indexX++;
-            });
-            line += "\n";
-
-            indexY++;
-        });
-
-        Debug.Log(line);
+        
     }
-
-
-
 
 
 }

@@ -7,26 +7,17 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] BoardFactory boardFactory;
 
-    private int[][] matrix;
-
+    private Matrix matrixObj;
 
     // Start is called before the first frame update
     void Start()
     {
-        matrix = boardFactory.Create();
+        matrixObj = FindObjectOfType<Matrix>();
 
-        PieceFactory pieceFactory = new PieceFactory();
-        pieceFactory.Create(matrix);
+        boardFactory.CreateBoard(matrixObj);
+        boardFactory.CreateDefaultSetUp(matrixObj);
 
     }
-
-
-
-
-
-
-
-
 
 
 

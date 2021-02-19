@@ -21,8 +21,7 @@ public class Piece : MonoBehaviour
         this.transform.parent = transform;
 
         // rotation
-        int rotationMapping = (pieceValue % 100) - (pieceValue % 10);
-        int rotation = this.GetRotation(rotationMapping);
+        int rotation = this.GetRotation(pieceValue);
         this.transform.Rotate(0, 0, rotation);
 
         // update name
@@ -31,10 +30,11 @@ public class Piece : MonoBehaviour
     }
 
 
-    private int GetRotation(int rotation)
+    private int GetRotation(int pieceValue)
     {
+        int rotationValue = (pieceValue % 100) - (pieceValue % 10);
 
-        switch (rotation)
+        switch (rotationValue)
         {
             case 0:
                 return 0;
@@ -45,7 +45,7 @@ public class Piece : MonoBehaviour
             case 30:
                 return 270;
             default:
-                Debug.LogError("No mapping for rotation value " + rotation);
+                Debug.LogError("No mapping for rotation value " + rotationValue);
                 return 0;
         }
     }

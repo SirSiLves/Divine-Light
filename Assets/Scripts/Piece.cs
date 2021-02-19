@@ -39,11 +39,11 @@ public class Piece : MonoBehaviour
             case 0:
                 return 0;
             case 10:
-                return -90;
+                return 90;
             case 20:
-                return -180;
+                return 180;
             case 30:
-                return -270;
+                return 270;
             default:
                 Debug.LogError("No mapping for rotation value " + rotation);
                 return 0;

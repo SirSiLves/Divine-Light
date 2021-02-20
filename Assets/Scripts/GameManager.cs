@@ -7,31 +7,47 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] BoardFactory boardFactory;
 
-    private Matrix matrixObj;
+    private MoveHandler moveHandler;
+    private Matrix matrix;
 
-    // Start is called before the first frame update
+
+
     void Start()
     {
-        matrixObj = FindObjectOfType<Matrix>();
+        matrix = new Matrix();
+        boardFactory.CreateBoard(matrix);
+        boardFactory.CreateDefaultSetUp(matrix);
 
-        boardFactory.CreateBoard(matrixObj);
-        boardFactory.CreateDefaultSetUp(matrixObj);
-
+        moveHandler = new MoveHandler();
     }
 
 
 
-    private void removeCurrentCells()
+
+    public MoveHandler GetMoveHandler()
     {
-        CellFactory[] cells = FindObjectsOfType<CellFactory>();
-
-        if (cells.Length > 0)
-        {
-            foreach (CellFactory cell in cells)
-            {
-                DestroyImmediate(cell);
-            }
-        }
+        return moveHandler;
     }
+
+    public Matrix GetMatrix()
+    {
+        return matrix;
+    }
+
+    
+
+
+    //private void removeCurrentCells()
+    //{
+    //    CellFactory[] cells = FindObjectsOfType<CellFactory>();
+
+    //    if (cells.Length > 0)
+    //    {
+    //        foreach (CellFactory cell in cells)
+    //        {
+    //            DestroyImmediate(cell);
+    //        }
+    //    }
+    //}
 
 }

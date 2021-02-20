@@ -13,13 +13,13 @@ public class BoardFactory : MonoBehaviour
     private const int BOARD_DIMENSION_X = 10;
 
 
-    public void CreateBoard(Matrix matrixObj)
+    public void CreateBoard(Matrix matrix)
     {
-        int[][] matrix = new int[BOARD_DIMENSION_Y][]; // jagged array's have better performance
+        int[][] matrixArray = new int[BOARD_DIMENSION_Y][]; // jagged array's have better performance
 
         for (int y = 0; y < BOARD_DIMENSION_Y; y++)
         {
-            matrix[y] = new int[BOARD_DIMENSION_X];
+            matrixArray[y] = new int[BOARD_DIMENSION_X];
 
             for (int x = 0; x < BOARD_DIMENSION_X; x++)
             {
@@ -27,36 +27,36 @@ public class BoardFactory : MonoBehaviour
                 cellFactory.Create(y, x);
 
                 // intialize matrix
-                matrix[y][x] = 0;
+                matrixArray[y][x] = 0;
             }
         }
 
-        matrixObj.SetMatrix(matrix);
+        matrix.SetMatrix(matrixArray);
     }
 
 
-    public void CreateDefaultSetUp(Matrix matrixObj)
+    public void CreateDefaultSetUp(Matrix matrix)
     {
         Dictionary<int, int> defaultSet = pieceFactory.GetDefaultSet();
 
-        int[][] matrix = matrixObj.GetMatrix();
+        int[][] matrixArray = matrix.GetMatrix();
 
         int index = 0;
-        for (int y = 0; y < matrix.Length; y++)
+        for (int y = 0; y < matrixArray.Length; y++)
         {
-            for (int x = 0; x < matrix[y].Length; x++)
+            for (int x = 0; x < matrixArray[y].Length; x++)
             {
                 if (defaultSet.ContainsKey(index))
                 {
                     int pieceValue = defaultSet[index];
-                    matrix[y][x] = pieceValue;
+                    matrixArray[y][x] = pieceValue;
                     pieceFactory.InstantiatePiece(y, x, pieceValue);
                 }
                 index++;
             }
         }
 
-        Matrix.PrintMatrixToConsole(matrixObj.GetMatrix());
+        Matrix.PrintMatrixToConsole(matrix.GetMatrix());
 
         
     }

@@ -6,16 +6,29 @@ using UnityEngine;
 public class Piece : MonoBehaviour
 {
 
+    private int pieceValue;
 
-
-    internal void DrawPiece(int y, int x, int pieceValue)
+    public int GetPieceValue()
     {
+        return pieceValue;
+    }
+
+    private void OnMouseDown()
+    {
+        MoveHandler moveHandler = FindObjectOfType<GameManager>().GetMoveHandler();
+        moveHandler.SetMovedFigure(this);
+    }
+
+
+    public void DrawPiece(int y, int x, int pieceValue)
+    {
+        this.pieceValue = pieceValue;
 
         // position
         this.transform.position = new Vector2(transform.position.x + x, transform.position.y + y);
 
         // size
-        this.transform.localScale = new Vector3(0.2f, 0.2f, 0.2f);
+        this.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
 
         // position in opject tree
         this.transform.parent = transform;
@@ -28,7 +41,6 @@ public class Piece : MonoBehaviour
         string player = pieceValue < 100 ? "p1" : "p2";
         this.name += " - " + player + " - " + rotation;
     }
-
 
     private int GetRotation(int pieceValue)
     {
@@ -49,5 +61,7 @@ public class Piece : MonoBehaviour
                 return 0;
         }
     }
+
+
 }
 

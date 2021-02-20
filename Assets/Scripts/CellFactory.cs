@@ -12,8 +12,12 @@ public class CellFactory : MonoBehaviour
         // standard cell
         Cell newCell = Instantiate(cell, transform);
         newCell.transform.parent = transform;
-        newCell.transform.position = new Vector2(transform.position.x + x, transform.position.y + y);
+        newCell.transform.position = new Vector3(
+            transform.position.x + x, transform.position.y + y, newCell.transform.parent.position.z
+            );
         newCell.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
         newCell.transform.name = y.ToString() + ',' + x.ToString();
+        newCell.SetCellId(y, x);
+        
     }
 }

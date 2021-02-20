@@ -79,8 +79,7 @@ public class PieceFactory : MonoBehaviour
                 name = "angler";
                 break;
             default:
-                Debug.LogError("no valid piece found");
-                break;
+                throw new Exception("no valid piece found for piece value: " + pieceValue);
         }
 
         // set player color

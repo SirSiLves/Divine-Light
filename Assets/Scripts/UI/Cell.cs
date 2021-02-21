@@ -19,8 +19,8 @@ public class Cell : MonoBehaviour
 
     private void OnMouseDown()
     {
-        MoveHandler moveHandler = FindObjectOfType<GameManager>().GetMoveHandler();
-        moveHandler.ValidateMove(this);
+        ClickValidator clickValidator = FindObjectOfType<GameManager>().GetMoveHandler();
+        clickValidator.ValidateMove(this);
     }
 
 

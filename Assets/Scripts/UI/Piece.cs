@@ -15,8 +15,8 @@ public class Piece : MonoBehaviour
 
     private void OnMouseDown()
     {
-        MoveHandler moveHandler = FindObjectOfType<GameManager>().GetMoveHandler();
-        moveHandler.SetMovedFigure(this);
+        ClickValidator clickValidator = FindObjectOfType<GameManager>().GetMoveHandler();
+        clickValidator.SetMovedFigure(this);
     }
 
 

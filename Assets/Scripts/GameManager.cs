@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] BoardFactory boardFactory;
 
-    private MoveHandler moveHandler;
+    private ClickValidator moveHandler;
     private Matrix matrix;
 
 
@@ -18,13 +18,13 @@ public class GameManager : MonoBehaviour
         boardFactory.CreateBoard(matrix);
         boardFactory.CreateDefaultSetUp(matrix);
 
-        moveHandler = new MoveHandler();
+        moveHandler = new ClickValidator();
     }
 
 
 
 
-    public MoveHandler GetMoveHandler()
+    public ClickValidator GetMoveHandler()
     {
         return moveHandler;
     }

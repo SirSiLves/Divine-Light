@@ -47,7 +47,7 @@ public class PieceFactory : MonoBehaviour
         return defaultSet;
     }
 
-    public void InstantiatePiece(int y, int x, int pieceValue)
+    public void InstantiatePiece(int y, int x, int pieceId)
     {
 
         Piece newPiece = null;
@@ -55,7 +55,7 @@ public class PieceFactory : MonoBehaviour
         // validate type of piece
 
         string name = "";
-        int type = pieceValue % 10;
+        int type = pieceId % 10;
         switch (type)
         {
             case 1:
@@ -79,17 +79,17 @@ public class PieceFactory : MonoBehaviour
                 name = "angler";
                 break;
             default:
-                throw new Exception("no valid piece found for piece value: " + pieceValue);
+                throw new Exception("no valid piece found for piece value: " + pieceId);
         }
 
         // set player color
-        newPiece.transform.GetComponentInChildren<SpriteRenderer>().color = pieceValue < 100 ? player1 : player2;
+        newPiece.transform.GetComponentInChildren<SpriteRenderer>().color = pieceId < 100 ? player1 : player2;
 
         // set name
         newPiece.name = name + " - " + y + "," + x;
 
         // show it on board
-        newPiece.DrawPiece(y, x, pieceValue);
+        newPiece.DrawPiece(y, x, pieceId);
     }
 
 

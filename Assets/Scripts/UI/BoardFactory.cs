@@ -48,9 +48,9 @@ public class BoardFactory : MonoBehaviour
             {
                 if (defaultSet.ContainsKey(index))
                 {
-                    int pieceValue = defaultSet[index];
-                    matrixArray[y][x] = pieceValue;
-                    pieceFactory.InstantiatePiece(y, x, pieceValue);
+                    int pieceId = defaultSet[index];
+                    matrixArray[y][x] = pieceId;
+                    pieceFactory.InstantiatePiece(y, x, pieceId);
                 }
                 index++;
             }

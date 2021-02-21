@@ -7,27 +7,16 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] BoardFactory boardFactory;
 
-    private ClickValidator moveHandler;
-    private Matrix matrix;
+    private Matrix matrix; // Singleton
 
 
-
-    void Start()
+    void Awake()
     {
         matrix = new Matrix();
         boardFactory.CreateBoard(matrix);
         boardFactory.CreateDefaultSetUp(matrix);
-
-        moveHandler = new ClickValidator();
     }
 
-
-
-
-    public ClickValidator GetMoveHandler()
-    {
-        return moveHandler;
-    }
 
     public Matrix GetMatrix()
     {
@@ -37,7 +26,7 @@ public class GameManager : MonoBehaviour
     
 
 
-    //private void removeCurrentCells()
+    //private void removeCurrentCells()s
     //{
     //    CellFactory[] cells = FindObjectsOfType<CellFactory>();
 

@@ -17,11 +17,12 @@ public class Cell : MonoBehaviour
         return id;
     }
 
-    private void OnMouseDown()
-    {
-        ClickValidator clickValidator = FindObjectOfType<GameManager>().GetMoveHandler();
-        clickValidator.ValidateMove(this);
-    }
+    //private void OnMouseDown()
+    //{
+    //    ClickValidator clickValidator = FindObjectOfType<ClickValidator>();
+    //    clickValidator.ValidateMove(this);
+    //}
 
 
+    
 }

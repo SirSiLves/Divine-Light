@@ -18,6 +18,6 @@ public class CellFactory : MonoBehaviour
         newCell.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
         newCell.transform.name = y.ToString() + ',' + x.ToString();
         newCell.SetCellId(y, x);
-        
     }
+
 }

@@ -21,7 +21,7 @@ public class Matrix
     }
 
 
-    public void ChangePiece(int newCellId, int pieceValue)
+    public void ChangePiece(int newCellId, int pieceId)
     {
         int index = 0;
         for (int y = 0; y < matrix.Length; y++)
@@ -29,7 +29,7 @@ public class Matrix
             for (int x = 0; x < matrix[y].Length; x++)
             {
                 // remove piece from old position
-                if(matrix[y][x] == pieceValue)
+                if(matrix[y][x] == pieceId)
                 {
                     matrix[y][x] = 0;
                 }
@@ -37,7 +37,7 @@ public class Matrix
                 // set piece to new position
                 if(index == newCellId)
                 {
-                    matrix[y][x] = pieceValue;
+                    matrix[y][x] = pieceId;
                 }
 
                 index++;
@@ -48,14 +48,14 @@ public class Matrix
     }
 
 
-    public int GetCellId(int pieceValue)
+    public int GetCellId(int pieceId)
     {
         int index = 0;
         for (int y = 0; y < matrix.Length; y++)
         {
             for (int x = 0; x < matrix[y].Length; x++)
             {
-                if (matrix[y][x] == pieceValue)
+                if (matrix[y][x] == pieceId)
                 {
                     return index;
                 }
@@ -68,7 +68,7 @@ public class Matrix
     }
 
 
-    public int GetPieceValue(int cellId)
+    public int GetPieceId(int cellId)
     {
         int index = 0;
         for(int y = 0; y < matrix.Length; y++)
@@ -84,7 +84,7 @@ public class Matrix
             }
         }
 
-        throw new Exception("Cell ID " + cellId + " could not be found in the matrix");
+        return 0;
     }
 
 

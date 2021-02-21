@@ -6,23 +6,23 @@ using UnityEngine;
 public class Piece : MonoBehaviour
 {
 
-    private int pieceValue;
+    private int id;
 
-    public int GetPieceValue()
+    public int GetPieceId()
     {
-        return pieceValue;
+        return id;
     }
 
-    private void OnMouseDown()
-    {
-        ClickValidator clickValidator = FindObjectOfType<GameManager>().GetMoveHandler();
-        clickValidator.SetMovedFigure(this);
-    }
+    //private void OnMouseDown()
+    //{
+    //    ClickValidator clickValidator = FindObjectOfType<ClickValidator>();
+    //    clickValidator.SetMovedFigure(this);
+    //}
 
 
-    public void DrawPiece(int y, int x, int pieceValue)
+    public void DrawPiece(int y, int x, int pieceId)
     {
-        this.pieceValue = pieceValue;
+        this.id = pieceId;
 
         // position
         this.transform.position = new Vector2(transform.position.x + x, transform.position.y + y);
@@ -34,17 +34,17 @@ public class Piece : MonoBehaviour
         this.transform.parent = transform;
 
         // rotation
-        int rotation = this.GetRotation(pieceValue);
+        int rotation = this.GetRotation(pieceId);
         this.transform.Rotate(0, 0, rotation);
 
         // update name
-        string player = pieceValue < 100 ? "p1" : "p2";
+        string player = pieceId < 100 ? "p1" : "p2";
         this.name += " - " + player + " - " + rotation;
     }
 
-    private int GetRotation(int pieceValue)
+    private int GetRotation(int pieceId)
     {
-        int rotationValue = (pieceValue % 100) - (pieceValue % 10);
+        int rotationValue = (pieceId % 100) - (pieceId % 10);
 
         switch (rotationValue)
         {

@@ -74,15 +74,23 @@ public class GameManager : MonoBehaviour
         this.isLightOn = false;
     }
 
+
     private void RemoveDestroyed()
     {
-        Array.ForEach(piecesToDestroy.ToArray(), item =>
+        Array.ForEach(piecesToDestroy.ToArray(), piece =>
         {
-            Destroy(item.gameObject);
+            // remove piece from matrix
+            int cellId = matrix.GetCellId(piece.GetPieceId());
+            matrix.ChangePiece(cellId, 0);
+
+            Destroy(piece.gameObject);
         });
 
         piecesToDestroy.Clear();
+
+        Matrix.PrintMatrixToConsole(matrix.GetMatrix());
     }
+
 
     private void ChangePlayer()
     {
@@ -92,7 +100,7 @@ public class GameManager : MonoBehaviour
         UpdatePlayingDisplay();
     }
 
-
+     
     public void UpdatePlayingDisplay()
     {
         Canvas canvas = GameObject.FindObjectOfType<Canvas>();

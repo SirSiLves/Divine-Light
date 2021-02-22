@@ -43,8 +43,6 @@ public class Matrix
                 index++;
             }
         }
-
-        Matrix.PrintMatrixToConsole(this.matrix);
     }
 
 

@@ -8,55 +8,48 @@ using UnityEngine;
 public class LightController : MonoBehaviour
 {
 
-    private const int infinity = 999;
-    private const int maxReflections = 100;
+    private const float delay = 0.01f;
+    private const float infinity = 999f;
+    private const float defaultRayDistance = 10f;
 
-    private int currentReflections = 0;
-    private int defaultRayDistance = 10;
-
-    private Vector2 startPoint, directionPoint;
-    private List<Vector3> connectedPoints;
+    private Vector2 startPoint, startDirection;
     private LineRenderer lineRenderer;
 
+    private List<Vector3> connectedPoints = new List<Vector3>();
+    private List<Vector3> delayedDrawnPoints = new List<Vector3>();
 
-    private void Start()
+    private void OnEnable()
+    {
+        CollectPoints();
+        StartCoroutine("DrawLight");
+    }
+
+
+    IEnumerator DrawLight()
+    {
+        delayedDrawnPoints.Clear();
+
+        foreach (Vector2 point in connectedPoints.ToArray())
+        {
+            delayedDrawnPoints.Add(point);
+
+            lineRenderer.positionCount = delayedDrawnPoints.Count;
+            lineRenderer.SetPositions(delayedDrawnPoints.ToArray());
+
+            yield return new WaitForSeconds(delay);
+        }
+    }
+
+
+    private void CollectPoints()
     {
         startPoint = transform.position;
         SetDirection();
 
-        connectedPoints = new List<Vector3>();
         lineRenderer = transform.GetComponent<LineRenderer>();
-    }
 
-    private void SetDirection()
-    {
-        float degrees = transform.parent.rotation.eulerAngles.z;
+        RaycastHit2D hitObject = Physics2D.Raycast(startPoint, (startDirection - startPoint).normalized, defaultRayDistance);
 
-        switch (degrees)
-        {
-            case 0f:
-                directionPoint = new Vector2(transform.parent.position.x, transform.parent.position.y + infinity);
-                break;
-            case 90f:
-                directionPoint = new Vector2(transform.parent.position.x - infinity, transform.parent.position.y);
-                break;
-            case 180f:
-                directionPoint = new Vector2(transform.parent.position.x, transform.parent.position.y - infinity);
-                break;
-            case 270f:
-                directionPoint = new Vector2(transform.parent.position.x + infinity, transform.parent.position.y);
-                break;
-            default:
-                Piece piece = transform.GetComponentInParent<Piece>();
-                throw new Exception("Could not find the right dregrees for " + piece.name);
-        }
-    }
-
-    private void Update()
-    {
-        RaycastHit2D hitObject = Physics2D.Raycast(startPoint, (directionPoint - startPoint).normalized, defaultRayDistance);
-
-        currentReflections = 0;
         connectedPoints.Clear();
         connectedPoints.Add(startPoint);
 
@@ -66,35 +59,54 @@ public class LightController : MonoBehaviour
         }
         else
         {
-            connectedPoints.Add(startPoint + (directionPoint - startPoint).normalized * infinity);
+            connectedPoints.Add(hitObject.point + startDirection * defaultRayDistance);
         }
-
-        lineRenderer.positionCount = connectedPoints.Count;
-        lineRenderer.SetPositions(connectedPoints.ToArray());
     }
+
 
     private void ReflectFurther(Vector2 nextStartPoint, RaycastHit2D hitObject)
     {
-
-        print(hitObject.transform.GetComponentInParent<Piece>().name);
-
-        if (currentReflections > maxReflections) return;
-
         connectedPoints.Add(hitObject.point);
-        currentReflections++;
 
-        Vector2 inDirection = (hitObject.point - nextStartPoint).normalized;
-        Vector2 newDirection = Vector2.Reflect(inDirection, hitObject.normal);
+        Vector2 fromDirection = (hitObject.point - nextStartPoint).normalized;
+        Vector2 newDirection = Vector2.Reflect(fromDirection, hitObject.normal);
 
-        var newHitData = Physics2D.Raycast(hitObject.point + (newDirection * 0.0001f), newDirection * 100, defaultRayDistance);
-        if (newHitData)
+        var newHitObject = Physics2D.Raycast(hitObject.point + (newDirection * 0.0001f), newDirection * 100, defaultRayDistance);
+
+        if (newHitObject)
         {
-            ReflectFurther(hitObject.point, newHitData);
+            ReflectFurther(hitObject.point, newHitObject);
         }
         else
         {
             connectedPoints.Add(hitObject.point + newDirection * defaultRayDistance);
         }
-
     }
+
+
+    private void SetDirection()
+    {
+        float degrees = transform.parent.rotation.eulerAngles.z;
+
+        switch (degrees)
+        {
+            case 0f:
+                startDirection = new Vector2(transform.parent.position.x, transform.parent.position.y + infinity);
+                break;
+            case 90f:
+                startDirection = new Vector2(transform.parent.position.x - infinity, transform.parent.position.y);
+                break;
+            case 180f:
+                startDirection = new Vector2(transform.parent.position.x, transform.parent.position.y - infinity);
+                break;
+            case 270f:
+                startDirection = new Vector2(transform.parent.position.x + infinity, transform.parent.position.y);
+                break;
+            default:
+                Piece piece = transform.GetComponentInParent<Piece>();
+                throw new Exception("Could not find the right dregrees for " + piece.name);
+        }
+    }
+
+
 }

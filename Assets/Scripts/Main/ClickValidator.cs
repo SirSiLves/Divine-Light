@@ -68,6 +68,8 @@ public class ClickValidator: MonoBehaviour
     {
         Cell targetCell = GetClickedCell();
 
+        if(targetCell == null) { return;  }
+
         MoveCommand move = new MoveCommand(movingFigure, targetCell, matrix);
         new Drawer(move).Draw();
 
@@ -78,7 +80,7 @@ public class ClickValidator: MonoBehaviour
 
     private Cell GetClickedCell()
     {
-        Vector2 gridPos = GetGridPos();
+        Vector2 gridPos = GetClickedGridPos();
 
         return Array.Find(cells, cell =>
             cell.transform.position.y == gridPos.y && cell.transform.position.x == gridPos.x
@@ -90,7 +92,7 @@ public class ClickValidator: MonoBehaviour
     {
         Piece[] pieces = FindObjectsOfType<Piece>();
 
-        Vector2 gridPos = GetGridPos();
+        Vector2 gridPos = GetClickedGridPos();
 
         return Array.Find(pieces, piece =>
             piece.transform.position.y == gridPos.y && piece.transform.position.x == gridPos.x
@@ -98,7 +100,7 @@ public class ClickValidator: MonoBehaviour
     }
 
 
-    private static Vector2 GetGridPos()
+    private static Vector2 GetClickedGridPos()
     {
         Vector2 clickPos = new Vector2(Input.mousePosition.x, Input.mousePosition.y);
         Vector2 worldPos = Camera.main.ScreenToWorldPoint(clickPos);

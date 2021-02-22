@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
 {
 
     [SerializeField] BoardFactory boardFactory;
-    [SerializeField] float lightTimer = 2f;
+    [SerializeField] float lightTimer = 3f;
 
 
     // Singleton's

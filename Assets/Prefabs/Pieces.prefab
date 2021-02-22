@@ -49,5 +49,5 @@ MonoBehaviour:
     type: 3}
   wall: {fileID: 5125589446823039054, guid: 30cef543e6c034d618e91c8f8250914f, type: 3}
   angler: {fileID: 842059092896816501, guid: 319fac1b7d57b4c2f8ff9dd60b8cfffb, type: 3}
-  player1: {r: 1, g: 0.84313726, b: 0, a: 1}
-  player2: {r: 0.7529412, g: 0.7529412, b: 0.7529412, a: 1}
+  player1: {fileID: 0}
+  player2: {fileID: 0}

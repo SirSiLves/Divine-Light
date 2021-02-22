@@ -9,7 +9,7 @@ public class PieceFactory : MonoBehaviour
 {
 
     [SerializeField] Piece sun, king, reflector, wall, angler;
-    [SerializeField] Color player1, player2;
+    [SerializeField] Player player1, player2;
 
 
     private readonly Dictionary<int, int> defaultSet = new Dictionary<int, int>
@@ -82,8 +82,15 @@ public class PieceFactory : MonoBehaviour
                 throw new Exception("no valid piece found for piece value: " + pieceId);
         }
 
-        // set player color
-        newPiece.transform.GetComponentInChildren<SpriteRenderer>().color = pieceId < 100 ? player1 : player2;
+        // set player
+        if(pieceId < 100)
+        {
+            newPiece.SetPlayer(player1);
+        }
+        else
+        {
+            newPiece.SetPlayer(player2);
+        }        
 
         // set name
         newPiece.name = name + " - " + y + "," + x;

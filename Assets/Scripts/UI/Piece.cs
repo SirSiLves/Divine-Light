@@ -7,18 +7,23 @@ public class Piece : MonoBehaviour
 {
 
     private int id;
+    private Player player;
 
     public int GetPieceId()
     {
         return id;
     }
 
-    //private void OnMouseDown()
-    //{
-    //    ClickValidator clickValidator = FindObjectOfType<ClickValidator>();
-    //    clickValidator.SetMovedFigure(this);
-    //}
+    public void SetPlayer(Player player)
+    {
+        this.player = player;
+        this.transform.GetComponentInChildren<SpriteRenderer>().color = player.GetColor();
+    }
 
+    public Player GetPlayer()
+    {
+        return player;
+    }
 
     public void DrawPiece(int y, int x, int pieceId)
     {

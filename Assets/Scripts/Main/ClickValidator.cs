@@ -6,6 +6,7 @@ using UnityEngine;
 public class ClickValidator: MonoBehaviour
 {
 
+    private GameManager gameManager;
     private Piece movingFigure;
     private Matrix matrix;
     private Piece[] pieces;
@@ -14,7 +15,8 @@ public class ClickValidator: MonoBehaviour
 
     private void Start()
     {
-        matrix = FindObjectOfType<GameManager>().GetMatrix();
+        gameManager = FindObjectOfType<GameManager>();
+        matrix = gameManager.matrix;
         pieces = FindObjectsOfType<Piece>();
         cells = FindObjectsOfType<Cell>();
     }
@@ -23,6 +25,7 @@ public class ClickValidator: MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
+            FirstMove();
             HandleMove();
         }
         else if (Input.GetMouseButtonDown(1))
@@ -32,9 +35,20 @@ public class ClickValidator: MonoBehaviour
         }
     }
 
+    private void FirstMove()
+    {
+        if (gameManager.isPlaying == null && movingFigure != null)
+        {
+            gameManager.isPlaying = movingFigure.GetPlayer();
+            gameManager.UpdatePlayingDisplay();
+        }
+    }
+
     private void HandleMove()
     {
-        if (movingFigure != null)
+        if (movingFigure != null
+            && !gameManager.isLightOn
+            && movingFigure.GetPlayer() == gameManager.isPlaying)
         {
             Piece collidedPiece = GetClickedPiece();
             Cell targetCell = GetClickedCell();
@@ -45,18 +59,27 @@ public class ClickValidator: MonoBehaviour
             }
             else
             {
-                MoveCommand move = new MoveCommand(movingFigure, targetCell, matrix);
-                new Drawer(move).Draw();
+                DoMove(targetCell);
 
-                movingFigure = null;
+                gameManager.TogglePlaying();
             }
         }
-        else
+        else if(!gameManager.isLightOn)
         {
             movingFigure = GetClickedPiece();
         }
 
     }
+
+
+    private void DoMove(Cell targetCell)
+    {
+        MoveCommand move = new MoveCommand(movingFigure, targetCell, matrix);
+        new Drawer(move).Draw();
+
+        movingFigure = null;
+    }
+
 
     private Cell GetClickedCell()
     {
@@ -67,6 +90,7 @@ public class ClickValidator: MonoBehaviour
         );
     }
 
+
     private Piece GetClickedPiece()
     {
         Vector2 gridPos = GetGridPos();
@@ -75,6 +99,7 @@ public class ClickValidator: MonoBehaviour
             piece.transform.position.y == gridPos.y && piece.transform.position.x == gridPos.x
         );
     }
+
 
     private static Vector2 GetGridPos()
     {

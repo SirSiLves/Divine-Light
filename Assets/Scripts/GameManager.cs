@@ -9,13 +9,14 @@ public class GameManager : MonoBehaviour
 {
 
     [SerializeField] BoardFactory boardFactory;
-    [SerializeField] float lightTimer = 5f;
+    [SerializeField] float lightTimer = 2f;
 
 
     // Singleton's
     public Matrix matrix { get; set; } 
     public Player isPlaying { get; set; } 
     public bool isLightOn { get; set; }
+    public List<Piece> piecesToDestroy;
 
 
     void Awake()
@@ -23,6 +24,8 @@ public class GameManager : MonoBehaviour
         matrix = new Matrix();
         boardFactory.CreateBoard(matrix);
         boardFactory.CreateDefaultSetUp(matrix);
+
+        piecesToDestroy = new List<Piece>();
     }
 
 
@@ -66,10 +69,20 @@ public class GameManager : MonoBehaviour
             controller.transform.gameObject.SetActive(false);
         });
 
+        this.RemoveDestroyed();
         this.ChangePlayer();
         this.isLightOn = false;
     }
 
+    private void RemoveDestroyed()
+    {
+        Array.ForEach(piecesToDestroy.ToArray(), item =>
+        {
+            Destroy(item.gameObject);
+        });
+
+        piecesToDestroy.Clear();
+    }
 
     private void ChangePlayer()
     {

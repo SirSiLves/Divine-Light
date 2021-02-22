@@ -10,7 +10,7 @@ public class LightController : MonoBehaviour
 
     private const float delay = 0.02f;
     private const float infinity = 999f;
-    private const float defaultRayDistance = 10f;
+    private const float defaultRayDistance = 100f;
 
     private Vector2 startPoint, startDirection;
     private LineRenderer lineRenderer;
@@ -90,11 +90,10 @@ public class LightController : MonoBehaviour
 
     private bool ValidateDestroy(RaycastHit2D hitObject)
     {
-        print(hitObject.transform.gameObject.name);
-
         switch(hitObject.transform.gameObject.name)
         {
             case "Destroy":
+                FindObjectOfType<GameManager>().piecesToDestroy.Add(hitObject.transform.parent.gameObject.GetComponent<Piece>());
                 return true;
             case "Block":
                 return true;

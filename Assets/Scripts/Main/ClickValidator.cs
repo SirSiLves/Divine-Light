@@ -9,7 +9,6 @@ public class ClickValidator: MonoBehaviour
     private GameManager gameManager;
     private Piece movingFigure;
     private Matrix matrix;
-    private Piece[] pieces;
     private Cell[] cells;
 
 
@@ -17,7 +16,6 @@ public class ClickValidator: MonoBehaviour
     {
         gameManager = FindObjectOfType<GameManager>();
         matrix = gameManager.matrix;
-        pieces = FindObjectsOfType<Piece>();
         cells = FindObjectsOfType<Cell>();
     }
 
@@ -92,6 +90,8 @@ public class ClickValidator: MonoBehaviour
 
     private Piece GetClickedPiece()
     {
+        Piece[] pieces = FindObjectsOfType<Piece>();
+
         Vector2 gridPos = GetGridPos();
 
         return Array.Find(pieces, piece =>

@@ -88,12 +88,13 @@ public class LightController : MonoBehaviour
         }
     }
 
+
     private bool ValidateDestroy(RaycastHit2D hitObject)
     {
         switch(hitObject.transform.gameObject.name)
         {
             case "Destroy":
-                FindObjectOfType<GameManager>().piecesToDestroy.Add(hitObject.transform.parent.gameObject.GetComponent<Piece>());
+                AddToDestroy(hitObject);
                 return true;
             case "Block":
                 return true;
@@ -101,6 +102,13 @@ public class LightController : MonoBehaviour
                 return false;
         }
     }
+
+
+    private static void AddToDestroy(RaycastHit2D hitObject)
+    {
+        FindObjectOfType<GameManager>().piecesToDestroy.Add(hitObject.transform.parent.gameObject.GetComponent<Piece>());
+    }
+
 
     private void SetDirection()
     {

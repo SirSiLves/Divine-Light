@@ -10,6 +10,7 @@ public class ClickValidator: MonoBehaviour
     private Piece movingFigure;
     private Matrix matrix;
     private Cell[] cells;
+    private bool firstTouched = false;
 
 
     private void Start()
@@ -23,7 +24,9 @@ public class ClickValidator: MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            FirstMove();
+            if (gameManager.isLightOn) { return; }
+            if (!firstTouched) { FirstTouched(); }
+
             HandleMove();
         }
         else if (Input.GetMouseButtonDown(1))
@@ -33,34 +36,29 @@ public class ClickValidator: MonoBehaviour
         }
     }
 
-    private void FirstMove()
+    private void FirstTouched()
     {
         if (gameManager.isPlaying == null && movingFigure != null)
         {
             gameManager.isPlaying = movingFigure.GetPlayer();
             gameManager.UpdatePlayingDisplay();
+
+            this.firstTouched = true;
         }
     }
 
     private void HandleMove()
     {
-        if (movingFigure != null
-            && !gameManager.isLightOn
-            && movingFigure.GetPlayer() == gameManager.isPlaying)
+        Piece clickedPiece = GetClickedPiece();
+
+
+        if(movingFigure == null || clickedPiece != null)
         {
-            Piece collidedPiece = GetClickedPiece();
-            if (collidedPiece != null)
-            {
-                //TODO handle replace
-            }
-            else
-            {
-                DoMove();
-            }
+            movingFigure = clickedPiece;
         }
-        else if(!gameManager.isLightOn)
+        else if (movingFigure.GetPlayer() == gameManager.isPlaying)
         {
-            movingFigure = GetClickedPiece();
+            DoMove();
         }
 
     }

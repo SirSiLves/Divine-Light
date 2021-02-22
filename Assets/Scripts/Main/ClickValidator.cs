@@ -51,8 +51,11 @@ public class ClickValidator: MonoBehaviour
                 movingFigure = null;
             }
         }
+        else
+        {
+            movingFigure = GetClickedPiece();
+        }
 
-        movingFigure = GetClickedPiece();
     }
 
     private Cell GetClickedCell()

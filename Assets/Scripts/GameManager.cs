@@ -11,8 +11,10 @@ public class GameManager : MonoBehaviour
     [SerializeField] BoardFactory boardFactory;
     [SerializeField] float lightTimer = 5f;
 
-    public Matrix matrix { get; set; } // Singleton
-    public Player isPlaying { get; set; } // Singleton
+
+    // Singleton's
+    public Matrix matrix { get; set; } 
+    public Player isPlaying { get; set; } 
     public bool isLightOn { get; set; }
 
 
@@ -21,20 +23,21 @@ public class GameManager : MonoBehaviour
         matrix = new Matrix();
         boardFactory.CreateBoard(matrix);
         boardFactory.CreateDefaultSetUp(matrix);
-
     }
 
 
 
     public void TogglePlaying()
     {
-        this.TurnOnLight();
+        StartCoroutine("TurnOnLight");
         StartCoroutine("TurnOffLight");
     }
 
 
-    private void TurnOnLight()
+    IEnumerator TurnOnLight()
     {
+        yield return new WaitForSeconds(0.2f);
+
         this.isLightOn = true;
 
         LightController[] lightControllers = Resources.FindObjectsOfTypeAll<LightController>();

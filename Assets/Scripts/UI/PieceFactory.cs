@@ -92,9 +92,6 @@ public class PieceFactory : MonoBehaviour
             newPiece.SetPlayer(player2);
         }        
 
-        // set name
-        newPiece.name = name + " - " + y + "," + x;
-
         // show it on board
         newPiece.DrawPiece(y, x, pieceId);
     }

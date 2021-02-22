@@ -51,17 +51,13 @@ public class ClickValidator: MonoBehaviour
             && movingFigure.GetPlayer() == gameManager.isPlaying)
         {
             Piece collidedPiece = GetClickedPiece();
-            Cell targetCell = GetClickedCell();
-
             if (collidedPiece != null)
             {
                 //TODO handle replace
             }
             else
             {
-                DoMove(targetCell);
-
-                gameManager.TogglePlaying();
+                DoMove();
             }
         }
         else if(!gameManager.isLightOn)
@@ -72,12 +68,15 @@ public class ClickValidator: MonoBehaviour
     }
 
 
-    private void DoMove(Cell targetCell)
+    private void DoMove()
     {
+        Cell targetCell = GetClickedCell();
+
         MoveCommand move = new MoveCommand(movingFigure, targetCell, matrix);
         new Drawer(move).Draw();
 
         movingFigure = null;
+        gameManager.TogglePlaying();
     }
 
 

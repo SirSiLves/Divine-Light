@@ -41,10 +41,6 @@ public class Piece : MonoBehaviour
         // rotation
         int rotation = this.GetRotation(pieceId);
         this.transform.Rotate(0, 0, rotation);
-
-        // update name
-        string player = pieceId < 100 ? "p1" : "p2";
-        this.name += " - " + player + " - " + rotation;
     }
 
     private int GetRotation(int pieceId)

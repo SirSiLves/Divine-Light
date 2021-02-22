@@ -45,6 +45,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boardFactory: {fileID: 0}
+  lightTimer: 5
 --- !u!114 &2537449380472521470
 MonoBehaviour:
   m_ObjectHideFlags: 0

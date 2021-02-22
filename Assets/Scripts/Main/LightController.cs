@@ -8,7 +8,7 @@ using UnityEngine;
 public class LightController : MonoBehaviour
 {
 
-    private const float delay = 0.01f;
+    private const float delay = 0.02f;
     private const float infinity = 999f;
     private const float defaultRayDistance = 10f;
 
@@ -17,6 +17,7 @@ public class LightController : MonoBehaviour
 
     private List<Vector3> connectedPoints = new List<Vector3>();
     private List<Vector3> delayedDrawnPoints = new List<Vector3>();
+
 
     private void OnEnable()
     {
@@ -48,7 +49,7 @@ public class LightController : MonoBehaviour
 
         lineRenderer = transform.GetComponent<LineRenderer>();
 
-        RaycastHit2D hitObject = Physics2D.Raycast(startPoint, (startDirection - startPoint).normalized, defaultRayDistance);
+        RaycastHit2D hitObject = Physics2D.Raycast(startPoint, (startDirection - startPoint).normalized, defaultRayDistance);        
 
         connectedPoints.Clear();
         connectedPoints.Add(startPoint);
@@ -68,6 +69,10 @@ public class LightController : MonoBehaviour
     {
         connectedPoints.Add(hitObject.point);
 
+        // dont go further if object has to be destroyed
+        if (ValidateDestroy(hitObject)) { return; }
+
+
         Vector2 fromDirection = (hitObject.point - nextStartPoint).normalized;
         Vector2 newDirection = Vector2.Reflect(fromDirection, hitObject.normal);
 
@@ -83,6 +88,20 @@ public class LightController : MonoBehaviour
         }
     }
 
+    private bool ValidateDestroy(RaycastHit2D hitObject)
+    {
+        print(hitObject.transform.gameObject.name);
+
+        switch(hitObject.transform.gameObject.name)
+        {
+            case "Destroy":
+                return true;
+            case "Block":
+                return true;
+            default:
+                return false;
+        }
+    }
 
     private void SetDirection()
     {

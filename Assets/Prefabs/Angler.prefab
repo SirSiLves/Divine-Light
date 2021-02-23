@@ -25,8 +25,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1676001094}
   m_LocalRotation: {x: 0, y: 0, z: 0.38268343, w: 0.92387956}
-  m_LocalPosition: {x: 0.17, y: 0.21, z: 0}
-  m_LocalScale: {x: 0.1, y: 10, z: 0}
+  m_LocalPosition: {x: -0.01, y: -0.01, z: 0}
+  m_LocalScale: {x: 0.11981281, y: 11.98128, z: 0}
   m_Children: []
   m_Father: {fileID: 842059092896816500}
   m_RootOrder: 0
@@ -114,7 +114,7 @@ PolygonCollider2D:
   m_Points:
     m_Paths:
     - - {x: -0.46280438, y: 7.3944654}
-      - {x: 8.036598, y: -0.9546256}
+      - {x: 7.960495, y: -1.0117033}
       - {x: -0.4398355, y: -0.99617624}
 --- !u!1 &842059092896816503
 GameObject:

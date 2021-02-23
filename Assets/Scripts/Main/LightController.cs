@@ -26,7 +26,7 @@ public class LightController : MonoBehaviour
     }
 
 
-    IEnumerator DrawLight()
+    IEnumerator DrawLight() // name reference
     {
         delayedDrawnPoints.Clear();
 
@@ -106,7 +106,7 @@ public class LightController : MonoBehaviour
 
     private static void AddToDestroy(RaycastHit2D hitObject)
     {
-        FindObjectOfType<GameManager>().piecesToDestroy.Add(hitObject.transform.parent.gameObject.GetComponent<Piece>());
+        FindObjectOfType<PlayerChanger>().GetPiecesToDestroy().Add(hitObject.transform.parent.gameObject.GetComponent<Piece>());
     }
 
 

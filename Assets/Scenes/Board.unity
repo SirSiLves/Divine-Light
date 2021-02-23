@@ -354,14 +354,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 114516425935054028, guid: 6e34f26b7227945dabcfb848aec49c49,
         type: 3}
-      propertyPath: lightTimer
-      value: 3
-      objectReference: {fileID: 0}
-    - target: {fileID: 114516425935054028, guid: 6e34f26b7227945dabcfb848aec49c49,
-        type: 3}
       propertyPath: boardFactory
       value: 
       objectReference: {fileID: 1971705829}
+    - target: {fileID: 114516425935054028, guid: 6e34f26b7227945dabcfb848aec49c49,
+        type: 3}
+      propertyPath: playerController
+      value: 
+      objectReference: {fileID: 708969651}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6e34f26b7227945dabcfb848aec49c49, type: 3}
 --- !u!1001 &547070458
@@ -448,6 +448,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fa3e64e25fb96460aa46e99571c2508b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &708969650 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 8173871615192394190, guid: 935265672b0bb44859bf13aa4bae7503,
+    type: 3}
+  m_PrefabInstance: {fileID: 8173871615170386744}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &708969651
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 708969650}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bc665928fa5744003ad2b2b9b3016fbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1248965981
@@ -1226,10 +1244,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
-    - target: {fileID: 447764530, guid: 26bc66837de1f4eb99517bd014069b34, type: 3}
-      propertyPath: m_SortingOrder
-      value: 1
-      objectReference: {fileID: 0}
     - target: {fileID: 5493170630086703308, guid: 26bc66837de1f4eb99517bd014069b34,
         type: 3}
       propertyPath: m_Name

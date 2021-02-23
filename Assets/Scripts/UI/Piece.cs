@@ -6,13 +6,11 @@ using UnityEngine;
 public class Piece : MonoBehaviour
 {
 
-    private int id;
     private Player player;
 
-    public int GetPieceId()
-    {
-        return id;
-    }
+    public int id { get; set; }
+    public bool exchangeable { get; set; }
+    public bool restrictedRotation { get; set; }
 
     public void SetPlayer(Player player)
     {
@@ -25,10 +23,8 @@ public class Piece : MonoBehaviour
         return player;
     }
 
-    public void DrawPiece(int y, int x, int pieceId)
+    public void DrawPiece(int y, int x)
     {
-        this.id = pieceId;
-
         // position
         this.transform.position = new Vector2(transform.position.x + x, transform.position.y + y);
 
@@ -39,7 +35,7 @@ public class Piece : MonoBehaviour
         this.transform.parent = transform;
 
         // rotation
-        int rotation = this.GetRotation(pieceId);
+        int rotation = this.GetRotation(id);
         this.transform.Rotate(0, 0, rotation);
     }
 

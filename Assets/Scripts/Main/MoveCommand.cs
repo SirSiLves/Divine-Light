@@ -27,7 +27,7 @@ public class MoveCommand : ICommand
         movedFigure.transform.position = new Vector2(targetCell.transform.position.x, targetCell.transform.position.y);
 
         // update matrix with new position
-        matrix.ChangePiece(targetCell.GetCellId(), movedFigure.GetPieceId());
+        matrix.ChangePiece(targetCell.GetCellId(), movedFigure.id);
     }
 
 

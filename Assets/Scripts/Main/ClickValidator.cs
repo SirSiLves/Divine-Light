@@ -6,17 +6,15 @@ using UnityEngine;
 public class ClickValidator: MonoBehaviour
 {
 
-    private GameManager gameManager;
     private Piece movingFigure;
-    private Matrix matrix;
+    private PlayerChanger playerChanger;
     private Cell[] cells;
-    private bool firstTouched = false;
+
 
 
     private void Start()
     {
-        gameManager = FindObjectOfType<GameManager>();
-        matrix = gameManager.matrix;
+        playerChanger = FindObjectOfType<PlayerChanger>();
         cells = FindObjectsOfType<Cell>();
     }
 
@@ -24,9 +22,6 @@ public class ClickValidator: MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (gameManager.isLightOn) { return; }
-            if (!firstTouched) { FirstTouched(); }
-
             HandleMove();
         }
         else if (Input.GetMouseButtonDown(1))
@@ -36,27 +31,21 @@ public class ClickValidator: MonoBehaviour
         }
     }
 
-    private void FirstTouched()
-    {
-        if (gameManager.isPlaying == null && movingFigure != null)
-        {
-            gameManager.isPlaying = movingFigure.GetPlayer();
-            gameManager.UpdatePlayingDisplay();
-
-            this.firstTouched = true;
-        }
-    }
-
+ 
     private void HandleMove()
     {
-        Piece clickedPiece = GetClickedPiece();
+        if (playerChanger.isLightOn) { return; }
+        if (!playerChanger.firstTouched) { playerChanger.FirstTouched(movingFigure); }
 
+        Piece clickedPiece = GetClickedPiece();
 
         if(movingFigure == null || clickedPiece != null)
         {
             movingFigure = clickedPiece;
+
+            CollectPossibleFields();
         }
-        else if (movingFigure.GetPlayer() == gameManager.isPlaying)
+        else if (movingFigure.GetPlayer() == playerChanger.isPlaying)
         {
             DoMove();
         }
@@ -64,21 +53,32 @@ public class ClickValidator: MonoBehaviour
     }
 
 
-    private void DoMove()
+    private void CollectPossibleFields()
     {
-        Cell targetCell = GetClickedCell();
+        Matrix matrix = FindObjectOfType<GameManager>().matrix;
 
-        if(targetCell == null) { return;  }
-
-        MoveCommand move = new MoveCommand(movingFigure, targetCell, matrix);
-        new Drawer(move).Draw();
-
-        movingFigure = null;
-        gameManager.TogglePlaying();
+        PossibleFieldsCommand pFieldCommand = new PossibleFieldsCommand(cells, movingFigure, matrix);
+        new Drawer(pFieldCommand).Draw();
     }
 
 
-    private Cell GetClickedCell()
+    private void DoMove()
+    {
+        Matrix matrix = FindObjectOfType<GameManager>().matrix;
+
+        Cell targetCell = GetClickedCell(cells);
+
+        if(targetCell == null) { return; }
+
+        MoveCommand moveCommand = new MoveCommand(movingFigure, targetCell, matrix);
+        new Drawer(moveCommand).Draw();
+
+        movingFigure = null;
+        playerChanger.TogglePlaying();
+    }
+
+
+    private static Cell GetClickedCell(Cell[] cells)
     {
         Vector2 gridPos = GetClickedGridPos();
 
@@ -88,7 +88,7 @@ public class ClickValidator: MonoBehaviour
     }
 
 
-    private Piece GetClickedPiece()
+    private static Piece GetClickedPiece()
     {
         Piece[] pieces = FindObjectsOfType<Piece>();
 

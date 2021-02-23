@@ -50,33 +50,27 @@ public class PieceFactory : MonoBehaviour
     public void InstantiatePiece(int y, int x, int pieceId)
     {
 
-        Piece newPiece = null;
+        Piece newPiece;
 
         // validate type of piece
 
-        string name = "";
         int type = pieceId % 10;
         switch (type)
         {
             case 1:
-                newPiece = Instantiate(sun, transform);
-                name = "sun";
+                newPiece = CreatePiece(sun, false, true);
                 break;
             case 2:
-                newPiece = Instantiate(king, transform);
-                name = "king";
+                newPiece = CreatePiece(king, true, false);
                 break;
             case 3:
-                newPiece = Instantiate(wall, transform);
-                name = "wall";
+                newPiece = CreatePiece(wall, true, false);
                 break;
             case 4:
-                newPiece = Instantiate(reflector, transform);
-                name = "reflector";
+                newPiece = CreatePiece(reflector, false, false);
                 break;
             case 5:
-                newPiece = Instantiate(angler, transform);
-                name = "angler";
+                newPiece = CreatePiece(angler, true, false);
                 break;
             default:
                 throw new Exception("no valid piece found for piece value: " + pieceId);
@@ -90,10 +84,23 @@ public class PieceFactory : MonoBehaviour
         else
         {
             newPiece.SetPlayer(player2);
-        }        
+        }
 
         // show it on board
-        newPiece.DrawPiece(y, x, pieceId);
+        newPiece.id = pieceId;
+        newPiece.DrawPiece(y, x);
+    }
+
+
+    private Piece CreatePiece(Piece piece, bool exchangeable, bool restrictedRotation)
+    {
+        piece = Instantiate(piece, transform);
+
+        piece.name = piece.ToString();
+        piece.exchangeable = exchangeable;
+        piece.restrictedRotation = restrictedRotation;
+
+        return piece;
     }
 
 

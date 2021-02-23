@@ -46,14 +46,15 @@ public class Matrix
     }
 
 
-    public int GetCellId(int pieceId)
-    {
+    public int GetCellId(float pieceY, float pieceX)
+    {       
+
         int index = 0;
         for (int y = 0; y < matrix.Length; y++)
         {
             for (int x = 0; x < matrix[y].Length; x++)
             {
-                if (matrix[y][x] == pieceId)
+                if (y == (int) Math.Round(pieceY) && x == (int) Math.Round(pieceX))
                 {
                     return index;
                 }
@@ -64,6 +65,27 @@ public class Matrix
 
         throw new Exception("No piece value found, something went wrong!");
     }
+
+
+
+    //public int GetCellId(int pieceId)
+    //{
+    //    int index = 0;
+    //    for (int y = 0; y < matrix.Length; y++)
+    //    {
+    //        for (int x = 0; x < matrix[y].Length; x++)
+    //        {
+    //            if (matrix[y][x] == pieceId)
+    //            {
+    //                return index;
+    //            }
+
+    //            index++;
+    //        }
+    //    }
+
+    //    throw new Exception("No piece value found, something went wrong!");
+    //}
 
 
     public int GetPieceId(int cellId)

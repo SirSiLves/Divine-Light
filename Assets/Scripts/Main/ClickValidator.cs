@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class ClickValidator: MonoBehaviour
 {
@@ -9,7 +10,6 @@ public class ClickValidator: MonoBehaviour
     private Piece movingFigure;
     private PlayerChanger playerChanger;
     private Cell[] cells;
-
 
 
     private void Start()
@@ -22,7 +22,7 @@ public class ClickValidator: MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            HandleMove();
+            HandleAction();
         }
         else if (Input.GetMouseButtonDown(1))
         {
@@ -32,49 +32,114 @@ public class ClickValidator: MonoBehaviour
     }
 
  
-    private void HandleMove()
+    private void HandleAction()
     {
         if (playerChanger.isLightOn) { return; }
-        if (!playerChanger.firstTouched) { playerChanger.FirstTouched(movingFigure); }
 
         Piece clickedPiece = GetClickedPiece();
+        
+        Cell targetCell = GetClickedCell(cells);
+        List<Cell> lastValidated = FindObjectOfType<FieldValidator>().GetLastValidatedCells();
 
-        if(movingFigure == null || clickedPiece != null)
+        if (MoveIsReady(lastValidated, targetCell)) {
+            DoMove(targetCell);
+        }
+
+        if (MovePreparation(clickedPiece)) { return; }
+    }
+
+
+    private bool MovePreparation(Piece clickedPiece)
+    {
+        if (movingFigure == null && clickedPiece == null) { return true; }
+
+        if(movingFigure == null && playerChanger.firstTouched && clickedPiece != null && clickedPiece.GetPlayer() != playerChanger.isPlaying) {
+            RevertMarkup();
+            return true;
+        }
+
+        if (movingFigure == null)
         {
             movingFigure = clickedPiece;
-
             CollectPossibleFields();
+
+            if (!playerChanger.firstTouched) { playerChanger.FirstTouched(movingFigure); }
+
+            return true;
         }
-        else if (movingFigure.GetPlayer() == playerChanger.isPlaying)
+
+        if (movingFigure == clickedPiece)
         {
-            DoMove();
+            movingFigure = null;
+            RevertMarkup();
+            return true;
         }
 
+        if (clickedPiece != null && movingFigure != clickedPiece && clickedPiece.GetPlayer() == playerChanger.isPlaying)
+        {
+            RevertMarkup();
+            movingFigure = clickedPiece;
+            CollectPossibleFields();
+            return true;
+        }
+
+        return false;
     }
 
 
-    private void CollectPossibleFields()
+    private bool MoveIsReady(List<Cell> lastValidated, Cell targetCell)
     {
-        Matrix matrix = FindObjectOfType<GameManager>().matrix;
+        if(movingFigure == null) { return false; }
 
-        PossibleFieldsCommand pFieldCommand = new PossibleFieldsCommand(cells, movingFigure, matrix);
-        new Drawer(pFieldCommand).Draw();
+        if (lastValidated.Contains(targetCell) && movingFigure.GetPlayer() == playerChanger.isPlaying)
+        {
+            return true;
+        }
+
+        return false;
     }
 
 
-    private void DoMove()
+    private List<Cell> CollectPossibleFields()
+    {
+        List<Cell> possibleCells = FindObjectOfType<FieldValidator>().CollectPossibleFields(movingFigure);
+        if(possibleCells.Count == 0) { return possibleCells; }
+
+        Color markupColor = FindObjectOfType<CellFactory>().possibleFields;
+
+        MarkupFieldsCommand markupCommand = new MarkupFieldsCommand(possibleCells, markupColor);
+        new Drawer(markupCommand).Draw();
+
+        return possibleCells;
+    }
+
+
+    private void RevertMarkup()
+    {
+        Color markupColor = FindObjectOfType<CellFactory>().defaultFields;
+        MarkupFieldsCommand markupCommand = new MarkupFieldsCommand(cells.OfType<Cell>().ToList(), markupColor);
+        new Drawer(markupCommand).Draw();
+    }
+
+
+    private void DoMove(Cell targetCell)
     {
         Matrix matrix = FindObjectOfType<GameManager>().matrix;
-
-        Cell targetCell = GetClickedCell(cells);
 
         if(targetCell == null) { return; }
 
         MoveCommand moveCommand = new MoveCommand(movingFigure, targetCell, matrix);
         new Drawer(moveCommand).Draw();
 
+        MoveDone();
+    }
+
+
+    private void MoveDone()
+    {
         movingFigure = null;
         playerChanger.TogglePlaying();
+        RevertMarkup();
     }
 
 

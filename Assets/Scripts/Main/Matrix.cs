@@ -21,21 +21,15 @@ public class Matrix
     }
 
 
-    public void ChangePiece(int newCellId, int pieceId)
+    public void ChangePiece(int cellId, int pieceId)
     {
         int index = 0;
         for (int y = 0; y < matrix.Length; y++)
         {
             for (int x = 0; x < matrix[y].Length; x++)
             {
-                // remove piece from old position
-                if(matrix[y][x] == pieceId)
-                {
-                    matrix[y][x] = 0;
-                }
-
-                // set piece to new position
-                if(index == newCellId)
+                // set piece on cell id
+                if(index == cellId)
                 {
                     matrix[y][x] = pieceId;
                 }

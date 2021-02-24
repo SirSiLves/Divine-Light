@@ -357,11 +357,6 @@ PrefabInstance:
       propertyPath: boardFactory
       value: 
       objectReference: {fileID: 1971705829}
-    - target: {fileID: 114516425935054028, guid: 6e34f26b7227945dabcfb848aec49c49,
-        type: 3}
-      propertyPath: playerController
-      value: 
-      objectReference: {fileID: 708969651}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6e34f26b7227945dabcfb848aec49c49, type: 3}
 --- !u!1001 &547070458
@@ -468,6 +463,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: bc665928fa5744003ad2b2b9b3016fbc, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  lightTimer: 3
 --- !u!1 &1248965981
 GameObject:
   m_ObjectHideFlags: 0
@@ -544,6 +540,24 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0f9e67dd2b15b4e0395f7507c9e0e601, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!1 &1312564944 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1341780852986344, guid: 6e34f26b7227945dabcfb848aec49c49,
+    type: 3}
+  m_PrefabInstance: {fileID: 523113621}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1312564945
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1312564944}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f2697b65d4a242d1a4a671e818b19e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!114 &1480473114 stripped
@@ -951,6 +965,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Cells
+      objectReference: {fileID: 0}
+    - target: {fileID: 6424912354377331899, guid: fa04b65f73bc14cd399d39d4fb60a203,
+        type: 3}
+      propertyPath: possibleFields.a
+      value: 0.87058824
+      objectReference: {fileID: 0}
+    - target: {fileID: 6424912354377331899, guid: fa04b65f73bc14cd399d39d4fb60a203,
+        type: 3}
+      propertyPath: possibleFields.b
+      value: 0.07058824
+      objectReference: {fileID: 0}
+    - target: {fileID: 6424912354377331899, guid: fa04b65f73bc14cd399d39d4fb60a203,
+        type: 3}
+      propertyPath: possibleFields.g
+      value: 0.35686275
+      objectReference: {fileID: 0}
+    - target: {fileID: 6424912354377331899, guid: fa04b65f73bc14cd399d39d4fb60a203,
+        type: 3}
+      propertyPath: possibleFields.r
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8451475568010035295, guid: fa04b65f73bc14cd399d39d4fb60a203,
         type: 3}

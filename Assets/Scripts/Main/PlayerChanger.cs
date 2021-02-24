@@ -22,6 +22,7 @@ public class PlayerChanger : MonoBehaviour
     private void Start()
     {
         piecesToDestroy = new List<Piece>();
+        firstTouched = false;
     }
 
 

@@ -23,11 +23,13 @@ public class MoveCommand : ICommand
 
     public void Execute()
     {
+        // update matrix with new position
+        int sourceCellId = matrix.GetCellId(movedFigure.transform.position.y, movedFigure.transform.position.x);
+        matrix.ChangePiece(sourceCellId, 0);
+        matrix.ChangePiece(targetCell.GetCellId(), movedFigure.id);
+
         // draw piece to new position
         movedFigure.transform.position = new Vector2(targetCell.transform.position.x, targetCell.transform.position.y);
-
-        // update matrix with new position
-        matrix.ChangePiece(targetCell.GetCellId(), movedFigure.id);
     }
 
 

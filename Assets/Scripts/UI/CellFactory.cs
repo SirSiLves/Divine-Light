@@ -6,6 +6,9 @@ using UnityEngine;
 public class CellFactory : MonoBehaviour
 {
     [SerializeField] Cell cell;
+    [SerializeField] public Color possibleFields;
+    [SerializeField] public Color defaultFields;
+
 
     internal void Create(int y, int x)
     {
@@ -18,6 +21,7 @@ public class CellFactory : MonoBehaviour
         newCell.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
         newCell.transform.name = y.ToString() + ',' + x.ToString();
         newCell.SetCellId(y, x);
+        newCell.transform.GetComponentInChildren<SpriteRenderer>().color = defaultFields;
     }
 
 }

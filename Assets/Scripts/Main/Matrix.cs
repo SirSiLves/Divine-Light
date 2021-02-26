@@ -62,26 +62,6 @@ public class Matrix
 
 
 
-    //public int GetCellId(int pieceId)
-    //{
-    //    int index = 0;
-    //    for (int y = 0; y < matrix.Length; y++)
-    //    {
-    //        for (int x = 0; x < matrix[y].Length; x++)
-    //        {
-    //            if (matrix[y][x] == pieceId)
-    //            {
-    //                return index;
-    //            }
-
-    //            index++;
-    //        }
-    //    }
-
-    //    throw new Exception("No piece value found, something went wrong!");
-    //}
-
-
     public int GetPieceId(int cellId)
     {
         int index = 0;

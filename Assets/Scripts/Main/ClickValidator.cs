@@ -10,10 +10,11 @@ public class ClickValidator: MonoBehaviour
     private Piece movingFigure;
     private PlayerChanger playerChanger;
     private Cell[] cells;
-
+    private bool rotation;
 
     private void Start()
     {
+        rotation = false;
         playerChanger = FindObjectOfType<PlayerChanger>();
         cells = FindObjectsOfType<Cell>();
     }
@@ -34,6 +35,8 @@ public class ClickValidator: MonoBehaviour
  
     private void HandleAction()
     {
+        
+
         if (playerChanger.isLightOn) { return; }
 
         Piece clickedPiece = GetClickedPiece();
@@ -42,7 +45,9 @@ public class ClickValidator: MonoBehaviour
         List<Cell> lastValidated = FindObjectOfType<FieldValidator>().GetLastValidatedCells();
 
         if (MoveIsReady(lastValidated, targetCell)) {
+            RevertMarkup();
             DoMove(targetCell);
+            return;
         }
 
         if (MovePreparation(clickedPiece)) { return; }
@@ -96,6 +101,7 @@ public class ClickValidator: MonoBehaviour
             return true;
         }
 
+
         return false;
     }
 
@@ -139,7 +145,6 @@ public class ClickValidator: MonoBehaviour
     {
         movingFigure = null;
         playerChanger.TogglePlaying();
-        RevertMarkup();
     }
 
 

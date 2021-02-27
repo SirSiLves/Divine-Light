@@ -10,13 +10,16 @@ public class ClickValidator: MonoBehaviour
     private Piece movingFigure;
     private PlayerChanger playerChanger;
     private Cell[] cells;
-    private bool rotation;
+
+
 
     private void Start()
     {
-        rotation = false;
+
         playerChanger = FindObjectOfType<PlayerChanger>();
         cells = FindObjectsOfType<Cell>();
+
+
     }
 
     private void Update()
@@ -35,8 +38,6 @@ public class ClickValidator: MonoBehaviour
  
     private void HandleAction()
     {
-        
-
         if (playerChanger.isLightOn) { return; }
 
         Piece clickedPiece = GetClickedPiece();
@@ -67,6 +68,7 @@ public class ClickValidator: MonoBehaviour
         {
             movingFigure = clickedPiece;
             CollectPossibleFields();
+            RotationHandling();
 
             if (!playerChanger.firstTouched) { playerChanger.FirstTouched(movingFigure); }
 
@@ -89,6 +91,13 @@ public class ClickValidator: MonoBehaviour
         }
 
         return false;
+    }
+
+
+    private void RotationHandling()
+    {
+        RotationController rController = FindObjectOfType<RotationController>();
+        rController.ActivateRotation();
     }
 
 
@@ -120,8 +129,8 @@ public class ClickValidator: MonoBehaviour
     }
 
 
-    private void RevertMarkup()
-    {
+    public void RevertMarkup()
+    {   
         Color markupColor = FindObjectOfType<CellFactory>().defaultFields;
         MarkupFieldsCommand markupCommand = new MarkupFieldsCommand(cells.OfType<Cell>().ToList(), markupColor);
         new Drawer(markupCommand).Draw();
@@ -144,6 +153,10 @@ public class ClickValidator: MonoBehaviour
     private void MoveDone()
     {
         movingFigure = null;
+
+        RotationController rController = FindObjectOfType<RotationController>();
+        rController.DisableRoation();
+
         playerChanger.TogglePlaying();
     }
 

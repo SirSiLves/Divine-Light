@@ -10,6 +10,7 @@ public class FieldValidator : MonoBehaviour
     private Matrix matrix;
     private Cell[] cells;
     private List<Cell> lastPossibleFields;
+    RotationController rController;
 
 
     private void Start()
@@ -17,7 +18,19 @@ public class FieldValidator : MonoBehaviour
         matrix = FindObjectOfType<GameManager>().matrix;
         cells = FindObjectsOfType<Cell>();
         lastPossibleFields = new List<Cell>();
+        rController = FindObjectOfType<RotationController>();
     }
+
+
+    private void Update()
+    {
+
+
+
+    }
+
+
+
 
 
     public List<Cell> GetLastValidatedCells()
@@ -48,7 +61,6 @@ public class FieldValidator : MonoBehaviour
                 cellId++;
             }
         }
-
 
         return lastPossibleFields;
     }

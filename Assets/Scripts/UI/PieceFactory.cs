@@ -91,7 +91,7 @@ public class PieceFactory : MonoBehaviour
         newPiece.DrawPiece(y, x);
     }
 
-
+   
     private Piece CreatePiece(Piece piece, bool exchangeable, bool restrictedRotation)
     {
         piece = Instantiate(piece, transform);

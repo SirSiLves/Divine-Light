@@ -2,15 +2,18 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using UnityEngine.Events;
+using System.Linq;
 
 
-public class FieldValidator : MonoBehaviour
+
+public class FieldHandler : MonoBehaviour
 {
 
     private Matrix matrix;
     private Cell[] cells;
     private List<Cell> lastPossibleFields;
-    RotationController rController;
+    public UnityEvent markupEvent, removeMarkupEvent;
 
 
     private void Start()
@@ -18,18 +21,38 @@ public class FieldValidator : MonoBehaviour
         matrix = FindObjectOfType<GameManager>().matrix;
         cells = FindObjectsOfType<Cell>();
         lastPossibleFields = new List<Cell>();
-        rController = FindObjectOfType<RotationController>();
+
+        markupEvent = new UnityEvent();
+        markupEvent.AddListener(Markup);
+
+        removeMarkupEvent = new UnityEvent();
+        removeMarkupEvent.AddListener(RemoveMarkup);
     }
 
 
-    private void Update()
+
+    public void Markup()
     {
+        Piece movedPiece = FindObjectOfType<ClickHandler>().touchedPiece;
+        Color markupColor = FindObjectOfType<CellFactory>().possibleFields;
 
+        lastPossibleFields = CollectPossibleFields(movedPiece);
+
+        MarkupFieldsCommand markupCommand = new MarkupFieldsCommand(lastPossibleFields, markupColor);
+        new Drawer(markupCommand).Draw();
 
 
     }
 
 
+    public void RemoveMarkup()
+    {
+        Color markupColor = FindObjectOfType<CellFactory>().defaultFields;
+        MarkupFieldsCommand markupCommand = new MarkupFieldsCommand(cells.OfType<Cell>().ToList(), markupColor);
+        new Drawer(markupCommand).Draw();
+
+        lastPossibleFields.Clear();
+    }
 
 
 

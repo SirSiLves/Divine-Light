@@ -4,19 +4,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
-public class ClickValidator: MonoBehaviour
+public class ClickHandler: MonoBehaviour
 {
 
-    private Piece movingFigure;
+    public Piece touchedPiece { get; set; }
     private PlayerChanger playerChanger;
+    private FieldHandler fieldHandler;
+    private RotationHandler rotationHandler;
     private Cell[] cells;
-
+        
 
 
     private void Start()
     {
-
         playerChanger = FindObjectOfType<PlayerChanger>();
+        fieldHandler = FindObjectOfType<FieldHandler>();
+        rotationHandler = FindObjectOfType<RotationHandler>();
         cells = FindObjectsOfType<Cell>();
 
 
@@ -39,11 +42,12 @@ public class ClickValidator: MonoBehaviour
     private void HandleAction()
     {
         if (playerChanger.isLightOn) { return; }
+        if (rotationHandler.isRotating) { return; }
 
         Piece clickedPiece = GetClickedPiece();
         
         Cell targetCell = GetClickedCell(cells);
-        List<Cell> lastValidated = FindObjectOfType<FieldValidator>().GetLastValidatedCells();
+        List<Cell> lastValidated = FindObjectOfType<FieldHandler>().GetLastValidatedCells();
 
         if (MoveIsReady(lastValidated, targetCell)) {
             RevertMarkup();
@@ -57,55 +61,47 @@ public class ClickValidator: MonoBehaviour
 
     private bool MovePreparation(Piece clickedPiece)
     {
-        if (movingFigure == null && clickedPiece == null) { return true; }
+        if (touchedPiece == null && clickedPiece == null) { return true; }
 
-        if(movingFigure == null && playerChanger.firstTouched && clickedPiece != null && clickedPiece.GetPlayer() != playerChanger.isPlaying) {
+        if(touchedPiece == null && playerChanger.firstTouched && clickedPiece != null && clickedPiece.GetPlayer() != playerChanger.isPlaying) {
             RevertMarkup();
             return true;
         }
 
-        if (movingFigure == null)
+        if (touchedPiece == null)
         {
-            movingFigure = clickedPiece;
-            CollectPossibleFields();
-            RotationHandling();
+            touchedPiece = clickedPiece;
+            MarkupFields();
 
-            if (!playerChanger.firstTouched) { playerChanger.FirstTouched(movingFigure); }
+            if (!playerChanger.firstTouched) { playerChanger.FirstTouched(touchedPiece); }
 
             return true;
         }
 
-        if (movingFigure == clickedPiece)
+        if (touchedPiece == clickedPiece)
         {
-            movingFigure = null;
+            touchedPiece = null;
             RevertMarkup();
             return true;
         }
 
-        if (clickedPiece != null && movingFigure != clickedPiece && clickedPiece.GetPlayer() == playerChanger.isPlaying)
+        if (clickedPiece != null && touchedPiece != clickedPiece && clickedPiece.GetPlayer() == playerChanger.isPlaying)
         {
             RevertMarkup();
-            movingFigure = clickedPiece;
-            CollectPossibleFields();
+            touchedPiece = clickedPiece;
+            MarkupFields();
             return true;
         }
 
         return false;
-    }
-
-
-    private void RotationHandling()
-    {
-        RotationController rController = FindObjectOfType<RotationController>();
-        rController.ActivateRotation();
     }
 
 
     private bool MoveIsReady(List<Cell> lastValidated, Cell targetCell)
     {
-        if(movingFigure == null) { return false; }
+        if(touchedPiece == null) { return false; }
 
-        if (lastValidated.Contains(targetCell) && movingFigure.GetPlayer() == playerChanger.isPlaying)
+        if (lastValidated.Contains(targetCell) && touchedPiece.GetPlayer() == playerChanger.isPlaying)
         {
             return true;
         }
@@ -115,25 +111,16 @@ public class ClickValidator: MonoBehaviour
     }
 
 
-    private List<Cell> CollectPossibleFields()
+    public void MarkupFields()
     {
-        List<Cell> possibleCells = FindObjectOfType<FieldValidator>().CollectPossibleFields(movingFigure);
-        if(possibleCells.Count == 0) { return possibleCells; }
-
-        Color markupColor = FindObjectOfType<CellFactory>().possibleFields;
-
-        MarkupFieldsCommand markupCommand = new MarkupFieldsCommand(possibleCells, markupColor);
-        new Drawer(markupCommand).Draw();
-
-        return possibleCells;
+        rotationHandler.ActivateRotateButton();
+        fieldHandler.markupEvent.Invoke();
     }
 
 
     public void RevertMarkup()
-    {   
-        Color markupColor = FindObjectOfType<CellFactory>().defaultFields;
-        MarkupFieldsCommand markupCommand = new MarkupFieldsCommand(cells.OfType<Cell>().ToList(), markupColor);
-        new Drawer(markupCommand).Draw();
+    {
+        fieldHandler.removeMarkupEvent.Invoke();
     }
 
 
@@ -143,7 +130,7 @@ public class ClickValidator: MonoBehaviour
 
         if(targetCell == null) { return; }
 
-        MoveCommand moveCommand = new MoveCommand(movingFigure, targetCell, matrix);
+        MoveCommand moveCommand = new MoveCommand(touchedPiece, targetCell, matrix);
         new Drawer(moveCommand).Draw();
 
         MoveDone();
@@ -152,10 +139,9 @@ public class ClickValidator: MonoBehaviour
 
     private void MoveDone()
     {
-        movingFigure = null;
+        touchedPiece = null;
 
-        RotationController rController = FindObjectOfType<RotationController>();
-        rController.DisableRoation();
+        rotationHandler.DisableRotation();
 
         playerChanger.TogglePlaying();
     }

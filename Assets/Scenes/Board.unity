@@ -439,7 +439,7 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 1996693420}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
+  m_GameObject: {fileID: 1765513635}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fa3e64e25fb96460aa46e99571c2508b, type: 3}
@@ -560,6 +560,30 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49445aae47eda4a238c60b898c5ebc99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &1765513635 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1967189342540761575, guid: fa04b65f73bc14cd399d39d4fb60a203,
+    type: 3}
+  m_PrefabInstance: {fileID: 1996693420}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1765513636
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1765513635}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7f2697b65d4a242d1a4a671e818b19e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  markupEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  removeMarkupEvent:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!1 &1784877037
 GameObject:
   m_ObjectHideFlags: 0
@@ -905,6 +929,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1971705830}
   - component: {fileID: 1971705829}
+  - component: {fileID: 1971705831}
   m_Layer: 0
   m_Name: Board UI
   m_TagString: Untagged
@@ -943,6 +968,18 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1971705831
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1971705828}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 63c61c825ed80432cb2a093d03998cab, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &1996693420
 PrefabInstance:
   m_ObjectHideFlags: 0

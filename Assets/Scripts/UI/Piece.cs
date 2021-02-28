@@ -12,16 +12,20 @@ public class Piece : MonoBehaviour
     public bool exchangeable { get; set; }
     public bool restrictedRotation { get; set; }
 
+
+
     public void SetPlayer(Player player)
     {
         this.player = player;
         transform.GetComponentInChildren<SpriteRenderer>().color = player.GetColor();
     }
 
+
     public Player GetPlayer()
     {
         return player;
     }
+
 
     public void DrawPiece(int y, int x)
     {
@@ -35,11 +39,12 @@ public class Piece : MonoBehaviour
         this.transform.parent = transform;
 
         // rotation
-        int rotation = this.GetRotation(id);
+        int rotation = GetRotationDegrees(id);
         this.transform.Rotate(0, 0, rotation);
     }
 
-    private int GetRotation(int pieceId)
+
+    private int GetRotationDegrees(int pieceId)
     {
         int rotationValue = (pieceId % 100) - (pieceId % 10);
 
@@ -58,7 +63,6 @@ public class Piece : MonoBehaviour
                 return 0;
         }
     }
-
 
 }
 

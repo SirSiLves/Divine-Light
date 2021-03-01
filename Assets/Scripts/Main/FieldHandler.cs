@@ -13,7 +13,7 @@ public class FieldHandler : MonoBehaviour
     private Matrix matrix;
     private Cell[] cells;
     private List<Cell> lastPossibleFields;
-    public UnityEvent markupEvent, removeMarkupEvent;
+    public UnityEvent markupEvent, removeMarkupEvent, markupTouchedEvent;
 
 
     private void Start()
@@ -23,25 +23,47 @@ public class FieldHandler : MonoBehaviour
         lastPossibleFields = new List<Cell>();
 
         markupEvent = new UnityEvent();
-        markupEvent.AddListener(Markup);
+        markupEvent.AddListener(MarkupPossibleFields);
 
         removeMarkupEvent = new UnityEvent();
         removeMarkupEvent.AddListener(RemoveMarkup);
+
+        markupTouchedEvent = new UnityEvent();
+        markupTouchedEvent.AddListener(MarkupTouchedField);
     }
 
 
-
-    public void Markup()
+    private void MarkupTouchedField()
     {
-        Piece movedPiece = FindObjectOfType<ClickHandler>().touchedPiece;
+        Piece touchedPiece = FindObjectOfType<ClickHandler>().touchedPiece;
+
+        Color markupColor = FindObjectOfType<CellFactory>().highlightedFields;
+
+        int cellId = matrix.GetCellId(touchedPiece.transform.position.y, touchedPiece.transform.position.x);
+
+        List<Cell> touchedCells = new List<Cell>
+        {
+            Array.Find(cells.ToArray(), cell => cell.GetCellId() == cellId)
+        };
+
+        print(cells.Count());
+        print(markupColor);
+
+        MarkupFieldsCommand markupCommand = new MarkupFieldsCommand(touchedCells, markupColor);
+        new Drawer(markupCommand).Draw();
+    }
+
+
+    private void MarkupPossibleFields()
+    {
+        Piece touchedPiece = FindObjectOfType<ClickHandler>().touchedPiece;
+
         Color markupColor = FindObjectOfType<CellFactory>().possibleFields;
 
-        lastPossibleFields = CollectPossibleFields(movedPiece);
+        lastPossibleFields = CollectPossibleFields(touchedPiece);
 
         MarkupFieldsCommand markupCommand = new MarkupFieldsCommand(lastPossibleFields, markupColor);
         new Drawer(markupCommand).Draw();
-
-
     }
 
 

@@ -55,7 +55,7 @@ public class ClickHandler: MonoBehaviour
             return;
         }
 
-        if (MovePreparation(clickedPiece)) { return; }
+        MovePreparation(clickedPiece);
     }
 
 
@@ -63,8 +63,11 @@ public class ClickHandler: MonoBehaviour
     {
         if (touchedPiece == null && clickedPiece == null) { return true; }
 
-        if(touchedPiece == null && playerChanger.firstTouched && clickedPiece != null && clickedPiece.GetPlayer() != playerChanger.isPlaying) {
+        if(touchedPiece == null && playerChanger.firstTouched &&
+            clickedPiece != null && clickedPiece.GetPlayer() != playerChanger.isPlaying) {
+
             RevertMarkup();
+
             return true;
         }
 
@@ -83,6 +86,7 @@ public class ClickHandler: MonoBehaviour
             touchedPiece = null;
             RevertMarkup();
             rotationHandler.DisableRotation();
+
             return true;
         }
 
@@ -91,6 +95,7 @@ public class ClickHandler: MonoBehaviour
             RevertMarkup();
             touchedPiece = clickedPiece;
             MarkupFields();
+
             return true;
         }
 
@@ -115,6 +120,7 @@ public class ClickHandler: MonoBehaviour
     {
         rotationHandler.ActiateRotate();
         fieldHandler.markupEvent.Invoke();
+        fieldHandler.markupTouchedEvent.Invoke();
     }
 
 

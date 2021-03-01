@@ -439,31 +439,12 @@ MonoBehaviour:
     type: 3}
   m_PrefabInstance: {fileID: 1996693420}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1765513635}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fa3e64e25fb96460aa46e99571c2508b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &708969650 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 8173871615192394190, guid: 935265672b0bb44859bf13aa4bae7503,
-    type: 3}
-  m_PrefabInstance: {fileID: 8173871615170386744}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &708969651
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 708969650}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bc665928fa5744003ad2b2b9b3016fbc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  lightTimer: 3
 --- !u!224 &797994386 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 5665748305915511707, guid: 1e9c5fecc7d7a48b3a9a9ca6e3e437d4,
@@ -560,30 +541,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 49445aae47eda4a238c60b898c5ebc99, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!1 &1765513635 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 1967189342540761575, guid: fa04b65f73bc14cd399d39d4fb60a203,
-    type: 3}
-  m_PrefabInstance: {fileID: 1996693420}
-  m_PrefabAsset: {fileID: 0}
---- !u!114 &1765513636
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1765513635}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f2697b65d4a242d1a4a671e818b19e1, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  markupEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  removeMarkupEvent:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &1784877037
 GameObject:
   m_ObjectHideFlags: 0
@@ -991,6 +948,26 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Cells
+      objectReference: {fileID: 0}
+    - target: {fileID: 6424912354377331899, guid: fa04b65f73bc14cd399d39d4fb60a203,
+        type: 3}
+      propertyPath: highlightedFields.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6424912354377331899, guid: fa04b65f73bc14cd399d39d4fb60a203,
+        type: 3}
+      propertyPath: highlightedFields.b
+      value: 0.22745098
+      objectReference: {fileID: 0}
+    - target: {fileID: 6424912354377331899, guid: fa04b65f73bc14cd399d39d4fb60a203,
+        type: 3}
+      propertyPath: highlightedFields.g
+      value: 0.22745098
+      objectReference: {fileID: 0}
+    - target: {fileID: 6424912354377331899, guid: fa04b65f73bc14cd399d39d4fb60a203,
+        type: 3}
+      propertyPath: highlightedFields.r
+      value: 0.22745098
       objectReference: {fileID: 0}
     - target: {fileID: 8451475568010035295, guid: fa04b65f73bc14cd399d39d4fb60a203,
         type: 3}

@@ -78,7 +78,7 @@ public class PieceFactory : MonoBehaviour
 
         // set player
         if(pieceId < 100)
-        {
+        {   
             newPiece.SetPlayer(player1);
         }
         else

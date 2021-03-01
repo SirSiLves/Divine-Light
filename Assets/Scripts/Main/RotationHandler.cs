@@ -44,6 +44,8 @@ public class RotationHandler : MonoBehaviour
         RotationCommand rotationCommand = new RotationCommand(touchedPiece, newDegrees, matrix);
         new Drawer(rotationCommand).Draw();
 
+        FindObjectOfType<FieldHandler>().markupTouchedEvent.Invoke();
+
         HandleMenuButtons(newDegrees);
     }
 
@@ -98,7 +100,10 @@ public class RotationHandler : MonoBehaviour
 
     public void Confirm()
     {
+        FindObjectOfType<FieldHandler>().removeMarkupEvent.Invoke();
+
         DisableRotation();
+
         FindObjectOfType<ClickHandler>().touchedPiece = null;
         FindObjectOfType<PlayerChanger>().TogglePlaying();
 

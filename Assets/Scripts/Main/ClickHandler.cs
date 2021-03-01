@@ -113,7 +113,7 @@ public class ClickHandler: MonoBehaviour
 
     public void MarkupFields()
     {
-        rotationHandler.ActivateRotateButton();
+        rotationHandler.ActiateRotate();
         fieldHandler.markupEvent.Invoke();
     }
 

@@ -36,7 +36,6 @@ public class RotationHandler : MonoBehaviour
         FindObjectOfType<ClickHandler>().RevertMarkup();
 
         Piece touchedPiece = FindObjectOfType<ClickHandler>().touchedPiece;
-
         int degrees = Mathf.RoundToInt(touchedPiece.transform.rotation.eulerAngles.z);
 
         if(touchedPiece.restrictedRotation)
@@ -51,17 +50,34 @@ public class RotationHandler : MonoBehaviour
         RotationCommand rotationCommand = new RotationCommand(touchedPiece, degrees, matrix);
         new Drawer(rotationCommand).Draw();
 
-        ActivateOkAndCancelButton();
+        HandleButton(degrees);
+
+
+
     }
 
-    private void ActivateOkAndCancelButton()
+
+    private void HandleButton(int degrees)
     {
-        confirm.GetComponent<Text>().color = active;
-        confirm.GetComponent<Button>().enabled = true;
-
-        abbort.GetComponent<Text>().color = active;
-        abbort.GetComponent<Button>().enabled = true;
+        if (degrees == initialRotation)
+        {
+            Cancel();
+        }
+        else
+        {
+            SetButtonState(active, true);
+        }
     }
+
+
+    public void SetButtonState(Color color, bool enabled)
+    {
+        confirm.GetComponent<Text>().color = color;
+        confirm.GetComponent<Button>().enabled = enabled;
+        abbort.GetComponent<Text>().color = color;
+        abbort.GetComponent<Button>().enabled = enabled;
+    }
+
 
     public void Confirm()
     {
@@ -85,7 +101,7 @@ public class RotationHandler : MonoBehaviour
     }
 
 
-    public void ActivateRotateButton()
+    public void ActiateRotate()
     {
         rotation.GetComponent<Image>().color = active;
         rotation.GetComponent<Button>().enabled = true;
@@ -106,11 +122,7 @@ public class RotationHandler : MonoBehaviour
         rotation.GetComponent<Image>().color = disabled;
         rotation.GetComponent<Button>().enabled = false;
 
-        confirm.GetComponent<Text>().color = disabled;
-        confirm.GetComponent<Button>().enabled = false;
-
-        abbort.GetComponent<Text>().color = disabled;
-        abbort.GetComponent<Button>().enabled = false;
+        SetButtonState(disabled, false);
 
         isRotating = false;
     }

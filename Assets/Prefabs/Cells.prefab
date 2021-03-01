@@ -45,9 +45,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cell: {fileID: 1951371331, guid: d20516ec5e3574992ac37d2fef6c6818, type: 3}
-  possibleFields: {r: 0, g: 0.35686275, b: 0.07058824, a: 0.87058824}
+  possibleFields: {r: 0, g: 0.35686275, b: 0.07058824, a: 1}
   defaultFields: {r: 0.39607844, g: 0.14117648, b: 0.02745098, a: 1}
-  highlightedFields: {r: 0, g: 0.8565588, b: 1, a: 1}
+  highlightedFields: {r: 0.22745098, g: 0.22745098, b: 0.22745098, a: 1}
 --- !u!114 &1765513636
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -64,5 +64,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   removeMarkupEvent:
+    m_PersistentCalls:
+      m_Calls: []
+  markupTouchedEvent:
     m_PersistentCalls:
       m_Calls: []

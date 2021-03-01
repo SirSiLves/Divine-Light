@@ -13,7 +13,7 @@ public class FieldHandler : MonoBehaviour
     private Matrix matrix;
     private Cell[] cells;
     private List<Cell> lastPossibleFields;
-    public UnityEvent markupEvent, removeMarkupEvent, markupTouchedEvent;
+    internal UnityEvent markupEvent, removeMarkupEvent, markupTouchedEvent;
 
 
     private void Start()

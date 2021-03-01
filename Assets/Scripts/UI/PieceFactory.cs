@@ -24,12 +24,12 @@ public class PieceFactory : MonoBehaviour
         {30, 135}, // field 3,0 - angler 270° - p2
         {32, 15}, // field 3,2 - angler 90° - p1
         {34, 4}, // field 3,4 - reflector 0° - p1
-        {35, 134}, // field 3,5 - reflector 270° - p2
+        {35, 114}, // field 3,5 - reflector 90° - p2
         {37, 105}, // field 3,7 - angler - 0° - p2
         {39, 25}, // field 3,9 - angler - 180° p1
         {40, 105}, // field 4,0 - angler - 0° - p2
         {42, 25}, // field 4,2 - angler - 180° - p1
-        {44, 34}, // field 4,4 - reflector - 270° - p1
+        {44, 14}, // field 4,4 - reflector - 90° - p1
         {45, 104}, // field 4,5 - reflector - 0° - p2
         {47, 135}, // field 4,7 - angler - 270° - p2
         {49, 15}, // field 4,9 - angler - 90° - p1

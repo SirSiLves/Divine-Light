@@ -949,26 +949,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: Cells
       objectReference: {fileID: 0}
-    - target: {fileID: 6424912354377331899, guid: fa04b65f73bc14cd399d39d4fb60a203,
-        type: 3}
-      propertyPath: highlightedFields.a
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 6424912354377331899, guid: fa04b65f73bc14cd399d39d4fb60a203,
-        type: 3}
-      propertyPath: highlightedFields.b
-      value: 0.22745098
-      objectReference: {fileID: 0}
-    - target: {fileID: 6424912354377331899, guid: fa04b65f73bc14cd399d39d4fb60a203,
-        type: 3}
-      propertyPath: highlightedFields.g
-      value: 0.22745098
-      objectReference: {fileID: 0}
-    - target: {fileID: 6424912354377331899, guid: fa04b65f73bc14cd399d39d4fb60a203,
-        type: 3}
-      propertyPath: highlightedFields.r
-      value: 0.22745098
-      objectReference: {fileID: 0}
     - target: {fileID: 8451475568010035295, guid: fa04b65f73bc14cd399d39d4fb60a203,
         type: 3}
       propertyPath: m_RootOrder

@@ -82,6 +82,7 @@ public class ClickHandler: MonoBehaviour
         {
             touchedPiece = null;
             RevertMarkup();
+            rotationHandler.DisableRotation();
             return true;
         }
 
@@ -105,7 +106,6 @@ public class ClickHandler: MonoBehaviour
         {
             return true;
         }
-
 
         return false;
     }

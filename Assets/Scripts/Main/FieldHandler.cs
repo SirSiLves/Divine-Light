@@ -91,7 +91,8 @@ public class FieldHandler : MonoBehaviour
 
     private bool Validate(int mFigureY, int mFigureX, int y, int x, Piece movingFigure)
     {
-        if (!ValidateCellsAround(mFigureX, mFigureY, y, x)) { return false; }
+        if (movingFigure.restrictedMove) { return false; }
+        else if (!ValidateCellsAround(mFigureX, mFigureY, y, x)) { return false; }
         else if (!ValidateReplace(y, x, movingFigure)) { return false; }
         else { return true; };
     }

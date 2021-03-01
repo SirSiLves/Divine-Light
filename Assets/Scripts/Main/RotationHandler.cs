@@ -36,28 +36,45 @@ public class RotationHandler : MonoBehaviour
         FindObjectOfType<ClickHandler>().RevertMarkup();
 
         Piece touchedPiece = FindObjectOfType<ClickHandler>().touchedPiece;
-        int degrees = Mathf.RoundToInt(touchedPiece.transform.rotation.eulerAngles.z);
+        int currentDegrees = Mathf.RoundToInt(touchedPiece.transform.rotation.eulerAngles.z);
 
-        if(touchedPiece.restrictedRotation)
-        {
-            //TODO set restricted values on sun piece
-        }
-        else
-        {
-            degrees = degrees == 0 ? 270 : degrees -= 90;
-        }
+        int newDegrees = touchedPiece.restrictedRotation ? HandleRestrictedRotate(touchedPiece, currentDegrees) :
+            currentDegrees == 0 ? 270 : currentDegrees -= 90;
 
-        RotationCommand rotationCommand = new RotationCommand(touchedPiece, degrees, matrix);
+        RotationCommand rotationCommand = new RotationCommand(touchedPiece, newDegrees, matrix);
         new Drawer(rotationCommand).Draw();
 
-        HandleButton(degrees);
-
-
-
+        HandleMenuButtons(newDegrees);
     }
 
 
-    private void HandleButton(int degrees)
+    private int HandleRestrictedRotate(Piece touchedPiece, int currentDegrees)
+    {
+        int pieceType = touchedPiece.id % 10;
+
+        // set sun rotation
+        if (pieceType == 1)
+        {
+            if (touchedPiece.id < 100)
+            {
+                return currentDegrees == 0 ? 90 : 0;
+            }
+            else
+            {
+                return currentDegrees == 180 ? 270 : 180;
+            }
+        }
+        // set reflector rotation
+        else if (pieceType == 4)
+        {
+            return currentDegrees == 0 ? 90 : 0;
+        }
+
+        throw new Exception("Restricted rotation mapping is missed");
+    }
+
+
+    private void HandleMenuButtons(int degrees)
     {
         if (degrees == initialRotation)
         {

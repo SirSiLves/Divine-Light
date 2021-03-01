@@ -11,6 +11,7 @@ public class Piece : MonoBehaviour
     public int id { get; set; }
     public bool exchangeable { get; set; }
     public bool restrictedRotation { get; set; }
+    public bool restrictedMove { get; set; }
 
 
 

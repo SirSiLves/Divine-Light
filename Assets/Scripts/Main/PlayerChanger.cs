@@ -11,6 +11,7 @@ public class PlayerChanger : MonoBehaviour
 {
 
     [SerializeField] float lightTimer = 3f;
+    internal Player player1, player2;
 
     public Player isPlaying { get; set; }
     public bool isLightOn { get; set; }
@@ -23,6 +24,9 @@ public class PlayerChanger : MonoBehaviour
     {
         piecesToDestroy = new List<Piece>();
         firstTouched = false;
+
+        player1 = transform.Find("Player1").GetComponent<Player>();
+        player2 = transform.Find("Player2").GetComponent<Player>();
     }
 
 
@@ -119,7 +123,7 @@ public class PlayerChanger : MonoBehaviour
         Text textComponent = textform.GetComponent<Text>();
 
         textComponent.text = "PLAYING " + isPlaying.GetNickName();
-        textComponent.color = isPlaying.GetColor();
+        textComponent.color = isPlaying.GetFigure();
     }
 
 

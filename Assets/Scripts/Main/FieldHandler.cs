@@ -107,12 +107,12 @@ public class FieldHandler : MonoBehaviour
 
     private bool Validate(int mFigureY, int mFigureX, int y, int x, Piece movingFigure)
     {
-        int player = movingFigure.GetPlayer() == FindObjectsOfType<Player>()[0] ? 0 : 1;
+        int playerIndex = movingFigure.GetPlayer() == FindObjectOfType<PlayerChanger>().player1 ? 1 : 0;
 
-        if (movingFigure.restrictedMove) { return false; }
-        else if (!ValidateCellsAround(mFigureX, mFigureY, y, x)) { return false; }
-        else if (!ValidateReplace(y, x, movingFigure)) { return false; }
-        else if (ValidateSafeZone(y, x, player)) { return false; }
+        if (movingFigure.restrictedMove) { return false; } // not allowed to move
+        else if (!ValidateCellsAround(mFigureX, mFigureY, y, x)) { return false; } // cell is not around the moved figure
+        else if (!ValidateReplace(y, x, movingFigure)) { return false; } // not allowed to replace
+        else if (ValidateSafeZone(y, x, playerIndex)) { return false; } // target cell is a safe zone from other player
         else { return true; };
     }
 
@@ -142,12 +142,12 @@ public class FieldHandler : MonoBehaviour
     }
 
 
-    public static bool ValidateSafeZone(int y, int x, int player)
+    public static bool ValidateSafeZone(int y, int x, int playerIndex)
     {
-        if ((x == 0 || (x == 8 && (y == 0 || y == 7))) && player == 1) {
+        if ((x == 0 || (x == 8 && (y == 0 || y == 7))) && playerIndex == 1) {
             return true;
         }
-        else if ((x == 9 || (x == 1 && (y == 0 || y == 7))) && player == 0)
+        else if ((x == 9 || (x == 1 && (y == 0 || y == 7))) && playerIndex == 0)
         {
             return true;
         }

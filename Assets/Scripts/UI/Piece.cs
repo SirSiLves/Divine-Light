@@ -18,7 +18,7 @@ public class Piece : MonoBehaviour
     public void SetPlayer(Player player)
     {
         this.player = player;
-        transform.GetComponentInChildren<SpriteRenderer>().color = player.GetColor();
+        transform.GetComponentInChildren<SpriteRenderer>().color = player.GetFigure();
     }
 
 

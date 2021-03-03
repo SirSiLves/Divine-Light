@@ -72,7 +72,6 @@ public class FieldHandler : MonoBehaviour
     }
 
 
-
     public List<Cell> GetLastValidatedCells()
     {
         return lastPossibleFields;
@@ -108,9 +107,12 @@ public class FieldHandler : MonoBehaviour
 
     private bool Validate(int mFigureY, int mFigureX, int y, int x, Piece movingFigure)
     {
+        int player = movingFigure.GetPlayer() == FindObjectsOfType<Player>()[0] ? 0 : 1;
+
         if (movingFigure.restrictedMove) { return false; }
         else if (!ValidateCellsAround(mFigureX, mFigureY, y, x)) { return false; }
         else if (!ValidateReplace(y, x, movingFigure)) { return false; }
+        else if (ValidateSafeZone(y, x, player)) { return false; }
         else { return true; };
     }
 
@@ -140,13 +142,12 @@ public class FieldHandler : MonoBehaviour
     }
 
 
-
     public static bool ValidateSafeZone(int y, int x, int player)
     {
-        if((x == 0 || (x == 8 && (y == 0 || y == 7))) && player == 0) {
+        if ((x == 0 || (x == 8 && (y == 0 || y == 7))) && player == 1) {
             return true;
         }
-        else if ((x == 9 || (x == 1 && (y == 0 || y == 7))) && player == 1)
+        else if ((x == 9 || (x == 1 && (y == 0 || y == 7))) && player == 0)
         {
             return true;
         }

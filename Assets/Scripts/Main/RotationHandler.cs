@@ -9,10 +9,10 @@ using UnityEngine.Events;
 public class RotationHandler : MonoBehaviour
 {
 
+    [SerializeField] Color disabled, active;
     public bool isRotating { get; set; }
     private int initialRotation;
-    [SerializeField] Color disabled, active;
-    Transform rotation, confirm, abbort;
+    private Transform rotation, confirm, abbort;
     private Matrix matrix;
 
 
@@ -41,8 +41,7 @@ public class RotationHandler : MonoBehaviour
         int newDegrees = touchedPiece.restrictedRotation ? HandleRestrictedRotate(touchedPiece, currentDegrees) :
             currentDegrees == 0 ? 270 : currentDegrees -= 90;
 
-        RotationCommand rotationCommand = new RotationCommand(touchedPiece, newDegrees, matrix);
-        new Drawer(rotationCommand).Draw();
+        FindObjectOfType<GameManager>().executor.Execute(new RotationCommand(touchedPiece, newDegrees, matrix));
 
         FindObjectOfType<FieldHandler>().markupTouchedEvent.Invoke();
 
@@ -115,8 +114,7 @@ public class RotationHandler : MonoBehaviour
     {
         Piece touchedPiece = FindObjectOfType<ClickHandler>().touchedPiece;
 
-        RotationCommand rotationCommand = new RotationCommand(touchedPiece, initialRotation, matrix);
-        new Drawer(rotationCommand).Draw();
+        FindObjectOfType<GameManager>().executor.Execute(new RotationCommand(touchedPiece, initialRotation, matrix));
 
         DisableRotation();
         FindObjectOfType<ClickHandler>().MarkupFields();

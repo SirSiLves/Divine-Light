@@ -23,7 +23,6 @@ public class BoardFactory : MonoBehaviour
 
             for (int x = 0; x < BOARD_DIMENSION_X; x++)
             {
-
                 cellFactory.Create(y, x);
 
                 // intialize matrix

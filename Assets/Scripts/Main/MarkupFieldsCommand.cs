@@ -29,9 +29,7 @@ public class MarkupFieldsCommand : ICommand
 
     public void Revert()
     {
-        Array.ForEach(cells.ToArray(), cell => {
-            cell.transform.GetComponent<SpriteRenderer>().color = color;
-        });
+        
     }
 
 

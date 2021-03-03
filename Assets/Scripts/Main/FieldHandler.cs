@@ -46,11 +46,7 @@ public class FieldHandler : MonoBehaviour
             Array.Find(cells.ToArray(), cell => cell.GetCellId() == cellId)
         };
 
-        print(cells.Count());
-        print(markupColor);
-
-        MarkupFieldsCommand markupCommand = new MarkupFieldsCommand(touchedCells, markupColor);
-        new Drawer(markupCommand).Draw();
+        FindObjectOfType<GameManager>().executor.Execute(new MarkupFieldsCommand(touchedCells, markupColor));
     }
 
 
@@ -62,16 +58,15 @@ public class FieldHandler : MonoBehaviour
 
         lastPossibleFields = CollectPossibleFields(touchedPiece);
 
-        MarkupFieldsCommand markupCommand = new MarkupFieldsCommand(lastPossibleFields, markupColor);
-        new Drawer(markupCommand).Draw();
+        FindObjectOfType<GameManager>().executor.Execute(new MarkupFieldsCommand(lastPossibleFields, markupColor));
     }
 
 
     public void RemoveMarkup()
     {
         Color markupColor = FindObjectOfType<CellFactory>().defaultFields;
-        MarkupFieldsCommand markupCommand = new MarkupFieldsCommand(cells.OfType<Cell>().ToList(), markupColor);
-        new Drawer(markupCommand).Draw();
+
+        FindObjectOfType<GameManager>().executor.Execute(new MarkupFieldsCommand(cells.OfType<Cell>().ToList(), markupColor));
 
         lastPossibleFields.Clear();
     }
@@ -146,6 +141,18 @@ public class FieldHandler : MonoBehaviour
 
 
 
+    public static bool ValidateSafeZone(int y, int x, int player)
+    {
+        if((x == 0 || (x == 8 && (y == 0 || y == 7))) && player == 0) {
+            return true;
+        }
+        else if ((x == 9 || (x == 1 && (y == 0 || y == 7))) && player == 1)
+        {
+            return true;
+        }
+
+        return false;
+    }
 
 
 

@@ -9,7 +9,6 @@ public class ClickHandler: MonoBehaviour
 
     public Piece touchedPiece { get; set; }
     private PlayerChanger playerChanger;
-    private FieldHandler fieldHandler;
     private RotationHandler rotationHandler;
     private Cell[] cells;
         
@@ -18,11 +17,8 @@ public class ClickHandler: MonoBehaviour
     private void Start()
     {
         playerChanger = FindObjectOfType<PlayerChanger>();
-        fieldHandler = FindObjectOfType<FieldHandler>();
         rotationHandler = FindObjectOfType<RotationHandler>();
         cells = FindObjectsOfType<Cell>();
-
-
     }
 
     private void Update()
@@ -52,6 +48,7 @@ public class ClickHandler: MonoBehaviour
         if (MoveIsReady(lastValidated, targetCell)) {
             RevertMarkup();
             DoMove(targetCell);
+
             return;
         }
 
@@ -119,14 +116,14 @@ public class ClickHandler: MonoBehaviour
     public void MarkupFields()
     {
         rotationHandler.ActiateRotate();
-        fieldHandler.markupEvent.Invoke();
-        fieldHandler.markupTouchedEvent.Invoke();
+        FindObjectOfType<FieldHandler>().markupEvent.Invoke();
+        FindObjectOfType<FieldHandler>().markupTouchedEvent.Invoke();
     }
 
 
     public void RevertMarkup()
     {
-        fieldHandler.removeMarkupEvent.Invoke();
+        FindObjectOfType<FieldHandler>().removeMarkupEvent.Invoke();
     }
 
 
@@ -136,8 +133,8 @@ public class ClickHandler: MonoBehaviour
 
         if(targetCell == null) { return; }
 
-        MoveCommand moveCommand = new MoveCommand(touchedPiece, targetCell, matrix);
-        new Drawer(moveCommand).Draw();
+        FindObjectOfType<GameManager>().executor.Execute(new MoveCommand(touchedPiece, targetCell, matrix));
+
 
         MoveDone();
     }

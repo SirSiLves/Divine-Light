@@ -48,6 +48,8 @@ MonoBehaviour:
   possibleFields: {r: 0, g: 0.35686275, b: 0.07058824, a: 1}
   defaultFields: {r: 0.39607844, g: 0.14117648, b: 0.02745098, a: 1}
   highlightedFields: {r: 0.22745098, g: 0.22745098, b: 0.22745098, a: 1}
+  player1: {fileID: 0}
+  player2: {fileID: 0}
 --- !u!114 &1765513636
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -60,12 +62,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7f2697b65d4a242d1a4a671e818b19e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  markupEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  removeMarkupEvent:
-    m_PersistentCalls:
-      m_Calls: []
-  markupTouchedEvent:
-    m_PersistentCalls:
-      m_Calls: []

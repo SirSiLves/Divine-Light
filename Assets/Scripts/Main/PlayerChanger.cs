@@ -26,7 +26,7 @@ public class PlayerChanger : MonoBehaviour
     }
 
 
-    public List<Piece> GetPiecesToDestroy()
+    public List<Piece>  GetPiecesToDestroy()
     {
         return piecesToDestroy;
     }
@@ -79,7 +79,6 @@ public class PlayerChanger : MonoBehaviour
 
         Array.ForEach(lightControllers, controller =>
         {
-            Piece piece = controller.transform.parent.GetComponent<Piece>();
             controller.transform.gameObject.SetActive(false);
         });
 
@@ -95,11 +94,7 @@ public class PlayerChanger : MonoBehaviour
 
         Array.ForEach(piecesToDestroy.ToArray(), piece =>
         {
-            // remove piece from matrix
-            int cellId = FindObjectOfType<GameManager>().matrix.GetCellId(piece.transform.position.y, piece.transform.position.x);
-            matrix.ChangePiece(cellId, 0);
-
-            Destroy(piece.gameObject);
+            FindObjectOfType<GameManager>().executor.Execute(new DestroyCommand(piece, matrix));
         });
 
         piecesToDestroy.Clear();

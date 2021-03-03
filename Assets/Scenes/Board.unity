@@ -809,6 +809,22 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1329834403, guid: d20516ec5e3574992ac37d2fef6c6818, type: 3}
+      propertyPath: m_Name
+      value: SafeZone
+      objectReference: {fileID: 0}
+    - target: {fileID: 1329834405, guid: d20516ec5e3574992ac37d2fef6c6818, type: 3}
+      propertyPath: m_Color.b
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1329834405, guid: d20516ec5e3574992ac37d2fef6c6818, type: 3}
+      propertyPath: m_Color.g
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1329834405, guid: d20516ec5e3574992ac37d2fef6c6818, type: 3}
+      propertyPath: m_Color.r
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5372341649889087586, guid: d20516ec5e3574992ac37d2fef6c6818,
         type: 3}
       propertyPath: m_Name

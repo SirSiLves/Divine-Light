@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
-
+using System.Linq;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,16 +12,19 @@ public class GameManager : MonoBehaviour
 
 
     // Singleton's
-    public Matrix matrix { get; set; } 
+    public Matrix matrix { get; set; }
+    public Executor executor { get; set; }
 
 
 
-    void Awake()
+    private void Awake()
     {
         matrix = new Matrix();
         boardFactory.CreateBoard(matrix);
         boardFactory.CreateDefaultSetUp(matrix);
-    }    
+
+        executor = new Executor();
+    }
 
 
 

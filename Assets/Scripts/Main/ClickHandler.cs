@@ -46,8 +46,20 @@ public class ClickHandler: MonoBehaviour
         List<Cell> lastValidated = FindObjectOfType<FieldHandler>().GetLastValidatedCells();
 
         if (MoveIsReady(lastValidated, targetCell)) {
+            Matrix matrix = FindObjectOfType<GameManager>().matrix;
+
+            int pieceId = matrix.GetPieceId(targetCell.GetCellId());
+
+            if (pieceId == 0)
+            {
+                DoMove(targetCell, matrix);
+            }
+            else
+            {
+                DoReplace(targetCell, matrix);
+            }
+
             RevertMarkup();
-            DoMove(targetCell);
 
             return;
         }
@@ -127,10 +139,8 @@ public class ClickHandler: MonoBehaviour
     }
 
 
-    private void DoMove(Cell targetCell)
+    private void DoMove(Cell targetCell, Matrix matrix)
     {
-        Matrix matrix = FindObjectOfType<GameManager>().matrix;
-
         if(targetCell == null) { return; }
 
         FindObjectOfType<GameManager>().executor.Execute(new MoveCommand(touchedPiece, targetCell, matrix));
@@ -147,6 +157,20 @@ public class ClickHandler: MonoBehaviour
         rotationHandler.DisableRotation();
 
         playerChanger.TogglePlaying();
+    }
+
+
+    private void DoReplace(Cell targetCell, Matrix matrix)
+    {
+        Piece targetPiece = Array.Find(FindObjectsOfType<Piece>(), p =>
+        {
+            return p.transform.position.y == targetCell.transform.position.y
+            && p.transform.position.x == targetCell.transform.position.x;
+        });
+
+        FindObjectOfType<GameManager>().executor.Execute(new ReplaceCommand(touchedPiece, targetPiece, targetCell, cells, matrix));
+
+        MoveDone();
     }
 
 

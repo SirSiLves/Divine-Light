@@ -35,11 +35,15 @@ public class Executor
             CleanUpRotationTry();
             commands.Add(command);
         }
+        else if (command.GetType() == typeof(ReplaceCommand))
+        {
+            CleanUpRotationTry();
+            commands.Add(command);
+        }
         else if (command.GetType() == typeof(DestroyCommand))
         {
             commands.Add(command);
         }
-
 
         //Debug.Log("PRINT HISTORY: ");
         //Array.ForEach(commands.ToArray(), c => Debug.Log(c));

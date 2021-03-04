@@ -11,8 +11,8 @@ public class PlayerChanger : MonoBehaviour
 {
 
     [SerializeField] float lightTimer = 3f;
-    internal Player player1, player2;
 
+    internal Player player1, player2;
     public Player isPlaying { get; set; }
     public bool isLightOn { get; set; }
     public bool firstTouched { get; set; }
@@ -61,6 +61,8 @@ public class PlayerChanger : MonoBehaviour
 
         isLightOn = true;
 
+        LightUpFrame(true);
+
         LightController[] lightControllers = Resources.FindObjectsOfTypeAll<LightController>();
 
         Array.ForEach(lightControllers, controller =>
@@ -88,7 +90,15 @@ public class PlayerChanger : MonoBehaviour
 
         RemoveDestroyed();
         ChangePlayer();
+        LightUpFrame(false);
         isLightOn = false;
+    }
+
+    private void LightUpFrame(bool state)
+    {
+        BoardFactory boardFactory = FindObjectOfType<BoardFactory>();
+        Transform textform = boardFactory.transform.Find("LightUpFrame");
+        textform.gameObject.SetActive(state);
     }
 
 

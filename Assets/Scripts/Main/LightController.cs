@@ -7,6 +7,7 @@ using UnityEngine;
 [RequireComponent(typeof(LineRenderer))]
 public class LightController : MonoBehaviour
 {
+    [SerializeField] Color spectrum1, spectrum2;
 
     private const float delay = 0.02f;
     private const float infinity = 999f;
@@ -14,6 +15,7 @@ public class LightController : MonoBehaviour
 
     private Vector2 startPoint, startDirection;
     private LineRenderer lineRenderer;
+    private bool colorToggle = false;
 
     private List<Vector3> connectedPoints = new List<Vector3>();
     private List<Vector3> delayedDrawnPoints = new List<Vector3>();
@@ -23,6 +25,21 @@ public class LightController : MonoBehaviour
     {
         CollectPoints();
         StartCoroutine("DrawLight");
+        StartCoroutine("SwitchColor");
+
+    }
+
+
+    IEnumerator SwitchColor()
+    {
+        lineRenderer.startColor = colorToggle ? spectrum1 : spectrum2;
+        lineRenderer.endColor = colorToggle ? spectrum1 : spectrum2;
+
+        colorToggle = !colorToggle;
+
+        yield return new WaitForSeconds(0.02f);
+
+        StartCoroutine("SwitchColor"); // infinity loop until component will be disabled
     }
 
 

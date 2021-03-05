@@ -199,7 +199,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spectrum1: {r: 1, g: 1, b: 1, a: 1}
-  spectrum2: {r: 1, g: 1, b: 1, a: 0.78431374}
+  spectrum2: {r: 1, g: 1, b: 1, a: 0.87058824}
 --- !u!1 &5493170630086703308
 GameObject:
   m_ObjectHideFlags: 0

@@ -33,11 +33,11 @@ public class LightController : MonoBehaviour
     IEnumerator SwitchColor()
     {
         lineRenderer.startColor = colorToggle ? spectrum1 : spectrum2;
-        lineRenderer.endColor = colorToggle ? spectrum1 : spectrum2;
+        lineRenderer.endColor = colorToggle ? spectrum2 : spectrum1;
 
         colorToggle = !colorToggle;
 
-        yield return new WaitForSeconds(0.02f);
+        yield return new WaitForSeconds(0.05f);
 
         StartCoroutine("SwitchColor"); // infinity loop until component will be disabled
     }

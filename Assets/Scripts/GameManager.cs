@@ -10,6 +10,9 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] BoardFactory boardFactory;
 
+    #region GAME_MANAGER
+    //AFADFSDFSDF
+    #endregion
 
     // Singleton's
     public Matrix matrix { get; set; }

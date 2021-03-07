@@ -120,7 +120,7 @@ public class RotationHandler : MonoBehaviour
         FindObjectOfType<ClickHandler>().MarkupFields();
     }
 
-
+    //TODO rename
     public void ActiateRotate()
     {
         rotation.GetComponent<Image>().color = active;

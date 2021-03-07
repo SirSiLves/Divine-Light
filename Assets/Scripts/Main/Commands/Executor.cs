@@ -76,4 +76,10 @@ public class Executor
 
     }
 
+
+    public List<ICommand> GetCommands()
+    {
+        return commands;
+    }
+
 }

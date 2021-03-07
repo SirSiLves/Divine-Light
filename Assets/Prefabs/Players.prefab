@@ -44,7 +44,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   figure: {r: 1, g: 0.7372549, b: 0, a: 1}
-  safeZone: {r: 1, g: 0.7372549, b: 0, a: 0.78431374}
+  safeZone: {r: 1, g: 0.7372549, b: 0, a: 0.5882353}
   nickName: PLAYER1
 --- !u!1 &8173871615192394190
 GameObject:
@@ -135,6 +135,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0f9e67dd2b15b4e0395f7507c9e0e601, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  figure: {r: 0.7529412, g: 0.7529412, b: 0.7529412, a: 1}
-  safeZone: {r: 0.7529412, g: 0.7529412, b: 0.7529412, a: 0.78431374}
+  figure: {r: 0.6698113, g: 0.6698113, b: 0.6698113, a: 1}
+  safeZone: {r: 0.67058825, g: 0.67058825, b: 0.67058825, a: 0.5882353}
   nickName: PLAYER2

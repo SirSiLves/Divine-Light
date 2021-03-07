@@ -45,9 +45,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cell: {fileID: 1951371331, guid: d20516ec5e3574992ac37d2fef6c6818, type: 3}
-  possibleFields: {r: 0, g: 0.5754717, b: 0.11382963, a: 0.5882353}
-  defaultFields: {r: 0.39607844, g: 0.14117648, b: 0.02745098, a: 0.39215687}
-  highlightedFields: {r: 0.22745098, g: 0.22745098, b: 0.22745098, a: 0.5882353}
+  possibleFields: {r: 0.101960786, g: 0.101960786, b: 0.101960786, a: 0.78431374}
+  defaultFields: {r: 0.5377358, g: 0.17789757, b: 0, a: 0.78431374}
+  highlightedFields: {r: 0, g: 0.5764706, b: 0.11372549, a: 0.5882353}
   player1: {fileID: 0}
   player2: {fileID: 0}
 --- !u!114 &1765513636

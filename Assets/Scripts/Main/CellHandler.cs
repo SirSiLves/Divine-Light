@@ -41,22 +41,20 @@ public class CellHandler : MonoBehaviour
     }
 
 
-    public void Markup(PrepareMove prepareMove)
+    public void MarkupPossibleFields(PrepareMove prepareMove)
     {
         // Markup possible cells
         Array.ForEach(prepareMove.possibleCells.ToArray(), id =>
         {
             SendMarkupEvent(id, cellFactory.possibleFields);
         });
-
-        if (prepareMove.possibleCells.Count > 0)
-        {
-            // Markup clicked cell
-            SendMarkupEvent(prepareMove.fromCellId(), cellFactory.highlightedFields);
-        }
-        
     }
 
+    public void MarkupTouchedField(PrepareMove prepareMove)
+    {
+        // Markup clicked cell
+        SendMarkupEvent(prepareMove.FromCellId(), cellFactory.highlightedFields);
+    }
 
     public void ResetMarkup()
     {

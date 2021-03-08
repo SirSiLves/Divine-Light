@@ -11,29 +11,6 @@ public class Piece : MonoBehaviour
     public bool exchangeable { get; set; }
     public bool restrictedMove { get; set; }
 
-    private void Start()
-    {
-        Subscribe();
-    }
-
-    private void Subscribe()
-    {
-        PieceHandler.Instance.OnRotate += Instance_OnRotate;
-    }
-
-    private void OnDestroy()
-    {
-        PieceHandler.Instance.OnRotate -= Instance_OnRotate;
-    }
-
-    private void Instance_OnRotate(int cellId, int degrees)
-    {
-        if (cellId == Matrix.ConvertPostionToCellId(transform.position))
-        {
-            transform.rotation = Quaternion.Euler(0, 0, degrees);
-        }
-    }
-
 
     public void DrawPiece(int y, int x)
     {

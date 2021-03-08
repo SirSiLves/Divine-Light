@@ -35,55 +35,63 @@ public class ClickHandler : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            CellHandler.Instance.ResetMarkup();
-
             HandlePrepare();
         }
     }
 
     private void HandlePrepare()
     {
-        if (PlayerHandler.Instance.isLightOn) { return; }
-
         Vector2 clickPosition = GetClickedGridPos();
+
+        if (PlayerHandler.Instance.isLightOn) { return; }
+        if (RotationHandler.Instance.isRotating) { return; }
         if (clickPosition.x < 0 || clickPosition.y < 0 || clickPosition.x > 9 || clickPosition.y > 7) { return; } // click is outside from grid
 
         if (prepareMove == null)
         {
-            prepareMove = new PrepareMove(clickPosition);
+            InitializePrepare(clickPosition);
         }
         else
         {
             prepareMove.toPosition = clickPosition;
+
+            if (prepareMove.possibleCells.Contains(prepareMove.ToCellId()))
+            {
+                //move can be executed
+                CellHandler.Instance.ResetMarkup();
+                PieceHandler.Instance.HanldeMove(prepareMove);
+            }
+            else
+            {
+                InitializePrepare(clickPosition);
+            }
+
         }
 
-        if (prepareMove.possibleCells.Contains(prepareMove.toCellId()))
-        {
-            //move can be executed
-            PieceHandler.Instance.HanldeMove(prepareMove);
-            prepareMove = null;
-        }
-        else
-        {
-            prepareMove = new PrepareMove(clickPosition);
-            CellHandler.Instance.Markup(prepareMove);
-        }
     }
 
-
-    private bool ValidateClick()
+    private void InitializePrepare(Vector2 clickPosition)
     {
-        int pieceId = Matrix.Instance.GetPieceId(prepareMove.fromCellId());
+        RotationHandler.Instance.DisableRotation();
+        CellHandler.Instance.ResetMarkup();
+
+        int pieceId = Matrix.Instance.GetPieceId(Matrix.ConvertPostionToCellId(clickPosition));
 
         // no piece found
-        if (pieceId == 0) { return false; }
+        if (pieceId == 0) { return; }
 
         // other players turn
-        if (PlayerHandler.Instance.isPlayingIndex == 0 && pieceId >= 100) { return false; }
-        if (PlayerHandler.Instance.isPlayingIndex == 1 && pieceId < 100) { return false; }
+        if (PlayerHandler.Instance.isPlayingIndex == 0 && pieceId >= 100) { return; }
+        if (PlayerHandler.Instance.isPlayingIndex == 1 && pieceId < 100) { return; }
 
-        return true;
+        prepareMove = new PrepareMove(clickPosition);
+
+        RotationHandler.Instance.ActivateRotate();
+
+        CellHandler.Instance.MarkupTouchedField(prepareMove);
+        CellHandler.Instance.MarkupPossibleFields(prepareMove);
     }
+
 
 
     private static Vector2 GetClickedGridPos()

@@ -13,15 +13,15 @@ public class PrepareMove
     {
         this.fromPosition = fromPosition;
         toPosition = new Vector2(9999f, 9999f); // unreal value to avoid 0
-        possibleCells = FieldValidator.CollectPossibleCellIds(fromCellId());
+        possibleCells = FieldValidator.CollectPossibleCellIds(FromCellId());
     }
 
-    public int fromCellId()
+    public int FromCellId()
     {
         return Matrix.ConvertPostionToCellId(fromPosition);
     }
 
-    public int toCellId()
+    public int ToCellId()
     {
         return Matrix.ConvertPostionToCellId(toPosition);
     }

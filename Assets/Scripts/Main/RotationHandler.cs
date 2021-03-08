@@ -53,14 +53,12 @@ public class RotationHandler : MonoBehaviour
 
     public void Rotate()
     {
-        // it's other player turn
-        int pieceId = Matrix.Instance.GetPieceId(ClickHandler.Instance.prepareMove.fromCellId());
-        if (PlayerHandler.Instance.isPlayingIndex == 0 && pieceId >= 100) { return; }
-        if (PlayerHandler.Instance.isPlayingIndex == 1 && pieceId < 100) { return; }
+        CellHandler.Instance.ResetMarkup();
+        CellHandler.Instance.MarkupTouchedField(ClickHandler.Instance.prepareMove);
 
         if (!isRotating)
         {
-            rotatingPieceId = Matrix.Instance.GetPieceId(ClickHandler.Instance.prepareMove.fromCellId());
+            rotatingPieceId = Matrix.Instance.GetPieceId(ClickHandler.Instance.prepareMove.FromCellId());
             initialDegree = GetDegrees(rotatingPieceId);
             isRotating = true;
         }
@@ -70,7 +68,7 @@ public class RotationHandler : MonoBehaviour
 
         rotatingPieceId = GetNewPieceId(rotatingPieceId, newDegrees);
 
-        PieceHandler.Instance.VisualRotate(newDegrees);
+        PieceHandler.Instance.VisualizeRotate(ClickHandler.Instance.prepareMove.fromPosition, newDegrees);
 
 
         HandleMenuButtons(newDegrees);
@@ -103,9 +101,7 @@ public class RotationHandler : MonoBehaviour
     {
         DisableRotation();
 
-        //FindObjectOfType<GameManager>().executor.Execute(new RotationCommand(touchedPiece, newDegrees, matrix));
-        //FindObjectOfType<ClickHandlerOLD>().touchedPiece = null;
-        //FindObjectOfType<PlayerChanger>().TogglePlaying();
+        PieceHandler.Instance.HandleRotate(ClickHandler.Instance.prepareMove, rotatingPieceId);
 
         initialDegree = 0;
     }
@@ -113,9 +109,9 @@ public class RotationHandler : MonoBehaviour
 
     public void Cancel()
     {
-        PieceHandler.Instance.VisualRotate(initialDegree);
+        PieceHandler.Instance.VisualizeRotate(ClickHandler.Instance.prepareMove.fromPosition, initialDegree);
 
-        CellHandler.Instance.Markup(ClickHandler.Instance.prepareMove);
+        CellHandler.Instance.MarkupPossibleFields(ClickHandler.Instance.prepareMove);
 
         SetButtonState(disabled, false);
 
@@ -131,6 +127,8 @@ public class RotationHandler : MonoBehaviour
 
     public void DisableRotation()
     {
+        CellHandler.Instance.ResetMarkup();
+
         rotation.GetComponent<Image>().color = disabled;
         rotation.GetComponent<Button>().enabled = false;
 

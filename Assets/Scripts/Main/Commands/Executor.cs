@@ -45,25 +45,27 @@ public class Executor
 
     private void Historicize(ICommand command)
     {
-        if (command.GetType() == typeof(MoveCommand))
-        {
-            CleanUpRotationTry();
-            commands.Add(command);
-        }
-        else if(command.GetType() == typeof(RotationCommand))
-        {
-            CleanUpRotationTry();
-            commands.Add(command);
-        }
-        else if (command.GetType() == typeof(ReplaceCommand))
-        {
-            CleanUpRotationTry();
-            commands.Add(command);
-        }
-        else if (command.GetType() == typeof(DestroyCommand))
-        {
-            commands.Add(command);
-        }
+        commands.Add(command);
+
+        //if (command.GetType() == typeof(MoveCommand))
+        //{
+        //    CleanUpRotationTry();
+        //    commands.Add(command);
+        //}
+        //else if(command.GetType() == typeof(RotationCommand))
+        //{
+        //    CleanUpRotationTry();
+        //    commands.Add(command);
+        //}
+        //else if (command.GetType() == typeof(ReplaceCommand))
+        //{
+        //    CleanUpRotationTry();
+        //    commands.Add(command);
+        //}
+        //else if (command.GetType() == typeof(DestroyCommand))
+        //{
+
+        //}
 
         //Debug.Log("PRINT HISTORY: ");
         //Array.ForEach(commands.ToArray(), c => Debug.Log(c));

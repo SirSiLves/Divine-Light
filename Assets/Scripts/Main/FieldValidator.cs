@@ -10,17 +10,18 @@ public class FieldValidator
     {
         List<int> cellIds = new List<int>();
 
-        // player is rotating
-        if (RotationHandler.Instance.isRotating) { return cellIds; }
-
         int pieceId = Matrix.Instance.GetPieceId(fromCellId);
 
-        // no piece found
-        if (pieceId == 0) { return cellIds; }
 
-        // other players turn
-        if (PlayerHandler.Instance.isPlayingIndex == 0 && pieceId >= 100) { return cellIds; }
-        if (PlayerHandler.Instance.isPlayingIndex == 1 && pieceId < 100) { return cellIds; }
+        //// player is rotating
+        //if (RotationHandler.Instance.isRotating) { return cellIds; }
+
+        //// no piece found
+        //if (pieceId == 0) { return cellIds; }
+
+        //// other players turn
+        //if (PlayerHandler.Instance.isPlayingIndex == 0 && pieceId >= 100) { return cellIds; }
+        //if (PlayerHandler.Instance.isPlayingIndex == 1 && pieceId < 100) { return cellIds; }
 
         int[][] rawMatrix = Matrix.Instance.GetMatrix();
         int cellId = 0;

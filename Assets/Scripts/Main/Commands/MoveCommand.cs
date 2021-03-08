@@ -29,8 +29,8 @@ public class MoveCommand : ICommand
         matrix.ChangePiece(Matrix.ConvertPostionToCellId(fromPosition), 0);
         matrix.ChangePiece(Matrix.ConvertPostionToCellId(toPosition), touchedPiece.id);
 
-        // draw piece to new position
-        touchedPiece.transform.position = new Vector2(toPosition.x, toPosition.y);
+        //// draw piece to new position
+        //touchedPiece.transform.position = new Vector2(toPosition.x, toPosition.y);
     }
 
 

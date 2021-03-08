@@ -31,9 +31,9 @@ public class ReplaceCommand : ICommand
         matrix.ChangePiece(Matrix.ConvertPostionToCellId(toPosition), touchedPiece.id);
         matrix.ChangePiece(Matrix.ConvertPostionToCellId(fromPosition), targetPiece.id);
 
-        // draw pieces to new position
-        UpdatePosition(touchedPiece.transform, toPosition);
-        UpdatePosition(targetPiece.transform, fromPosition);
+        //// draw pieces to new position
+        //UpdatePosition(touchedPiece.transform, toPosition);
+        //UpdatePosition(targetPiece.transform, fromPosition);
     }
 
 

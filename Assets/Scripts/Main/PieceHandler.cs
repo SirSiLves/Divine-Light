@@ -6,8 +6,6 @@ using UnityEngine;
 public class PieceHandler : MonoBehaviour
 {
 
-    public event Action<int, int> OnRotate;
-
     #region PIECE_HANDLER_SINGLETON_SETUP
     private static PieceHandler _instance;
 
@@ -38,13 +36,24 @@ public class PieceHandler : MonoBehaviour
 
         if (touchedPiece && targetPiece)
         {
+            VisualizeReplace(touchedPiece, targetPiece, prepareMove.fromPosition, prepareMove.toPosition);
             DoReplace(touchedPiece, targetPiece, prepareMove.fromPosition, prepareMove.toPosition);
         }
         else
         {
+            VisualizeMove(touchedPiece, prepareMove.toPosition);
             DoMove(touchedPiece, prepareMove.fromPosition, prepareMove.toPosition);
         }
     }
+
+    internal void HandleRotate(PrepareMove prepareMove, int newPieceId)
+    {
+        Piece touchedPiece = GetClickedPiece(prepareMove.fromPosition);
+
+        DoRotate(touchedPiece, prepareMove.fromPosition, touchedPiece.id, newPieceId);
+    }
+
+
 
     private void DoReplace(Piece touchedPiece, Piece targetPiece, Vector2 fromPosition, Vector2 toPosition)
     {
@@ -56,9 +65,28 @@ public class PieceHandler : MonoBehaviour
         Executor.Instance.Execute(new MoveCommand(piece, fromPosition, toPosition));
     }
 
-    public void VisualRotate(int degrees)
+    private void DoRotate(Piece touchedPiece, Vector2 fromPosition, int oldPieceId, int newPieceId)
     {
-        OnRotate?.Invoke(ClickHandler.Instance.prepareMove.fromCellId(), degrees);
+        Executor.Instance.Execute(new RotationCommand(touchedPiece, fromPosition, oldPieceId, newPieceId));
+    }
+
+
+
+    public void VisualizeMove(Piece touchedPiece, Vector2 targetPosition)
+    {
+        touchedPiece.transform.position = new Vector2(targetPosition.x, targetPosition.y);
+    }
+
+    public void VisualizeReplace(Piece touchedPiece, Piece targetPiece, Vector2 fromPosition, Vector2 toPosition)
+    {
+        touchedPiece.transform.position = new Vector2(toPosition.x, toPosition.y);
+        targetPiece.transform.position = new Vector2(fromPosition.x, fromPosition.y);
+    }
+
+    public void VisualizeRotate(Vector2 clickedPosition, int degrees)
+    {
+        Piece touchedPiece = GetClickedPiece(clickedPosition);
+        touchedPiece.transform.rotation = Quaternion.Euler(0, 0, degrees);
     }
 
 

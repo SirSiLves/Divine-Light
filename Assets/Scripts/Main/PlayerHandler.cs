@@ -12,7 +12,7 @@ public class PlayerHandler : MonoBehaviour
 
     [SerializeField] float lightTimer = 3f;
 
-    public Player player1, player2;
+    internal Player player1, player2;
     public int isPlayingIndex { get; private set; }
     public bool isLightOn { get; set; }
 
@@ -71,11 +71,10 @@ public class PlayerHandler : MonoBehaviour
 
     IEnumerator TurnOnLight()
     {
-        yield return new WaitForSeconds(0.2f);
-
         isLightOn = true;
-
         LightUpFrame(true);
+
+        yield return new WaitForSeconds(0.2f);
 
         LightController[] lightControllers = Resources.FindObjectsOfTypeAll<LightController>();
 

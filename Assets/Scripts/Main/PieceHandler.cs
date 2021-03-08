@@ -6,6 +6,8 @@ using UnityEngine;
 public class PieceHandler : MonoBehaviour
 {
 
+    public event Action<int, int> OnRotate;
+
     #region PIECE_HANDLER_SINGLETON_SETUP
     private static PieceHandler _instance;
 
@@ -53,6 +55,12 @@ public class PieceHandler : MonoBehaviour
     {
         Executor.Instance.Execute(new MoveCommand(piece, fromPosition, toPosition));
     }
+
+    public void VisualRotate(int degrees)
+    {
+        OnRotate?.Invoke(ClickHandler.Instance.prepareMove.fromCellId(), degrees);
+    }
+
 
     //TODO
     private void Destroy()

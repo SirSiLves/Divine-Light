@@ -15,11 +15,15 @@ public class Cell : MonoBehaviour
 
     private void Subscribe()
     {
-        CellHandler cellHandler = FindObjectOfType<CellHandler>();
-        cellHandler.OnMarkupEvent += CellEventHandler_OnMarkupEvent;
-   }
+        CellHandler.Instance.OnMarkupEvent += Instance_OnMarkupEvent;
+    }
 
-    private void CellEventHandler_OnMarkupEvent(int cellId, Color color)
+    private void OnDestroy()
+    {
+        CellHandler.Instance.OnMarkupEvent -= Instance_OnMarkupEvent;
+    }
+
+    private void Instance_OnMarkupEvent(int cellId, Color color)
     {
         if (cellId == this.id)
         {

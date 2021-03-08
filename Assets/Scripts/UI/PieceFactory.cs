@@ -57,19 +57,19 @@ public class PieceFactory : MonoBehaviour
         switch (type)
         {
             case 1:
-                newPiece = CreatePiece(sun, false, true, true);
+                newPiece = CreatePiece(sun, false, true);
                 break;
             case 2:
-                newPiece = CreatePiece(king, true, false, false);
+                newPiece = CreatePiece(king, true, false);
                 break;
             case 3:
-                newPiece = CreatePiece(wall, true, false, false);
+                newPiece = CreatePiece(wall, true, false);
                 break;
             case 4:
-                newPiece = CreatePiece(reflector, false, true, false);
+                newPiece = CreatePiece(reflector, false, false);
                 break;
             case 5:
-                newPiece = CreatePiece(angler, true, false, false);
+                newPiece = CreatePiece(angler, true, false);
                 break;
             default:
                 throw new Exception("no valid piece found for piece value: " + pieceId);
@@ -80,13 +80,12 @@ public class PieceFactory : MonoBehaviour
     }
 
    
-    private Piece CreatePiece(Piece piece, bool exchangeable, bool restrictedRotation, bool restrictedMove)
+    private Piece CreatePiece(Piece piece, bool exchangeable, bool restrictedMove)
     {
         piece = Instantiate(piece, transform);
 
         piece.name = piece.ToString();
         piece.exchangeable = exchangeable;
-        piece.restrictedRotation = restrictedRotation;
         piece.restrictedMove = restrictedMove;
 
         return piece;

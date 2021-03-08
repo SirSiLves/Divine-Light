@@ -8,34 +8,32 @@ using System.Linq;
 public class ReplaceCommand : ICommand
 {
 
-    private Piece touchedPiece, targetPiece;
-    private Cell targetCell;
-    private Matrix matrix;
-    private Cell[] cells;
+    public Piece touchedPiece { get; private set; }
+    public Piece targetPiece { get; private set; }
+    public Vector2 fromPosition { get; private set; }
+    public Vector2 toPosition { get; private set; }
+    public Matrix matrix { get; private set; }
 
-    public ReplaceCommand(Piece touchedPiece, Piece targetPiece, Cell targetCell, Cell[] cells, Matrix matrix)
+
+    public ReplaceCommand(Piece touchedPiece, Piece targetPiece, Vector2 fromPosition, Vector2 toPosition)
     {
         this.touchedPiece = touchedPiece;
         this.targetPiece = targetPiece;
-        this.targetCell = targetCell;
-        this.cells = cells;
-        this.matrix = matrix;
+        this.fromPosition = fromPosition;
+        this.toPosition = toPosition;
+        this.matrix = Matrix.Instance;
     }
 
 
     public void Execute()
     {
-        int cellId = matrix.GetCellId(touchedPiece.transform.position.y, touchedPiece.transform.position.x);
-        Cell touchedCells = Array.Find(cells.ToArray(), cell => cell.GetCellId() == cellId);
-
         // update matrix with new position
-        matrix.ChangePiece(targetCell.GetCellId(), touchedPiece.id);
-        matrix.ChangePiece(touchedCells.GetCellId(), targetPiece.id);
-
+        matrix.ChangePiece(Matrix.ConvertPostionToCellId(toPosition), touchedPiece.id);
+        matrix.ChangePiece(Matrix.ConvertPostionToCellId(fromPosition), targetPiece.id);
 
         // draw pieces to new position
-        UpdatePosition(touchedPiece.transform, targetCell.transform);
-        UpdatePosition(targetPiece.transform, touchedCells.transform);
+        UpdatePosition(touchedPiece.transform, toPosition);
+        UpdatePosition(targetPiece.transform, fromPosition);
     }
 
 
@@ -45,11 +43,9 @@ public class ReplaceCommand : ICommand
     }
 
 
-    private void UpdatePosition(Transform sourceTransform, Transform targetTransform)
+    private void UpdatePosition(Transform sourceTransform, Vector2 position)
     {
-        sourceTransform.position = new Vector2(
-            targetTransform.transform.position.x, targetTransform.transform.position.y
-            );
+        sourceTransform.position = new Vector2(position.x, position.y);
     }
 
 }

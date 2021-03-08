@@ -7,6 +7,24 @@ using System;
 public class Matrix
 {
 
+    #region MATRIX_SINGLETON_SETUP
+    private static Matrix _instance;
+
+    public static Matrix Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = new Matrix();
+            }
+
+            return _instance;
+        }
+    }
+    #endregion
+
+
     private int[][] matrix;
 
 
@@ -37,6 +55,25 @@ public class Matrix
                 index++;
             }
         }
+    }
+
+    public int[] GetCoordinates(int cellId)
+    {
+        int index = 0;
+        for (int y = 0; y < matrix.Length; y++)
+        {
+            for (int x = 0; x < matrix[y].Length; x++)
+            {
+                if (index == cellId)
+                {
+                    return new int[] { x, y };
+                }
+
+                index++;
+            }
+        }
+
+        throw new Exception("Cell id not found, something went wrong!");
     }
 
 
@@ -109,5 +146,18 @@ public class Matrix
         Debug.Log(line);
     }
 
+
+    public static int ConvertPostionToCellId(Vector2 position)
+    {
+        int x = Mathf.RoundToInt(position.x);
+        int y = Mathf.RoundToInt(position.y);
+
+        if (x < 0 || y < 0)
+        {
+            throw new Exception("Position is outside from grid");
+        }
+
+        return Int32.Parse(y + "" + x);
+    }
 
 }

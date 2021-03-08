@@ -896,14 +896,6 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 1971705830}
     m_Modifications:
-    - target: {fileID: 1480473114, guid: 70ff863ec7a394147ae4e26cd8c623ed, type: 3}
-      propertyPath: player1
-      value: 
-      objectReference: {fileID: 1301334659}
-    - target: {fileID: 1480473114, guid: 70ff863ec7a394147ae4e26cd8c623ed, type: 3}
-      propertyPath: player2
-      value: 
-      objectReference: {fileID: 37378755}
     - target: {fileID: 3648432305504409825, guid: 70ff863ec7a394147ae4e26cd8c623ed,
         type: 3}
       propertyPath: m_RootOrder
@@ -1157,7 +1149,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1971705830}
   - component: {fileID: 1971705829}
-  - component: {fileID: 1971705831}
+  - component: {fileID: 1971705832}
   m_Layer: 0
   m_Name: Board UI
   m_TagString: Untagged
@@ -1197,7 +1189,7 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &1971705831
+--- !u!114 &1971705832
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1206,7 +1198,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1971705828}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 63c61c825ed80432cb2a093d03998cab, type: 3}
+  m_Script: {fileID: 11500000, guid: e09bbe58e04124d3c9874ef491509505, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1001 &1996693420

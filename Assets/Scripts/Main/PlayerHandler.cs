@@ -7,44 +7,58 @@ using System;
 
 
 
-public class PlayerChanger : MonoBehaviour
+public class PlayerHandler : MonoBehaviour
 {
 
     [SerializeField] float lightTimer = 3f;
 
-    internal Player player1, player2;
-    public Player isPlaying { get; set; }
+    public Player player1, player2;
+    public int isPlayingIndex { get; private set; }
     public bool isLightOn { get; set; }
-    public bool firstTouched { get; set; }
+
     private List<Piece> piecesToDestroy;
 
+
+    #region PLAYER_HANDLER_SINGLETON_SETUP
+    private static PlayerHandler _instance;
+
+    public static PlayerHandler Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                GameObject gO = new GameObject("Player Changer");
+                gO.AddComponent<PlayerHandler>();
+            }
+
+            return _instance;
+        }
+    }
+
+    private void Awake()
+    {
+        _instance = this;
+
+        player1 = transform.Find("Player1").GetComponent<Player>();
+        player2 = transform.Find("Player2").GetComponent<Player>();
+    }
+    #endregion
 
 
     private void Start()
     {
         piecesToDestroy = new List<Piece>();
-        firstTouched = false;
 
-        player1 = transform.Find("Player1").GetComponent<Player>();
-        player2 = transform.Find("Player2").GetComponent<Player>();
+        isPlayingIndex = 0;
+
+        UpdatePlayingDisplay();
     }
 
 
     public List<Piece>  GetPiecesToDestroy()
     {
         return piecesToDestroy;
-    }
-
-
-    public void FirstTouched(Piece movingFigure)
-    {
-        if (isPlaying == null && movingFigure != null)
-        {
-            isPlaying = movingFigure.GetPlayer();
-            UpdatePlayingDisplay();
-
-            firstTouched = true;
-        }
     }
 
 
@@ -68,7 +82,7 @@ public class PlayerChanger : MonoBehaviour
         Array.ForEach(lightControllers, controller =>
         {
             Piece piece = controller.transform.parent.GetComponent<Piece>();
-            if (piece.GetPlayer() == this.isPlaying)
+            if (piece.playerIndex == isPlayingIndex)
             {
                 controller.transform.gameObject.SetActive(true);
             }
@@ -88,7 +102,7 @@ public class PlayerChanger : MonoBehaviour
             controller.transform.gameObject.SetActive(false);
         });
 
-        RemoveDestroyed();
+        //RemoveDestroyed();
         ChangePlayer();
         LightUpFrame(false);
         isLightOn = false;
@@ -102,25 +116,24 @@ public class PlayerChanger : MonoBehaviour
     }
 
 
-    private void RemoveDestroyed()
-    {
-        Matrix matrix = FindObjectOfType<GameManager>().matrix;
+    //private void RemoveDestroyed()
+    //{
+    //    Matrix matrix = FindObjectOfType<GameManager>().matrix;
 
-        Array.ForEach(piecesToDestroy.ToArray(), piece =>
-        {
-            FindObjectOfType<GameManager>().executor.Execute(new DestroyCommand(piece, matrix));
-        });
+    //    Array.ForEach(piecesToDestroy.ToArray(), piece =>
+    //    {
+    //        FindObjectOfType<GameManager>().executor.Execute(new DestroyCommand(piece, matrix));
+    //    });
 
-        piecesToDestroy.Clear();
+    //    piecesToDestroy.Clear();
 
-        Matrix.PrintMatrixToConsole(matrix.GetMatrix());
-    }
+    //    Matrix.PrintMatrixToConsole(matrix.GetMatrix());
+    //}
 
 
     public void ChangePlayer()
     {
-        Player[] players = FindObjectsOfType<Player>();
-        isPlaying = players[1] == isPlaying ? players[0] : players[1];
+        isPlayingIndex = isPlayingIndex == 0 ? 1 : 0;
 
         UpdatePlayingDisplay();
     }
@@ -132,8 +145,22 @@ public class PlayerChanger : MonoBehaviour
         Transform textform = canvas.transform.Find("Playing Player");
         Text textComponent = textform.GetComponent<Text>();
 
-        textComponent.text = "PLAYING " + isPlaying.GetNickName();
-        textComponent.color = isPlaying.GetFigure();
+        textComponent.text = "PLAYING " + GetIsPlaying().GetNickName();
+        textComponent.color = GetIsPlaying().GetFigure();
+    }
+
+    public Player GetIsPlaying()
+    {
+        if(isPlayingIndex == 0)
+        {
+            return player1;
+        }
+        else if (isPlayingIndex == 1)
+        {
+            return player2;
+        }
+
+        return null;
     }
 
 

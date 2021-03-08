@@ -6,30 +6,22 @@ using UnityEngine;
 public class Piece : MonoBehaviour
 {
 
-    private Player player;
-
     public int id { get; set; }
+    public int playerIndex { get; private set; }
     public bool exchangeable { get; set; }
     public bool restrictedRotation { get; set; }
     public bool restrictedMove { get; set; }
 
 
-
-    public void SetPlayer(Player player)
-    {
-        this.player = player;
-        transform.GetComponentInChildren<SpriteRenderer>().color = player.GetFigure();
-    }
-
-
-    public Player GetPlayer()
-    {
-        return player;
-    }
-
-
     public void DrawPiece(int y, int x)
     {
+        //player
+        playerIndex = id < 100 ? 0 : 1;
+
+        //color
+        Color playerColor = playerIndex == 0 ? PlayerHandler.Instance.player1.GetFigure() : PlayerHandler.Instance.player2.GetFigure();
+        this.transform.GetComponentInChildren<SpriteRenderer>().color = playerColor;
+
         // position
         this.transform.position = new Vector2(transform.position.x + x, transform.position.y + y);
 

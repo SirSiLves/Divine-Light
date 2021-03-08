@@ -9,7 +9,6 @@ public class PieceFactory : MonoBehaviour
 {
 
     [SerializeField] Piece sun, king, reflector, wall, angler;
-    [SerializeField] Player player1, player2;
 
 
     private readonly Dictionary<int, int> defaultSet = new Dictionary<int, int>
@@ -76,17 +75,6 @@ public class PieceFactory : MonoBehaviour
                 throw new Exception("no valid piece found for piece value: " + pieceId);
         }
 
-        // set player
-        if(pieceId < 100)
-        {   
-            newPiece.SetPlayer(player1);
-        }
-        else
-        {
-            newPiece.SetPlayer(player2);
-        }
-
-        // show it on board
         newPiece.id = pieceId;
         newPiece.DrawPiece(y, x);
     }

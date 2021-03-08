@@ -7,6 +7,23 @@ using System;
 public class Executor
 {
 
+    #region EXECUTOR_SINGLETON_SETUP
+    private static Executor _instance;
+
+    public static Executor Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = new Executor();
+            }
+
+            return _instance;
+        }
+    }
+    #endregion
+
     private List<ICommand> commands;
 
 
@@ -19,7 +36,10 @@ public class Executor
     public void Execute(ICommand command)
     {
         command.Execute();
+
         Historicize(command);
+
+        PlayerHandler.Instance.TogglePlaying();
     }
 
 

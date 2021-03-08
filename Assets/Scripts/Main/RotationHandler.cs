@@ -24,127 +24,127 @@ public class RotationHandler : MonoBehaviour
         confirm = transform.Find("Ok Button");
         abbort = transform.Find("Cancel Button");
 
-        matrix = FindObjectOfType<GameManager>().matrix;
+        matrix = Matrix.Instance;
     }
 
 
 
-    public void Rotate()
-    {
-        isRotating = true;
+    //public void Rotate()
+    //{
+    //    isRotating = true;
 
-        FindObjectOfType<ClickHandler>().RevertMarkup();
+    //    FindObjectOfType<ClickHandlerOLD>().RevertMarkup();
 
-        Piece touchedPiece = FindObjectOfType<ClickHandler>().touchedPiece;
-        int currentDegrees = Mathf.RoundToInt(touchedPiece.transform.rotation.eulerAngles.z);
+    //    Piece touchedPiece = FindObjectOfType<ClickHandlerOLD>().touchedPiece;
+    //    int currentDegrees = Mathf.RoundToInt(touchedPiece.transform.rotation.eulerAngles.z);
 
-        int newDegrees = touchedPiece.restrictedRotation ? HandleRestrictedRotate(touchedPiece, currentDegrees) :
-            currentDegrees == 0 ? 270 : currentDegrees -= 90;
+    //    int newDegrees = touchedPiece.restrictedRotation ? HandleRestrictedRotate(touchedPiece, currentDegrees) :
+    //        currentDegrees == 0 ? 270 : currentDegrees -= 90;
 
-        FindObjectOfType<GameManager>().executor.Execute(new RotationCommand(touchedPiece, newDegrees, matrix));
+    //    FindObjectOfType<GameManager>().executor.Execute(new RotationCommand(touchedPiece, newDegrees, matrix));
 
-        FindObjectOfType<FieldHandler>().markupTouchedEvent.Invoke();
+    //    FindObjectOfType<FieldHandler>().markupTouchedEvent.Invoke();
 
-        HandleMenuButtons(newDegrees);
-    }
-
-
-    private int HandleRestrictedRotate(Piece touchedPiece, int currentDegrees)
-    {
-        int pieceType = touchedPiece.id % 10;
-
-        // set sun rotation
-        if (pieceType == 1)
-        {
-            if (touchedPiece.id < 100)
-            {
-                return currentDegrees == 0 ? 90 : 0;
-            }
-            else
-            {
-                return currentDegrees == 180 ? 270 : 180;
-            }
-        }
-        // set reflector rotation
-        else if (pieceType == 4)
-        {
-            return currentDegrees == 0 ? 90 : 0;
-        }
-
-        throw new Exception("Restricted rotation mapping is missed");
-    }
+    //    HandleMenuButtons(newDegrees);
+    //}
 
 
-    private void HandleMenuButtons(int degrees)
-    {
-        if (degrees == initialRotation)
-        {
-            Cancel();
-        }
-        else
-        {
-            SetButtonState(active, true);
-        }
-    }
+    //private int HandleRestrictedRotate(Piece touchedPiece, int currentDegrees)
+    //{
+    //    int pieceType = touchedPiece.id % 10;
+
+    //    // set sun rotation
+    //    if (pieceType == 1)
+    //    {
+    //        if (touchedPiece.id < 100)
+    //        {
+    //            return currentDegrees == 0 ? 90 : 0;
+    //        }
+    //        else
+    //        {
+    //            return currentDegrees == 180 ? 270 : 180;
+    //        }
+    //    }
+    //    // set reflector rotation
+    //    else if (pieceType == 4)
+    //    {
+    //        return currentDegrees == 0 ? 90 : 0;
+    //    }
+
+    //    throw new Exception("Restricted rotation mapping is missed");
+    //}
 
 
-    public void SetButtonState(Color color, bool enabled)
-    {
-        confirm.GetComponent<Text>().color = color;
-        confirm.GetComponent<Button>().enabled = enabled;
-        abbort.GetComponent<Text>().color = color;
-        abbort.GetComponent<Button>().enabled = enabled;
-    }
+    //private void HandleMenuButtons(int degrees)
+    //{
+    //    if (degrees == initialRotation)
+    //    {
+    //        Cancel();
+    //    }
+    //    else
+    //    {
+    //        SetButtonState(active, true);
+    //    }
+    //}
 
 
-    public void Confirm()
-    {
-        FindObjectOfType<FieldHandler>().removeMarkupEvent.Invoke();
-
-        DisableRotation();
-
-        FindObjectOfType<ClickHandler>().touchedPiece = null;
-        FindObjectOfType<PlayerChanger>().TogglePlaying();
-
-        initialRotation = 0;
-    }
+    //public void SetButtonState(Color color, bool enabled)
+    //{
+    //    confirm.GetComponent<Text>().color = color;
+    //    confirm.GetComponent<Button>().enabled = enabled;
+    //    abbort.GetComponent<Text>().color = color;
+    //    abbort.GetComponent<Button>().enabled = enabled;
+    //}
 
 
-    public void Cancel()
-    {
-        Piece touchedPiece = FindObjectOfType<ClickHandler>().touchedPiece;
+    //public void Confirm()
+    //{
+    //    FindObjectOfType<FieldHandler>().removeMarkupEvent.Invoke();
 
-        FindObjectOfType<GameManager>().executor.Execute(new RotationCommand(touchedPiece, initialRotation, matrix));
+    //    DisableRotation();
 
-        DisableRotation();
-        FindObjectOfType<ClickHandler>().MarkupFields();
-    }
+    //    FindObjectOfType<ClickHandlerOLD>().touchedPiece = null;
+    //    FindObjectOfType<PlayerChanger>().TogglePlaying();
 
-    //TODO rename
-    public void ActiateRotate()
-    {
-        rotation.GetComponent<Image>().color = active;
-        rotation.GetComponent<Button>().enabled = true;
-
-        SetInitialValue();
-    }
+    //    initialRotation = 0;
+    //}
 
 
-    private void SetInitialValue()
-    {
-        float rotationRawValue = FindObjectOfType<ClickHandler>().touchedPiece.transform.rotation.eulerAngles.z;
-        initialRotation = Mathf.RoundToInt(rotationRawValue);
-    }
+    //public void Cancel()
+    //{
+    //    Piece touchedPiece = FindObjectOfType<ClickHandlerOLD>().touchedPiece;
+
+    //    FindObjectOfType<GameManager>().executor.Execute(new RotationCommand(touchedPiece, initialRotation, matrix));
+
+    //    DisableRotation();
+    //    FindObjectOfType<ClickHandlerOLD>().MarkupFields();
+    //}
+
+    ////TODO rename
+    //public void ActiateRotate()
+    //{
+    //    rotation.GetComponent<Image>().color = active;
+    //    rotation.GetComponent<Button>().enabled = true;
+
+    //    SetInitialValue();
+    //}
 
 
-    public void DisableRotation()
-    {
-        rotation.GetComponent<Image>().color = disabled;
-        rotation.GetComponent<Button>().enabled = false;
+    //private void SetInitialValue()
+    //{
+    //    float rotationRawValue = FindObjectOfType<ClickHandlerOLD>().touchedPiece.transform.rotation.eulerAngles.z;
+    //    initialRotation = Mathf.RoundToInt(rotationRawValue);
+    //}
 
-        SetButtonState(disabled, false);
 
-        isRotating = false;
-    }
+    //public void DisableRotation()
+    //{
+    //    rotation.GetComponent<Image>().color = disabled;
+    //    rotation.GetComponent<Button>().enabled = false;
+
+    //    SetButtonState(disabled, false);
+
+    //    isRotating = false;
+    //}
 
 }

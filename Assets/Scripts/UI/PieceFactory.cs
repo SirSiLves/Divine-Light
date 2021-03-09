@@ -9,7 +9,6 @@ public class PieceFactory : MonoBehaviour
 {
 
     [SerializeField] Piece sun, king, reflector, wall, angler;
-    [SerializeField] Player player1, player2;
 
 
     private readonly Dictionary<int, int> defaultSet = new Dictionary<int, int>
@@ -47,60 +46,46 @@ public class PieceFactory : MonoBehaviour
         return defaultSet;
     }
 
-    public void InstantiatePiece(int y, int x, int pieceId)
+    public void InstantiatePiece(int y, int x, int character, int id)
     {
 
         Piece newPiece;
 
         // validate type of piece
 
-        int type = pieceId % 10;
+        int type = character % 10;
         switch (type)
         {
             case 1:
-                newPiece = CreatePiece(sun, false, true, true);
+                newPiece = CreatePiece(sun);
                 break;
             case 2:
-                newPiece = CreatePiece(king, true, false, false);
+                newPiece = CreatePiece(king);
                 break;
             case 3:
-                newPiece = CreatePiece(wall, true, false, false);
+                newPiece = CreatePiece(wall);
                 break;
             case 4:
-                newPiece = CreatePiece(reflector, false, true, false);
+                newPiece = CreatePiece(reflector);
                 break;
             case 5:
-                newPiece = CreatePiece(angler, true, false, false);
+                newPiece = CreatePiece(angler);
                 break;
             default:
-                throw new Exception("no valid piece found for piece value: " + pieceId);
+                throw new Exception("no valid piece found for piece value: " + character);
         }
 
-        // set player
-        if(pieceId < 100)
-        {   
-            newPiece.SetPlayer(player1);
-        }
-        else
-        {
-            newPiece.SetPlayer(player2);
-        }
-
-        // show it on board
-        newPiece.id = pieceId;
+        newPiece.id = id;
+        newPiece.character = character;
         newPiece.DrawPiece(y, x);
     }
 
    
-    private Piece CreatePiece(Piece piece, bool exchangeable, bool restrictedRotation, bool restrictedMove)
+    private Piece CreatePiece(Piece piece)
     {
         piece = Instantiate(piece, transform);
 
         piece.name = piece.ToString();
-        piece.exchangeable = exchangeable;
-        piece.restrictedRotation = restrictedRotation;
-        piece.restrictedMove = restrictedMove;
-
         return piece;
     }
 

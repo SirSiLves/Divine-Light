@@ -111,7 +111,7 @@ public class LightController : MonoBehaviour
         switch(hitObject.transform.gameObject.name)
         {
             case "Destroy":
-                AddToDestroy(hitObject);
+                //AddToDestroy(hitObject);
                 return true;
             case "Block":
                 return true;
@@ -121,10 +121,10 @@ public class LightController : MonoBehaviour
     }
 
 
-    private static void AddToDestroy(RaycastHit2D hitObject)
-    {
-        FindObjectOfType<PlayerChanger>().GetPiecesToDestroy().Add(hitObject.transform.parent.gameObject.GetComponent<Piece>());
-    }
+    //private static void AddToDestroy(RaycastHit2D hitObject)
+    //{
+    //    FindObjectOfType<PlayerHandler>().GetPiecesToDestroy().Add(hitObject.transform.parent.gameObject.GetComponent<Piece>());
+    //}
 
 
     private void SetDirection()

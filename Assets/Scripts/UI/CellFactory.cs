@@ -7,8 +7,6 @@ public class CellFactory : MonoBehaviour
 {
     [SerializeField] Cell cell;
     [SerializeField] public Color possibleFields, defaultFields, highlightedFields;
-    [SerializeField] internal Player player1, player2;
-
 
     internal void Create(int y, int x)
     {
@@ -21,16 +19,15 @@ public class CellFactory : MonoBehaviour
         newCell.transform.name = y.ToString() + ',' + x.ToString();
         newCell.SetCellId(y, x);
 
-        if (FieldHandler.ValidateSafeZone(y, x, 0)) {
-            CreateSafeZone(newCell, player1.GetSafeZone());
+        if (MoveValidator.ValidateSafeZone(y, x, 0)) {
+            CreateSafeZone(newCell, PlayerHandler.Instance.player1.GetSafeZone());
         }
-        else if (FieldHandler.ValidateSafeZone(y, x, 1))
+        else if (MoveValidator.ValidateSafeZone(y, x, 1))
         {
-            CreateSafeZone(newCell, player2.GetSafeZone());
+            CreateSafeZone(newCell, PlayerHandler.Instance.player2.GetSafeZone());
         }
 
         cell.transform.GetComponentInChildren<SpriteRenderer>().color = defaultFields;
-
     }
 
 

@@ -6,64 +6,69 @@ using UnityEngine;
 public class Piece : MonoBehaviour
 {
 
-    private Player player;
-
     public int id { get; set; }
-    public bool exchangeable { get; set; }
-    public bool restrictedRotation { get; set; }
-    public bool restrictedMove { get; set; }
+    public int character { get; set; }
+    public int playerIndex { get; private set; }
 
 
-
-    public void SetPlayer(Player player)
+    private void Start()
     {
-        this.player = player;
-        transform.GetComponentInChildren<SpriteRenderer>().color = player.GetFigure();
+        Subscribe();
     }
 
-
-    public Player GetPlayer()
+    private void Subscribe()
     {
-        return player;
+        PieceHandler.Instance.OnMoveEvent += Instance_OnMoveEvent;
+        PieceHandler.Instance.OnRotateEvent += Instance_OnRotateEvent;
     }
 
+    private void OnDestroy()
+    {
+        PieceHandler.Instance.OnMoveEvent -= Instance_OnMoveEvent;
+        PieceHandler.Instance.OnRotateEvent -= Instance_OnRotateEvent;
+    }
+
+    private void Instance_OnRotateEvent(int id, int degrees)
+    {
+        if (id == this.id)
+        {
+            transform.rotation = Quaternion.Euler(0, 0, degrees);
+        }
+    }
+
+    private void Instance_OnMoveEvent(int id, Vector2 toPsition)
+    {
+        if (id == this.id)
+        {
+            transform.position = new Vector2(toPsition.x, toPsition.y);
+        }
+    }
 
     public void DrawPiece(int y, int x)
     {
+        //player
+        playerIndex = PlayerHandler.GetPlayerIndex(character);
+
+        //color
+        Color playerColor = playerIndex == 0 ? PlayerHandler.Instance.player1.GetFigure() : PlayerHandler.Instance.player2.GetFigure();
+        transform.GetComponentInChildren<SpriteRenderer>().color = playerColor;
+
         // position
-        this.transform.position = new Vector2(transform.position.x + x, transform.position.y + y);
+        transform.position = new Vector2(transform.position.x + x, transform.position.y + y);
 
         // size
-        this.transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+        transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
 
         // position in opject tree
-        this.transform.parent = transform;
+        transform.parent = transform;
 
         // rotation
-        int rotation = GetRotationDegrees(id);
-        this.transform.Rotate(0, 0, rotation);
+        int rotation = RotateValidator.GetDegrees(character);
+        transform.Rotate(0, 0, rotation);
     }
 
 
-    private int GetRotationDegrees(int pieceId)
-    {
-        int rotationValue = (pieceId % 100) - (pieceId % 10);
 
-        switch (rotationValue)
-        {
-            case 0:
-                return 0;
-            case 10:
-                return 90;
-            case 20:
-                return 180;
-            case 30:
-                return 270;
-            default:
-                Debug.LogError("No mapping for rotation value " + rotationValue);
-                return 0;
-        }
-    }
 
 }
 

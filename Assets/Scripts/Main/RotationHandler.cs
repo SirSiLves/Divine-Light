@@ -11,9 +11,33 @@ public class RotationHandler : MonoBehaviour
 
     [SerializeField] Color disabled, active;
     public bool isRotating { get; set; }
-    private int initialRotation;
+    private int rotatingCharacter;
+    private int initialDegree;
     private Transform rotation, confirm, abbort;
-    private Matrix matrix;
+
+
+    #region ROTATION_HANDLER_SINGLETON_SETUP
+    private static RotationHandler _instance;
+
+    public static RotationHandler Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                GameObject gO = new GameObject("Rotation Handler");
+                gO.AddComponent<RotationHandler>();
+            }
+
+            return _instance;
+        }
+    }
+
+    private void Awake()
+    {
+        _instance = this;
+    }
+    #endregion
 
 
     private void Start()
@@ -23,61 +47,44 @@ public class RotationHandler : MonoBehaviour
         rotation = transform.Find("Rotation Button");
         confirm = transform.Find("Ok Button");
         abbort = transform.Find("Cancel Button");
-
-        matrix = FindObjectOfType<GameManager>().matrix;
     }
 
 
 
     public void Rotate()
     {
-        isRotating = true;
+        CellHandler.Instance.ResetMarkup();
+        CellHandler.Instance.MarkupTouchedField(ClickHandler.Instance.prepareMove);
 
-        FindObjectOfType<ClickHandler>().RevertMarkup();
+        if (!isRotating)
+        {
+            rotatingCharacter = Matrix.Instance.GetCharacter(ClickHandler.Instance.prepareMove.FromCellId());
+            initialDegree = RotateValidator.GetDegrees(rotatingCharacter);
+            isRotating = true;
+        }
 
-        Piece touchedPiece = FindObjectOfType<ClickHandler>().touchedPiece;
-        int currentDegrees = Mathf.RoundToInt(touchedPiece.transform.rotation.eulerAngles.z);
+        int currentDegrees = RotateValidator.GetDegrees(rotatingCharacter);
+        int newDegrees = RotateValidator.GetNewDegrees(rotatingCharacter, currentDegrees);
+        rotatingCharacter = RotateValidator.GetNewCharacter(rotatingCharacter, newDegrees);
 
-        int newDegrees = touchedPiece.restrictedRotation ? HandleRestrictedRotate(touchedPiece, currentDegrees) :
-            currentDegrees == 0 ? 270 : currentDegrees -= 90;
-
-        FindObjectOfType<GameManager>().executor.Execute(new RotationCommand(touchedPiece, newDegrees, matrix));
-
-        FindObjectOfType<FieldHandler>().markupTouchedEvent.Invoke();
+        UpdateBoard(rotatingCharacter);
 
         HandleMenuButtons(newDegrees);
+
+        Executor.Instance.RemoveLastHistoryEntry();
     }
 
-
-    private int HandleRestrictedRotate(Piece touchedPiece, int currentDegrees)
+    private void UpdateBoard(int characterValue)
     {
-        int pieceType = touchedPiece.id % 10;
+        PrepareMove prepareMove = ClickHandler.Instance.prepareMove;
+        prepareMove.characterValue = characterValue;
 
-        // set sun rotation
-        if (pieceType == 1)
-        {
-            if (touchedPiece.id < 100)
-            {
-                return currentDegrees == 0 ? 90 : 0;
-            }
-            else
-            {
-                return currentDegrees == 180 ? 270 : 180;
-            }
-        }
-        // set reflector rotation
-        else if (pieceType == 4)
-        {
-            return currentDegrees == 0 ? 90 : 0;
-        }
-
-        throw new Exception("Restricted rotation mapping is missed");
+        PieceHandler.Instance.HandleRotate(prepareMove);
     }
-
 
     private void HandleMenuButtons(int degrees)
     {
-        if (degrees == initialRotation)
+        if (degrees == initialDegree)
         {
             Cancel();
         }
@@ -99,46 +106,42 @@ public class RotationHandler : MonoBehaviour
 
     public void Confirm()
     {
-        FindObjectOfType<FieldHandler>().removeMarkupEvent.Invoke();
-
         DisableRotation();
 
-        FindObjectOfType<ClickHandler>().touchedPiece = null;
-        FindObjectOfType<PlayerChanger>().TogglePlaying();
+        initialDegree = 0;
 
-        initialRotation = 0;
+        UpdateBoard(rotatingCharacter);
+
+        PlayerHandler.Instance.TogglePlaying();
     }
 
 
     public void Cancel()
     {
-        Piece touchedPiece = FindObjectOfType<ClickHandler>().touchedPiece;
+        int characterValue = RotateValidator.GetNewCharacter(rotatingCharacter, initialDegree);
 
-        FindObjectOfType<GameManager>().executor.Execute(new RotationCommand(touchedPiece, initialRotation, matrix));
+        UpdateBoard(characterValue);
 
-        DisableRotation();
-        FindObjectOfType<ClickHandler>().MarkupFields();
+        Executor.Instance.RemoveLastHistoryEntry();
+
+        CellHandler.Instance.MarkupPossibleFields(ClickHandler.Instance.prepareMove);
+
+        SetButtonState(disabled, false);
+
+        isRotating = false;
     }
 
-    //TODO rename
-    public void ActiateRotate()
+    public void ActivateRotate()
     {
         rotation.GetComponent<Image>().color = active;
         rotation.GetComponent<Button>().enabled = true;
-
-        SetInitialValue();
-    }
-
-
-    private void SetInitialValue()
-    {
-        float rotationRawValue = FindObjectOfType<ClickHandler>().touchedPiece.transform.rotation.eulerAngles.z;
-        initialRotation = Mathf.RoundToInt(rotationRawValue);
     }
 
 
     public void DisableRotation()
     {
+        CellHandler.Instance.ResetMarkup();
+
         rotation.GetComponent<Image>().color = disabled;
         rotation.GetComponent<Button>().enabled = false;
 
@@ -146,5 +149,7 @@ public class RotationHandler : MonoBehaviour
 
         isRotating = false;
     }
+
+
 
 }

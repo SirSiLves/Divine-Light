@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8451475568010035295}
   - component: {fileID: 6424912354377331899}
-  - component: {fileID: 1765513636}
+  - component: {fileID: 692858401}
   m_Layer: 0
   m_Name: Cells
   m_TagString: Untagged
@@ -45,12 +45,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cell: {fileID: 1951371331, guid: d20516ec5e3574992ac37d2fef6c6818, type: 3}
-  possibleFields: {r: 0.101960786, g: 0.101960786, b: 0.101960786, a: 0.78431374}
-  defaultFields: {r: 0.5377358, g: 0.17789757, b: 0, a: 0.78431374}
-  highlightedFields: {r: 0, g: 0.5764706, b: 0.11372549, a: 0.5882353}
+  possibleFields: {r: 0.101960786, g: 0.101960786, b: 0.101960786, a: 1}
+  defaultFields: {r: 0.5377358, g: 0.17789757, b: 0, a: 1}
+  highlightedFields: {r: 0, g: 0.5764706, b: 0.11372549, a: 1}
   player1: {fileID: 0}
   player2: {fileID: 0}
---- !u!114 &1765513636
+--- !u!114 &692858401
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -59,6 +59,6 @@ MonoBehaviour:
   m_GameObject: {fileID: 1967189342540761575}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7f2697b65d4a242d1a4a671e818b19e1, type: 3}
+  m_Script: {fileID: 11500000, guid: 3c6211af955a242708081bdb7ade3241, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

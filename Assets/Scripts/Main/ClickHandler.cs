@@ -2,198 +2,112 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using System.Linq;
 
-public class ClickHandler: MonoBehaviour
+public class ClickHandler : MonoBehaviour
 {
 
-    public Piece touchedPiece { get; set; }
-    private PlayerChanger playerChanger;
-    private RotationHandler rotationHandler;
-    private Cell[] cells;
-        
+    internal PrepareMove prepareMove { get; set; }
 
+    #region CLICK_HANDLER_SINGLETON_SETUP
+    private static ClickHandler _instance;
 
-    private void Start()
+    public static ClickHandler Instance
     {
-        playerChanger = FindObjectOfType<PlayerChanger>();
-        rotationHandler = FindObjectOfType<RotationHandler>();
-        cells = FindObjectsOfType<Cell>();
+        get
+        {
+            if (_instance == null)
+            {
+                GameObject gO = new GameObject("Click Handler");
+                gO.AddComponent<ClickHandler>();
+            }
+
+            return _instance;
+        }
     }
+
+    private void Awake()
+    {
+        _instance = this;
+    }
+    #endregion
 
     private void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-            HandleAction();
-        }
-        else if (Input.GetMouseButtonDown(1))
-        {
-            //TODO arrow markup
-            //HandleMarkup();
+            HandlePrepare();
         }
     }
 
- 
-    private void HandleAction()
+    private void HandlePrepare()
     {
-        if (playerChanger.isLightOn) { return; }
-        if (rotationHandler.isRotating) { return; }
+        Vector2 clickPosition = GetClickedGridPos();
 
-        Piece clickedPiece = GetClickedPiece();
-        
-        Cell targetCell = GetClickedCell(cells);
-        List<Cell> lastValidated = FindObjectOfType<FieldHandler>().GetLastValidatedCells();
+        if (PlayerHandler.Instance.isLightOn) { return; }
+        if (RotationHandler.Instance.isRotating) { return; }
+        if (clickPosition.x < 0 || clickPosition.y < 0 || clickPosition.x > 9 || clickPosition.y > 7) { return; } // click is outside from grid
 
-        if (MoveIsReady(lastValidated, targetCell)) {
-            Matrix matrix = FindObjectOfType<GameManager>().matrix;
+        if (prepareMove == null)
+        {
+            InitializePrepare(clickPosition);
+        }
+        else
+        {
+            prepareMove.toPosition = clickPosition;
 
-            int pieceId = matrix.GetPieceId(targetCell.GetCellId());
-
-            if (pieceId == 0)
+            if (prepareMove.possibleCells.Contains(prepareMove.ToCellId()))
             {
-                DoMove(targetCell, matrix);
+                //move can be executed
+                CellHandler.Instance.ResetMarkup();
+                RotationHandler.Instance.DisableRotation();
+
+                int character = Matrix.Instance.GetCharacter(Matrix.ConvertPostionToCellId(clickPosition));
+
+                // replace
+                if (character != 0)
+                {
+                    PieceHandler.Instance.HandleReplace(prepareMove);
+                }
+                // normal move
+                else
+                {
+                    PieceHandler.Instance.HanldeMove(prepareMove);
+                }
+
+                PlayerHandler.Instance.TogglePlaying();
+                prepareMove = null;
             }
             else
             {
-                DoReplace(targetCell, matrix);
+                InitializePrepare(clickPosition);
             }
 
-            RevertMarkup();
-
-            return;
         }
 
-        MovePreparation(clickedPiece);
     }
 
-
-    private bool MovePreparation(Piece clickedPiece)
+    private void InitializePrepare(Vector2 clickPosition)
     {
-        if (touchedPiece == null && clickedPiece == null) { return true; }
+        RotationHandler.Instance.DisableRotation();
+        CellHandler.Instance.ResetMarkup();
 
-        if(touchedPiece == null && playerChanger.firstTouched &&
-            clickedPiece != null && clickedPiece.GetPlayer() != playerChanger.isPlaying) {
+        int character = Matrix.Instance.GetCharacter(Matrix.ConvertPostionToCellId(clickPosition));
 
-            RevertMarkup();
+        // no piece found
+        if (character == 0) { return; }
 
-            return true;
-        }
+        // other players turn
+        if (PlayerHandler.Instance.GetIsPlayingIndex() == 0 && character >= 100) { return; }
+        if (PlayerHandler.Instance.GetIsPlayingIndex() == 1 && character < 100) { return; }
 
-        if (touchedPiece == null)
-        {
-            touchedPiece = clickedPiece;
-            MarkupFields();
+        prepareMove = new PrepareMove(clickPosition);
 
-            if (!playerChanger.firstTouched) { playerChanger.FirstTouched(touchedPiece); }
+        RotationHandler.Instance.ActivateRotate();
 
-            return true;
-        }
-
-        if (touchedPiece == clickedPiece)
-        {
-            touchedPiece = null;
-            RevertMarkup();
-            rotationHandler.DisableRotation();
-
-            return true;
-        }
-
-        if (clickedPiece != null && touchedPiece != clickedPiece && clickedPiece.GetPlayer() == playerChanger.isPlaying)
-        {
-            RevertMarkup();
-            touchedPiece = clickedPiece;
-            MarkupFields();
-
-            return true;
-        }
-
-        return false;
+        CellHandler.Instance.MarkupTouchedField(prepareMove);
+        CellHandler.Instance.MarkupPossibleFields(prepareMove);
     }
 
-
-    private bool MoveIsReady(List<Cell> lastValidated, Cell targetCell)
-    {
-        if(touchedPiece == null) { return false; }
-
-        if (lastValidated.Contains(targetCell) && touchedPiece.GetPlayer() == playerChanger.isPlaying)
-        {
-            return true;
-        }
-
-        return false;
-    }
-
-
-    public void MarkupFields()
-    {
-        rotationHandler.ActiateRotate();
-        FindObjectOfType<FieldHandler>().markupEvent.Invoke();
-        FindObjectOfType<FieldHandler>().markupTouchedEvent.Invoke();
-    }
-
-
-    public void RevertMarkup()
-    {
-        FindObjectOfType<FieldHandler>().removeMarkupEvent.Invoke();
-    }
-
-
-    private void DoMove(Cell targetCell, Matrix matrix)
-    {
-        if(targetCell == null) { return; }
-
-        FindObjectOfType<GameManager>().executor.Execute(new MoveCommand(touchedPiece, targetCell, matrix));
-
-
-        MoveDone();
-    }
-
-
-    private void MoveDone()
-    {
-        touchedPiece = null;
-
-        rotationHandler.DisableRotation();
-
-        playerChanger.TogglePlaying();
-    }
-
-
-    private void DoReplace(Cell targetCell, Matrix matrix)
-    {
-        Piece targetPiece = Array.Find(FindObjectsOfType<Piece>(), p =>
-        {
-            return p.transform.position.y == targetCell.transform.position.y
-            && p.transform.position.x == targetCell.transform.position.x;
-        });
-
-        FindObjectOfType<GameManager>().executor.Execute(new ReplaceCommand(touchedPiece, targetPiece, targetCell, cells, matrix));
-
-        MoveDone();
-    }
-
-
-    private static Cell GetClickedCell(Cell[] cells)
-    {
-        Vector2 gridPos = GetClickedGridPos();
-
-        return Array.Find(cells, cell =>
-            cell.transform.position.y == gridPos.y && cell.transform.position.x == gridPos.x
-        );
-    }
-
-
-    private static Piece GetClickedPiece()
-    {
-        Piece[] pieces = FindObjectsOfType<Piece>();
-
-        Vector2 gridPos = GetClickedGridPos();
-
-        return Array.Find(pieces, piece =>
-            piece.transform.position.y == gridPos.y && piece.transform.position.x == gridPos.x
-        );
-    }
 
 
     private static Vector2 GetClickedGridPos()
@@ -204,15 +118,6 @@ public class ClickHandler: MonoBehaviour
 
         return gridPos;
     }
-
-
-
-
-
-
-
-
-
 
 
 

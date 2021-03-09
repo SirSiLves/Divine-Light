@@ -7,6 +7,24 @@ using System;
 public class Matrix
 {
 
+    #region MATRIX_SINGLETON_SETUP
+    private static Matrix _instance;
+
+    public static Matrix Instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = new Matrix();
+            }
+
+            return _instance;
+        }
+    }
+    #endregion
+
+
     private int[][] matrix;
 
 
@@ -21,7 +39,7 @@ public class Matrix
     }
 
 
-    public void ChangePiece(int cellId, int pieceId)
+    public void ChangePiece(int cellId, int character)
     {
         int index = 0;
         for (int y = 0; y < matrix.Length; y++)
@@ -31,7 +49,7 @@ public class Matrix
                 // set piece on cell id
                 if(index == cellId)
                 {
-                    matrix[y][x] = pieceId;
+                    matrix[y][x] = character;
                 }
 
                 index++;
@@ -39,8 +57,27 @@ public class Matrix
         }
     }
 
+    public int[] GetCoordinates(int cellId)
+    {
+        int index = 0;
+        for (int y = 0; y < matrix.Length; y++)
+        {
+            for (int x = 0; x < matrix[y].Length; x++)
+            {
+                if (index == cellId)
+                {
+                    return new int[] { x, y };
+                }
 
-    public int GetCellId(float pieceY, float pieceX)
+                index++;
+            }
+        }
+
+        throw new Exception("Cell id not found, something went wrong!");
+    }
+
+
+    public int GetCellId(float positionY, float positionX)
     {       
 
         int index = 0;
@@ -48,7 +85,7 @@ public class Matrix
         {
             for (int x = 0; x < matrix[y].Length; x++)
             {
-                if (y == (int) Math.Round(pieceY) && x == (int) Math.Round(pieceX))
+                if (y == (int) Math.Round(positionY) && x == (int) Math.Round(positionX))
                 {
                     return index;
                 }
@@ -57,12 +94,24 @@ public class Matrix
             }
         }
 
-        throw new Exception("No piece value found, something went wrong!");
+        throw new Exception("Position not found, something went wrong!");
+    }
+
+    public int GetCellId(int[] coordinate)
+    {
+        int x = coordinate[0];
+        int y = coordinate[1];
+
+        if (x < 0 || y < 0)
+        {
+            throw new Exception("Coordinate is outside from grid");
+        }
+
+        return Int32.Parse(y + "" + x);
     }
 
 
-
-    public int GetPieceId(int cellId)
+    public int GetCharacter(int cellId)
     {
         int index = 0;
         for(int y = 0; y < matrix.Length; y++)
@@ -109,5 +158,17 @@ public class Matrix
         Debug.Log(line);
     }
 
+    public static int ConvertPostionToCellId(Vector2 position)
+    {
+        int x = Mathf.RoundToInt(position.x);
+        int y = Mathf.RoundToInt(position.y);
+
+        if (x < 0 || y < 0)
+        {
+            throw new Exception("Position is outside from grid");
+        }
+
+        return Int32.Parse(y + "" + x);
+    }
 
 }

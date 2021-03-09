@@ -8,34 +8,30 @@ using System.Linq;
 public class ReplaceCommand : ICommand
 {
 
-    private Piece touchedPiece, targetPiece;
-    private Cell targetCell;
-    private Matrix matrix;
-    private Cell[] cells;
+    public int characterValue1 { get; private set; }
+    public int characterValue2 { get; private set; }
+    public int fromCellId { get; private set; }
+    public int toCellId { get; private set; }
 
-    public ReplaceCommand(Piece touchedPiece, Piece targetPiece, Cell targetCell, Cell[] cells, Matrix matrix)
+    private Matrix matrix { get; set; }
+
+
+    public ReplaceCommand(int fromCellId, int toCellId)
     {
-        this.touchedPiece = touchedPiece;
-        this.targetPiece = targetPiece;
-        this.targetCell = targetCell;
-        this.cells = cells;
-        this.matrix = matrix;
+        this.fromCellId = fromCellId;
+        this.toCellId = toCellId;
+
+        matrix = Matrix.Instance;
+        characterValue1 = matrix.GetCharacter(fromCellId);
+        characterValue2 = matrix.GetCharacter(toCellId);
     }
 
 
     public void Execute()
     {
-        int cellId = matrix.GetCellId(touchedPiece.transform.position.y, touchedPiece.transform.position.x);
-        Cell touchedCells = Array.Find(cells.ToArray(), cell => cell.GetCellId() == cellId);
-
         // update matrix with new position
-        matrix.ChangePiece(targetCell.GetCellId(), touchedPiece.id);
-        matrix.ChangePiece(touchedCells.GetCellId(), targetPiece.id);
-
-
-        // draw pieces to new position
-        UpdatePosition(touchedPiece.transform, targetCell.transform);
-        UpdatePosition(targetPiece.transform, touchedCells.transform);
+        matrix.ChangePiece(toCellId, characterValue1);
+        matrix.ChangePiece(fromCellId, characterValue2);
     }
 
 
@@ -44,12 +40,5 @@ public class ReplaceCommand : ICommand
 
     }
 
-
-    private void UpdatePosition(Transform sourceTransform, Transform targetTransform)
-    {
-        sourceTransform.position = new Vector2(
-            targetTransform.transform.position.x, targetTransform.transform.position.y
-            );
-    }
 
 }

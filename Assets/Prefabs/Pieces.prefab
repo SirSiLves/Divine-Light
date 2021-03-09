@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3648432305504409825}
   - component: {fileID: 1480473114}
+  - component: {fileID: 755134451}
   m_Layer: 0
   m_Name: Pieces
   m_TagString: Untagged
@@ -49,5 +50,15 @@ MonoBehaviour:
     type: 3}
   wall: {fileID: 5125589446823039054, guid: 30cef543e6c034d618e91c8f8250914f, type: 3}
   angler: {fileID: 842059092896816501, guid: 319fac1b7d57b4c2f8ff9dd60b8cfffb, type: 3}
-  player1: {fileID: 0}
-  player2: {fileID: 0}
+--- !u!114 &755134451
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3648432305504409830}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5f18122939ef049a2848dbd50c08afe1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

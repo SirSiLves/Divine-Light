@@ -8,36 +8,34 @@ using UnityEngine;
 public class MoveCommand : ICommand
 {
 
-    public Piece touchedPiece { get; private set; }
-    public Vector2 fromPosition { get; private set; }
-    public Vector2 toPosition { get; private set; }
-    public Matrix matrix { get; private set; }
+    public int characterValue { get; private set; }
+    public int fromCellId { get; private set; }
+    public int toCellId { get; private set; }
+    
+    private Matrix matrix { get; set; }
 
 
-    public MoveCommand(Piece touchedPiece, Vector2 fromPosition, Vector2 toPosition)
+    public MoveCommand(int fromCellId, int toCellId)
     {
-        this.touchedPiece = touchedPiece;
-        this.fromPosition = fromPosition;
-        this.toPosition = toPosition;
-        this.matrix = Matrix.Instance;
+        this.fromCellId = fromCellId;
+        this.toCellId = toCellId;
+
+        matrix = Matrix.Instance;
+        characterValue = matrix.GetCharacter(fromCellId);
     }
 
 
     public void Execute()
     {
         // update matrix with new position
-        matrix.ChangePiece(Matrix.ConvertPostionToCellId(fromPosition), 0);
-        matrix.ChangePiece(Matrix.ConvertPostionToCellId(toPosition), touchedPiece.id);
-
-        //// draw piece to new position
-        //touchedPiece.transform.position = new Vector2(toPosition.x, toPosition.y);
+        matrix.ChangePiece(fromCellId, 0);
+        matrix.ChangePiece(toCellId, characterValue);
     }
-
 
 
     public void Revert()
     {
-
+        //TODO
     }
 
 

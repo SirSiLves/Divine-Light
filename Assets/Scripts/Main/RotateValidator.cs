@@ -6,9 +6,9 @@ public class RotateValidator
 {
 
 
-    public static int GetDegrees(int pieceId)
+    public static int GetDegrees(int character)
     {
-        int rotationValue = (pieceId % 100) - (pieceId % 10);
+        int rotationValue = (character % 100) - (character % 10);
 
         switch (rotationValue)
         {
@@ -26,14 +26,14 @@ public class RotateValidator
         }
     }
 
-    public static int GetNewDegrees(int pieceId, int currentDegrees)
+    public static int GetNewDegrees(int character, int currentDegrees)
     {
-        int pieceType = pieceId % 10;
+        int pieceType = character % 10;
 
         // set sun rotation
         if (pieceType == 1)
         {
-            if (pieceId < 100)
+            if (character < 100)
             {
                 return currentDegrees == 0 ? 90 : 0;
             }
@@ -59,16 +59,16 @@ public class RotateValidator
         }
     }
 
-    public static int GetNewPieceId(int pieceId, int degrees)
+    public static int GetNewCharacter(int character, int degrees)
     {
-        int tempId = pieceId % 10;
-        pieceId -= pieceId % 100;
+        int tempId = character % 10;
+        character -= character % 100;
 
         int rotateId = GetRotationId(degrees);
 
-        pieceId += rotateId + tempId;
+        character += rotateId + tempId;
 
-        return pieceId;
+        return character;
     }
 
 

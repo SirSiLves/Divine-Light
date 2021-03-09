@@ -61,10 +61,10 @@ public class ClickHandler : MonoBehaviour
                 CellHandler.Instance.ResetMarkup();
                 RotationHandler.Instance.DisableRotation();
 
-                int pieceId = Matrix.Instance.GetPieceId(Matrix.ConvertPostionToCellId(clickPosition));
+                int character = Matrix.Instance.GetCharacter(Matrix.ConvertPostionToCellId(clickPosition));
 
                 // replace
-                if (pieceId != 0)
+                if (character != 0)
                 {
                     PieceHandler.Instance.HandleReplace(prepareMove);
                 }
@@ -74,6 +74,7 @@ public class ClickHandler : MonoBehaviour
                     PieceHandler.Instance.HanldeMove(prepareMove);
                 }
 
+                PlayerHandler.Instance.TogglePlaying();
                 prepareMove = null;
             }
             else
@@ -90,14 +91,14 @@ public class ClickHandler : MonoBehaviour
         RotationHandler.Instance.DisableRotation();
         CellHandler.Instance.ResetMarkup();
 
-        int pieceId = Matrix.Instance.GetPieceId(Matrix.ConvertPostionToCellId(clickPosition));
+        int character = Matrix.Instance.GetCharacter(Matrix.ConvertPostionToCellId(clickPosition));
 
         // no piece found
-        if (pieceId == 0) { return; }
+        if (character == 0) { return; }
 
         // other players turn
-        if (PlayerHandler.Instance.GetIsPlayingIndex() == 0 && pieceId >= 100) { return; }
-        if (PlayerHandler.Instance.GetIsPlayingIndex() == 1 && pieceId < 100) { return; }
+        if (PlayerHandler.Instance.GetIsPlayingIndex() == 0 && character >= 100) { return; }
+        if (PlayerHandler.Instance.GetIsPlayingIndex() == 1 && character < 100) { return; }
 
         prepareMove = new PrepareMove(clickPosition);
 

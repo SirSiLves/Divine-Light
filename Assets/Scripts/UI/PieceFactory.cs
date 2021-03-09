@@ -46,14 +46,14 @@ public class PieceFactory : MonoBehaviour
         return defaultSet;
     }
 
-    public void InstantiatePiece(int y, int x, int pieceId)
+    public void InstantiatePiece(int y, int x, int character, int id)
     {
 
         Piece newPiece;
 
         // validate type of piece
 
-        int type = pieceId % 10;
+        int type = character % 10;
         switch (type)
         {
             case 1:
@@ -72,10 +72,11 @@ public class PieceFactory : MonoBehaviour
                 newPiece = CreatePiece(angler);
                 break;
             default:
-                throw new Exception("no valid piece found for piece value: " + pieceId);
+                throw new Exception("no valid piece found for piece value: " + character);
         }
 
-        newPiece.id = pieceId;
+        newPiece.id = id;
+        newPiece.character = character;
         newPiece.DrawPiece(y, x);
     }
 

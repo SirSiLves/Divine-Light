@@ -63,6 +63,8 @@ public class PlayerHandler : MonoBehaviour
     {
         StartCoroutine("TurnOnLight");
         StartCoroutine("TurnOffLight");
+
+        Matrix.PrintMatrixToConsole(Matrix.Instance.GetMatrix());
     }
 
 
@@ -164,14 +166,14 @@ public class PlayerHandler : MonoBehaviour
         return null;
     }
 
-    public static int GetPlayerIndex(int pieceId)
+    public static int GetPlayerIndex(int character)
     {
-        return pieceId < 100 ? 0 : 1;
+        return character < 100 ? 0 : 1;
     }
 
-    public static int GetEnemyIndex(int pieceId)
+    public static int GetEnemyIndex(int character)
     {
-        return pieceId < 100 ? 1 : 0;
+        return character < 100 ? 1 : 0;
     }
 
 }

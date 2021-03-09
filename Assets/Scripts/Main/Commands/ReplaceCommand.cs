@@ -8,32 +8,30 @@ using System.Linq;
 public class ReplaceCommand : ICommand
 {
 
-    public Piece touchedPiece { get; private set; }
-    public Piece targetPiece { get; private set; }
-    public Vector2 fromPosition { get; private set; }
-    public Vector2 toPosition { get; private set; }
-    public Matrix matrix { get; private set; }
+    public int characterValue1 { get; private set; }
+    public int characterValue2 { get; private set; }
+    public int fromCellId { get; private set; }
+    public int toCellId { get; private set; }
+
+    private Matrix matrix { get; set; }
 
 
-    public ReplaceCommand(Piece touchedPiece, Piece targetPiece, Vector2 fromPosition, Vector2 toPosition)
+    public ReplaceCommand(int fromCellId, int toCellId)
     {
-        this.touchedPiece = touchedPiece;
-        this.targetPiece = targetPiece;
-        this.fromPosition = fromPosition;
-        this.toPosition = toPosition;
-        this.matrix = Matrix.Instance;
+        this.fromCellId = fromCellId;
+        this.toCellId = toCellId;
+
+        matrix = Matrix.Instance;
+        characterValue1 = matrix.GetCharacter(fromCellId);
+        characterValue2 = matrix.GetCharacter(toCellId);
     }
 
 
     public void Execute()
     {
         // update matrix with new position
-        matrix.ChangePiece(Matrix.ConvertPostionToCellId(toPosition), touchedPiece.id);
-        matrix.ChangePiece(Matrix.ConvertPostionToCellId(fromPosition), targetPiece.id);
-
-        //// draw pieces to new position
-        //UpdatePosition(touchedPiece.transform, toPosition);
-        //UpdatePosition(targetPiece.transform, fromPosition);
+        matrix.ChangePiece(toCellId, characterValue1);
+        matrix.ChangePiece(fromCellId, characterValue2);
     }
 
 
@@ -42,10 +40,5 @@ public class ReplaceCommand : ICommand
 
     }
 
-
-    private void UpdatePosition(Transform sourceTransform, Vector2 position)
-    {
-        sourceTransform.position = new Vector2(position.x, position.y);
-    }
 
 }

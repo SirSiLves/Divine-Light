@@ -6,6 +6,10 @@ using UnityEngine;
 public class PieceHandler : MonoBehaviour
 {
 
+    public event Action<int, Vector2> OnMoveEvent;
+    public event Action<int, int> OnRotateEvent;
+
+
     #region PIECE_HANDLER_SINGLETON_SETUP
     private static PieceHandler _instance;
 
@@ -29,68 +33,120 @@ public class PieceHandler : MonoBehaviour
     }
     #endregion
 
+    #region UI INPUT HANDLING
     internal void HanldeMove(PrepareMove prepareMove)
     {
-        Piece touchedPiece = GetClickedPiece(prepareMove.fromPosition);
+        int fromCellId = Matrix.ConvertPostionToCellId(prepareMove.fromPosition);
+        int toCellId = Matrix.ConvertPostionToCellId(prepareMove.toPosition);
 
-        VisualizeMove(touchedPiece, prepareMove.toPosition);
-        DoMove(touchedPiece, prepareMove.fromPosition, prepareMove.toPosition);
+        DoMove(fromCellId, toCellId);
+        Visualize();
     }
 
     internal void HandleReplace(PrepareMove prepareMove)
     {
-        Piece touchedPiece = GetClickedPiece(prepareMove.fromPosition);
-        Piece targetPiece = GetClickedPiece(prepareMove.toPosition);
+        int fromCellId = Matrix.ConvertPostionToCellId(prepareMove.fromPosition);
+        int toCellId = Matrix.ConvertPostionToCellId(prepareMove.toPosition);
 
-        VisualizeReplace(touchedPiece, targetPiece, prepareMove.fromPosition, prepareMove.toPosition);
-        DoReplace(touchedPiece, targetPiece, prepareMove.fromPosition, prepareMove.toPosition);
+        DoReplace(fromCellId, toCellId);
+        Visualize();
     }
 
-    internal void HandleRotate(PrepareMove prepareMove, int newPieceId)
+    internal void HandleRotate(PrepareMove prepareMove)
     {
-        Piece touchedPiece = GetClickedPiece(prepareMove.fromPosition);
+        int fromCellId = Matrix.ConvertPostionToCellId(prepareMove.fromPosition);
+        int newCharacterValue = prepareMove.characterValue;
 
-        DoRotate(touchedPiece, prepareMove.fromPosition, touchedPiece.id, newPieceId);
+        DoRotate(fromCellId, newCharacterValue);
+        Visualize();
     }
+    #endregion
 
 
-
-    private void DoReplace(Piece touchedPiece, Piece targetPiece, Vector2 fromPosition, Vector2 toPosition)
+    #region VISUALIZE LAST MOVE FROM HISTORY
+    public void Visualize()
     {
-        Executor.Instance.Execute(new ReplaceCommand(touchedPiece, targetPiece, fromPosition, toPosition));
+        ICommand command = Executor.Instance.GetLastCommand();
+
+        if (command.GetType() == typeof(MoveCommand))
+        {
+            VisualizeMove((MoveCommand)command);
+        }
+        else if (command.GetType() == typeof(ReplaceCommand))
+        {
+            VisualizeReplace((ReplaceCommand)command);
+        }
+        else if (command.GetType() == typeof(RotationCommand))
+        {
+            VisualizeRotate((RotationCommand) command);
+        }
+        else
+        {
+            throw new Exception("Visualize command was not found: " + command.GetType());
+        }
     }
 
-    private void DoMove(Piece piece, Vector2 fromPosition, Vector2 toPosition)
+    private void VisualizeMove(MoveCommand moveCommand)
     {
-        Executor.Instance.Execute(new MoveCommand(piece, fromPosition, toPosition));
+        int[] fromXY = Matrix.Instance.GetCoordinates(moveCommand.fromCellId);
+        int[] toXY = Matrix.Instance.GetCoordinates(moveCommand.toCellId);
+
+        Vector2 fromPosition = new Vector2(fromXY[0], fromXY[1]);
+        Vector2 toPosition = new Vector2(toXY[0], toXY[1]);
+
+        Piece touchedPiece = GetClickedPiece(fromPosition);
+
+        OnMoveEvent?.Invoke(touchedPiece.id, toPosition);
     }
 
-    private void DoRotate(Piece touchedPiece, Vector2 fromPosition, int oldPieceId, int newPieceId)
+    private void VisualizeReplace(ReplaceCommand replaceCommand)
     {
-        Executor.Instance.Execute(new RotationCommand(touchedPiece, fromPosition, oldPieceId, newPieceId));
+        int[] fromXY = Matrix.Instance.GetCoordinates(replaceCommand.fromCellId);
+        int[] toXY = Matrix.Instance.GetCoordinates(replaceCommand.toCellId);
+
+        Vector2 fromPosition = new Vector2(fromXY[0], fromXY[1]);
+        Vector2 toPosition = new Vector2(toXY[0], toXY[1]);
+
+        Piece touchedPiece = GetClickedPiece(fromPosition);
+        Piece targetPiece = GetClickedPiece(toPosition);
+
+        OnMoveEvent?.Invoke(touchedPiece.id, toPosition);
+        OnMoveEvent?.Invoke(targetPiece.id, fromPosition);
     }
 
-
-
-    public void VisualizeMove(Piece touchedPiece, Vector2 targetPosition)
+    public void VisualizeRotate(RotationCommand rotationCommand)
     {
-        touchedPiece.transform.position = new Vector2(targetPosition.x, targetPosition.y);
-    }
+        int[] fromXY = Matrix.Instance.GetCoordinates(rotationCommand.fromCellId);
 
-    public void VisualizeReplace(Piece touchedPiece, Piece targetPiece, Vector2 fromPosition, Vector2 toPosition)
+        Vector2 fromPosition = new Vector2(fromXY[0], fromXY[1]);
+
+        Piece touchedPiece = GetClickedPiece(fromPosition);
+
+        int degrees = RotateValidator.GetDegrees(rotationCommand.newCharacter);
+
+        touchedPiece.character = rotationCommand.newCharacter;
+
+        OnRotateEvent?.Invoke(touchedPiece.id, degrees);
+    }
+    #endregion
+
+
+    #region DO MOVE ON MATRIX WIHTOUT VISUALIZE
+    private void DoMove(int fromCellId, int toCellId)
     {
-        touchedPiece.transform.position = new Vector2(toPosition.x, toPosition.y);
-        targetPiece.transform.position = new Vector2(fromPosition.x, fromPosition.y);
+        Executor.Instance.Execute(new MoveCommand(fromCellId, toCellId));
     }
 
-    public void VisualizeRotate(Vector2 clickedPosition, int degrees)
+    private void DoReplace(int fromCellId, int toCellId)
     {
-        Piece touchedPiece = GetClickedPiece(clickedPosition);
-        touchedPiece.transform.rotation = Quaternion.Euler(0, 0, degrees);
+        Executor.Instance.Execute(new ReplaceCommand(fromCellId, toCellId));
     }
 
-
-
+    private void DoRotate(int fromCellId, int newCharacter)
+    {
+        Executor.Instance.Execute(new RotationCommand(fromCellId, newCharacter));
+    }
+    #endregion
 
 
     //TODO

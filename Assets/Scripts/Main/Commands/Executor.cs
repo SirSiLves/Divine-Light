@@ -38,53 +38,17 @@ public class Executor
         command.Execute();
 
         Historicize(command);
+    }
 
-        PlayerHandler.Instance.TogglePlaying();
-
-        Matrix.PrintMatrixToConsole(Matrix.Instance.GetMatrix());
+    public void Revert()
+    {
+        //TODO
     }
 
 
     private void Historicize(ICommand command)
     {
         commands.Add(command);
-
-        //if (command.GetType() == typeof(MoveCommand))
-        //{
-        //    CleanUpRotationTry();
-        //    commands.Add(command);
-        //}
-        //else if(command.GetType() == typeof(RotationCommand))
-        //{
-        //    CleanUpRotationTry();
-        //    commands.Add(command);
-        //}
-        //else if (command.GetType() == typeof(ReplaceCommand))
-        //{
-        //    CleanUpRotationTry();
-        //    commands.Add(command);
-        //}
-        //else if (command.GetType() == typeof(DestroyCommand))
-        //{
-
-        //}
-
-        //Debug.Log("PRINT HISTORY: ");
-        //Array.ForEach(commands.ToArray(), c => Debug.Log(c));
-    }
-
-
-    // Add only the last clicked rotation state to history
-    private void CleanUpRotationTry()
-    {
-        if (commands.Count() > 0)
-        {
-            ICommand command = commands.Last();
-            if (command.GetType() == typeof(RotationCommand))
-            {
-                RemoveLastHistoryEntry();
-            }
-        }
     }
 
 
@@ -94,10 +58,9 @@ public class Executor
     }
 
 
-    public void Revert()
+    public ICommand GetLastCommand()
     {
-        //TODO
-
+        return commands.Last();
     }
 
 

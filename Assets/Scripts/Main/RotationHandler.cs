@@ -11,7 +11,7 @@ public class RotationHandler : MonoBehaviour
 
     [SerializeField] Color disabled, active;
     public bool isRotating { get; set; }
-    private int rotatingPieceId;
+    private int rotatingCharacter;
     private int initialDegree;
     private Transform rotation, confirm, abbort;
 
@@ -58,22 +58,29 @@ public class RotationHandler : MonoBehaviour
 
         if (!isRotating)
         {
-            rotatingPieceId = Matrix.Instance.GetPieceId(ClickHandler.Instance.prepareMove.FromCellId());
-            initialDegree = RotateValidator.GetDegrees(rotatingPieceId);
+            rotatingCharacter = Matrix.Instance.GetCharacter(ClickHandler.Instance.prepareMove.FromCellId());
+            initialDegree = RotateValidator.GetDegrees(rotatingCharacter);
             isRotating = true;
         }
 
-        int currentDegrees = RotateValidator.GetDegrees(rotatingPieceId);
-        int newDegrees = RotateValidator.GetNewDegrees(rotatingPieceId, currentDegrees);
+        int currentDegrees = RotateValidator.GetDegrees(rotatingCharacter);
+        int newDegrees = RotateValidator.GetNewDegrees(rotatingCharacter, currentDegrees);
+        rotatingCharacter = RotateValidator.GetNewCharacter(rotatingCharacter, newDegrees);
 
-        rotatingPieceId = RotateValidator.GetNewPieceId(rotatingPieceId, newDegrees);
-
-        PieceHandler.Instance.VisualizeRotate(ClickHandler.Instance.prepareMove.fromPosition, newDegrees);
-
+        UpdateBoard(rotatingCharacter);
 
         HandleMenuButtons(newDegrees);
+
+        Executor.Instance.RemoveLastHistoryEntry();
     }
 
+    private void UpdateBoard(int characterValue)
+    {
+        PrepareMove prepareMove = ClickHandler.Instance.prepareMove;
+        prepareMove.characterValue = characterValue;
+
+        PieceHandler.Instance.HandleRotate(prepareMove);
+    }
 
     private void HandleMenuButtons(int degrees)
     {
@@ -101,15 +108,21 @@ public class RotationHandler : MonoBehaviour
     {
         DisableRotation();
 
-        PieceHandler.Instance.HandleRotate(ClickHandler.Instance.prepareMove, rotatingPieceId);
-
         initialDegree = 0;
+
+        UpdateBoard(rotatingCharacter);
+
+        PlayerHandler.Instance.TogglePlaying();
     }
 
 
     public void Cancel()
     {
-        PieceHandler.Instance.VisualizeRotate(ClickHandler.Instance.prepareMove.fromPosition, initialDegree);
+        int characterValue = RotateValidator.GetNewCharacter(rotatingCharacter, initialDegree);
+
+        UpdateBoard(characterValue);
+
+        Executor.Instance.RemoveLastHistoryEntry();
 
         CellHandler.Instance.MarkupPossibleFields(ClickHandler.Instance.prepareMove);
 

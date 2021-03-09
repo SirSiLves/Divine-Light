@@ -7,6 +7,7 @@ public class PrepareMove
 {
     public Vector2 fromPosition { get; set; }
     public Vector2 toPosition { get; set; }
+    public int characterValue { get; set; }
     public List<int> possibleCells { get; set; }
 
     public PrepareMove(Vector2 fromPosition)

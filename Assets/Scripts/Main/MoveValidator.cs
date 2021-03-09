@@ -10,18 +10,18 @@ public class MoveValidator
     {
         List<int> cellIds = new List<int>();
 
-        int pieceId = Matrix.Instance.GetPieceId(fromCellId);
+        int character = Matrix.Instance.GetCharacter(fromCellId);
 
 
         //// player is rotating
         //if (RotationHandler.Instance.isRotating) { return cellIds; }
 
         //// no piece found
-        //if (pieceId == 0) { return cellIds; }
+        //if (character == 0) { return cellIds; }
 
         //// other players turn
-        //if (PlayerHandler.Instance.isPlayingIndex == 0 && pieceId >= 100) { return cellIds; }
-        //if (PlayerHandler.Instance.isPlayingIndex == 1 && pieceId < 100) { return cellIds; }
+        //if (PlayerHandler.Instance.isPlayingIndex == 0 && character >= 100) { return cellIds; }
+        //if (PlayerHandler.Instance.isPlayingIndex == 1 && character < 100) { return cellIds; }
 
 
         int[][] rawMatrix = Matrix.Instance.GetMatrix();
@@ -31,7 +31,7 @@ public class MoveValidator
         {
             for (int x = 0; x < rawMatrix[y].Length; x++)
             {
-                if (Validate(fromCellId, pieceId, y, x))
+                if (Validate(fromCellId, character, y, x))
                 {
                     cellIds.Add(cellId);
                 }
@@ -44,23 +44,23 @@ public class MoveValidator
     }
 
 
-    private static bool Validate(int fromCellId, int pieceId, int y, int x)
+    private static bool Validate(int fromCellId, int character, int y, int x)
     {
         int[] xy = Matrix.Instance.GetCoordinates(fromCellId);
         int xFromCellId = xy[0];
         int yFromCellId = xy[1];
 
         // not allowed to move
-        if (ValidateRestrictedMove(pieceId)) { return false; }
+        if (ValidateRestrictedMove(character)) { return false; }
 
         // cell is not around the touched figure
         if (!ValidateCellsAround(xFromCellId, yFromCellId, y, x)) { return false; }
 
         // not allowed to replace
-        if (!ValidateReplace(y, x, pieceId)) { return false; }
+        if (!ValidateReplace(y, x, character)) { return false; }
 
         // target cell is a safe zone from other player
-        int enemyIndex = PlayerHandler.GetEnemyIndex(pieceId);
+        int enemyIndex = PlayerHandler.GetEnemyIndex(character);
         if (ValidateSafeZone(y, x, enemyIndex)) { return false; }
 
         return true;
@@ -79,9 +79,9 @@ public class MoveValidator
         || fromPositionY - 1 == y && fromPositionX + 1 == x;
     }
 
-    public static bool ValidateRestrictedMove(int pieceId)
+    public static bool ValidateRestrictedMove(int character)
     {
-        int pieceType = pieceId % 10;
+        int pieceType = character % 10;
 
         // sun
         if (pieceType == 1)
@@ -93,7 +93,7 @@ public class MoveValidator
     }
 
 
-    private static bool ValidateReplace(int y, int x, int pieceId)
+    private static bool ValidateReplace(int y, int x, int character)
     {
         int cellOccupied = Matrix.Instance.GetMatrix()[y][x];
 
@@ -101,7 +101,7 @@ public class MoveValidator
         if (cellOccupied == 0) { return true; }
 
         //reflactor is allowed to replace, but only with an angler or wall
-        return pieceId % 10 == 4 && (cellOccupied % 10 == 3 || cellOccupied % 10 == 5);
+        return character % 10 == 4 && (cellOccupied % 10 == 3 || cellOccupied % 10 == 5);
     }
 
 

@@ -19,10 +19,10 @@ public class CellFactory : MonoBehaviour
         newCell.transform.name = y.ToString() + ',' + x.ToString();
         newCell.SetCellId(y, x);
 
-        if (FieldValidator.ValidateSafeZone(y, x, 0)) {
+        if (MoveValidator.ValidateSafeZone(y, x, 0)) {
             CreateSafeZone(newCell, PlayerHandler.Instance.player1.GetSafeZone());
         }
-        else if (FieldValidator.ValidateSafeZone(y, x, 1))
+        else if (MoveValidator.ValidateSafeZone(y, x, 1))
         {
             CreateSafeZone(newCell, PlayerHandler.Instance.player2.GetSafeZone());
         }

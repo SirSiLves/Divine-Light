@@ -40,6 +40,8 @@ public class Executor
         Historicize(command);
 
         PlayerHandler.Instance.TogglePlaying();
+
+        Matrix.PrintMatrixToConsole(Matrix.Instance.GetMatrix());
     }
 
 

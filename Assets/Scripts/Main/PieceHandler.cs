@@ -32,18 +32,18 @@ public class PieceHandler : MonoBehaviour
     internal void HanldeMove(PrepareMove prepareMove)
     {
         Piece touchedPiece = GetClickedPiece(prepareMove.fromPosition);
+
+        VisualizeMove(touchedPiece, prepareMove.toPosition);
+        DoMove(touchedPiece, prepareMove.fromPosition, prepareMove.toPosition);
+    }
+
+    internal void HandleReplace(PrepareMove prepareMove)
+    {
+        Piece touchedPiece = GetClickedPiece(prepareMove.fromPosition);
         Piece targetPiece = GetClickedPiece(prepareMove.toPosition);
 
-        if (touchedPiece && targetPiece)
-        {
-            VisualizeReplace(touchedPiece, targetPiece, prepareMove.fromPosition, prepareMove.toPosition);
-            DoReplace(touchedPiece, targetPiece, prepareMove.fromPosition, prepareMove.toPosition);
-        }
-        else
-        {
-            VisualizeMove(touchedPiece, prepareMove.toPosition);
-            DoMove(touchedPiece, prepareMove.fromPosition, prepareMove.toPosition);
-        }
+        VisualizeReplace(touchedPiece, targetPiece, prepareMove.fromPosition, prepareMove.toPosition);
+        DoReplace(touchedPiece, targetPiece, prepareMove.fromPosition, prepareMove.toPosition);
     }
 
     internal void HandleRotate(PrepareMove prepareMove, int newPieceId)
@@ -88,6 +88,9 @@ public class PieceHandler : MonoBehaviour
         Piece touchedPiece = GetClickedPiece(clickedPosition);
         touchedPiece.transform.rotation = Quaternion.Euler(0, 0, degrees);
     }
+
+
+
 
 
     //TODO

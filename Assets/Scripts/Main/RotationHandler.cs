@@ -59,14 +59,14 @@ public class RotationHandler : MonoBehaviour
         if (!isRotating)
         {
             rotatingPieceId = Matrix.Instance.GetPieceId(ClickHandler.Instance.prepareMove.FromCellId());
-            initialDegree = GetDegrees(rotatingPieceId);
+            initialDegree = RotateValidator.GetDegrees(rotatingPieceId);
             isRotating = true;
         }
 
-        int currentDegrees = GetDegrees(rotatingPieceId);
-        int newDegrees = GetNewDegrees(rotatingPieceId, currentDegrees);
+        int currentDegrees = RotateValidator.GetDegrees(rotatingPieceId);
+        int newDegrees = RotateValidator.GetNewDegrees(rotatingPieceId, currentDegrees);
 
-        rotatingPieceId = GetNewPieceId(rotatingPieceId, newDegrees);
+        rotatingPieceId = RotateValidator.GetNewPieceId(rotatingPieceId, newDegrees);
 
         PieceHandler.Instance.VisualizeRotate(ClickHandler.Instance.prepareMove.fromPosition, newDegrees);
 
@@ -136,91 +136,6 @@ public class RotationHandler : MonoBehaviour
 
         isRotating = false;
     }
-
-
-
-    public int GetDegrees(int pieceId)
-    {
-        int rotationValue = (pieceId % 100) - (pieceId % 10);
-
-        switch (rotationValue)
-        {
-            case 0:
-                return 0;
-            case 10:
-                return 90;
-            case 20:
-                return 180;
-            case 30:
-                return 270;
-            default:
-                Debug.LogError("No mapping for rotation value " + rotationValue);
-                return 0;
-        }
-    }
-
-
-    private int GetNewDegrees(int pieceId, int currentDegrees)
-    {
-        int pieceType = pieceId % 10;
-
-        // set sun rotation
-        if (pieceType == 1)
-        {
-            if (pieceId < 100)
-            {
-                return currentDegrees == 0 ? 90 : 0;
-            }
-            else
-            {
-                return currentDegrees == 180 ? 270 : 180;
-            }
-        }
-        // set reflector rotation
-        else if (pieceType == 4)
-        {
-            return currentDegrees == 0 ? 90 : 0;
-        }
-        // set other figures
-        else
-        {
-            return currentDegrees == 0 ? 270 : currentDegrees -= 90;
-        }
-
-    }
-
-    private int GetNewPieceId(int pieceId, int degrees)
-    {
-        int tempId = pieceId % 10;
-        pieceId -= pieceId % 100;
-
-        int rotateId = GetRotationId(degrees);
-
-        pieceId += rotateId + tempId;
-
-        return pieceId;
-    }
-
-
-    private int GetRotationId(int degrees)
-    {
-        switch (degrees)
-        {
-            case 0:
-                return 0;
-            case 90:
-                return 1 * 10;
-            case 180:
-                return 2 * 10;
-            case 270:
-                return 3 * 10;
-            default:
-                Debug.LogError("No mapping for degrees value " + degrees);
-                return 0;
-        }
-    }
-
-
 
 
 

@@ -11,9 +11,9 @@ public class PlayerHandler : MonoBehaviour
 {
 
     [SerializeField] float lightTimer = 3f;
+    [SerializeField] int isPlayingIndex = 0;
 
     internal Player player1, player2;
-    public int isPlayingIndex { get; private set; }
     public bool isLightOn { get; set; }
 
     private List<Piece> piecesToDestroy;
@@ -49,9 +49,6 @@ public class PlayerHandler : MonoBehaviour
     private void Start()
     {
         piecesToDestroy = new List<Piece>();
-
-        isPlayingIndex = 0;
-
         UpdatePlayingDisplay();
     }
 
@@ -148,6 +145,11 @@ public class PlayerHandler : MonoBehaviour
         textComponent.color = GetIsPlaying().GetFigure();
     }
 
+    public int GetIsPlayingIndex()
+    {
+        return isPlayingIndex;
+    }
+
     public Player GetIsPlaying()
     {
         if(isPlayingIndex == 0)
@@ -162,6 +164,14 @@ public class PlayerHandler : MonoBehaviour
         return null;
     }
 
+    public static int GetPlayerIndex(int pieceId)
+    {
+        return pieceId < 100 ? 0 : 1;
+    }
 
+    public static int GetEnemyIndex(int pieceId)
+    {
+        return pieceId < 100 ? 1 : 0;
+    }
 
 }

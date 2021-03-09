@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using System;
 
-public class FieldValidator
+public class MoveValidator
 {
 
     public static List<int> CollectPossibleCellIds(int fromCellId)
@@ -22,6 +22,7 @@ public class FieldValidator
         //// other players turn
         //if (PlayerHandler.Instance.isPlayingIndex == 0 && pieceId >= 100) { return cellIds; }
         //if (PlayerHandler.Instance.isPlayingIndex == 1 && pieceId < 100) { return cellIds; }
+
 
         int[][] rawMatrix = Matrix.Instance.GetMatrix();
         int cellId = 0;
@@ -49,6 +50,9 @@ public class FieldValidator
         int xFromCellId = xy[0];
         int yFromCellId = xy[1];
 
+        // not allowed to move
+        if (ValidateRestrictedMove(pieceId)) { return false; }
+
         // cell is not around the touched figure
         if (!ValidateCellsAround(xFromCellId, yFromCellId, y, x)) { return false; }
 
@@ -56,10 +60,8 @@ public class FieldValidator
         if (!ValidateReplace(y, x, pieceId)) { return false; }
 
         // target cell is a safe zone from other player
-        int enemyIndex = pieceId >= 100 ? 0 : 1;
+        int enemyIndex = PlayerHandler.GetEnemyIndex(pieceId);
         if (ValidateSafeZone(y, x, enemyIndex)) { return false; }
-
-        //TODO handle restricted move
 
         return true;
     }
@@ -75,6 +77,19 @@ public class FieldValidator
         || fromPositionY - 1 == y && fromPositionX - 1 == x
         || fromPositionY - 1 == y && fromPositionX + 0 == x
         || fromPositionY - 1 == y && fromPositionX + 1 == x;
+    }
+
+    public static bool ValidateRestrictedMove(int pieceId)
+    {
+        int pieceType = pieceId % 10;
+
+        // sun
+        if (pieceType == 1)
+        {
+            return true;
+        }
+
+        return false;
     }
 
 

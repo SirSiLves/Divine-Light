@@ -6,7 +6,7 @@ using UnityEngine;
 public class ClickHandler : MonoBehaviour
 {
 
-    public PrepareMove prepareMove { get; private set; }
+    internal PrepareMove prepareMove { get; set; }
 
     #region CLICK_HANDLER_SINGLETON_SETUP
     private static ClickHandler _instance;
@@ -59,7 +59,22 @@ public class ClickHandler : MonoBehaviour
             {
                 //move can be executed
                 CellHandler.Instance.ResetMarkup();
-                PieceHandler.Instance.HanldeMove(prepareMove);
+                RotationHandler.Instance.DisableRotation();
+
+                int pieceId = Matrix.Instance.GetPieceId(Matrix.ConvertPostionToCellId(clickPosition));
+
+                // replace
+                if (pieceId != 0)
+                {
+                    PieceHandler.Instance.HandleReplace(prepareMove);
+                }
+                // normal move
+                else
+                {
+                    PieceHandler.Instance.HanldeMove(prepareMove);
+                }
+
+                prepareMove = null;
             }
             else
             {
@@ -81,8 +96,8 @@ public class ClickHandler : MonoBehaviour
         if (pieceId == 0) { return; }
 
         // other players turn
-        if (PlayerHandler.Instance.isPlayingIndex == 0 && pieceId >= 100) { return; }
-        if (PlayerHandler.Instance.isPlayingIndex == 1 && pieceId < 100) { return; }
+        if (PlayerHandler.Instance.GetIsPlayingIndex() == 0 && pieceId >= 100) { return; }
+        if (PlayerHandler.Instance.GetIsPlayingIndex() == 1 && pieceId < 100) { return; }
 
         prepareMove = new PrepareMove(clickPosition);
 

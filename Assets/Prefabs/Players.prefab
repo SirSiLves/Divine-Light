@@ -92,6 +92,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   lightTimer: 3
+  isPlayingIndex: 0
 --- !u!1 &8173871615203557881
 GameObject:
   m_ObjectHideFlags: 0

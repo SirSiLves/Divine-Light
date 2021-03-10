@@ -131,8 +131,10 @@ public class Matrix
     }
 
 
-    public static void PrintMatrixToConsole(int[][] matrix)
+    public static void PrintMatrixToConsole()
     {
+        int[][] matrix = Matrix.Instance.GetMatrix();
+
         string line = "";
 
         for(int y = matrix.Length - 1; y >= 0; y--)

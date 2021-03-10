@@ -5,8 +5,8 @@ using UnityEngine;
 public class RotationCommand : ICommand
 {
 
-    public int oldCharacter { get; private set; }
     public int fromCellId { get; private set; }
+    public int oldCharacter { get; private set; }
     public int newCharacter { get; private set; }
 
     public Matrix matrix { get; private set; }
@@ -31,7 +31,8 @@ public class RotationCommand : ICommand
 
     public void Revert()
     {
-
+        // upate matrix with rotation value
+        matrix.ChangePiece(fromCellId, oldCharacter);
     }
 
 

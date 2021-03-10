@@ -64,7 +64,7 @@ public class PlayerHandler : MonoBehaviour
         StartCoroutine("TurnOnLight");
         StartCoroutine("TurnOffLight");
 
-        Matrix.PrintMatrixToConsole(Matrix.Instance.GetMatrix());
+        Matrix.PrintMatrixToConsole();
     }
 
 

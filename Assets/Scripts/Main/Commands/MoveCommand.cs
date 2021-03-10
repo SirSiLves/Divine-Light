@@ -35,7 +35,9 @@ public class MoveCommand : ICommand
 
     public void Revert()
     {
-        //TODO
+        // update matrix with old position
+        matrix.ChangePiece(toCellId, 0);
+        matrix.ChangePiece(fromCellId, characterValue);
     }
 
 

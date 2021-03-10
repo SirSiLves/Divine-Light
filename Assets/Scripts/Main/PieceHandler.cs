@@ -40,7 +40,7 @@ public class PieceHandler : MonoBehaviour
         int toCellId = Matrix.ConvertPostionToCellId(prepareMove.toPosition);
 
         DoMove(fromCellId, toCellId);
-        Visualize();
+        Visualize(false);
     }
 
     internal void HandleReplace(PrepareMove prepareMove)
@@ -49,7 +49,7 @@ public class PieceHandler : MonoBehaviour
         int toCellId = Matrix.ConvertPostionToCellId(prepareMove.toPosition);
 
         DoReplace(fromCellId, toCellId);
-        Visualize();
+        Visualize(false);
     }
 
     internal void HandleRotate(PrepareMove prepareMove)
@@ -58,27 +58,41 @@ public class PieceHandler : MonoBehaviour
         int newCharacterValue = prepareMove.characterValue;
 
         DoRotate(fromCellId, newCharacterValue);
-        Visualize();
+        Visualize(false);
+    }
+
+
+    internal void HandleRevert()
+    {
+        Visualize(true);
+        DoRevert();
     }
     #endregion
 
 
     #region VISUALIZE LAST MOVE FROM HISTORY
-    public void Visualize()
+    public void Visualize(bool revert)
     {
         ICommand command = Executor.Instance.GetLastCommand();
+        if (command == null) { return; }
 
         if (command.GetType() == typeof(MoveCommand))
         {
-            VisualizeMove((MoveCommand)command);
+            MoveCommand moveCommand = (MoveCommand)command;
+            if(revert) { VisualizeMove(moveCommand.toCellId, moveCommand.fromCellId); }
+            else { VisualizeMove(moveCommand.fromCellId, moveCommand.toCellId); }
         }
         else if (command.GetType() == typeof(ReplaceCommand))
         {
-            VisualizeReplace((ReplaceCommand)command);
+            ReplaceCommand replaceCommand = (ReplaceCommand)command;
+            if (revert) { VisualizeReplace(replaceCommand.toCellId, replaceCommand.fromCellId); }
+            else { VisualizeReplace(replaceCommand.fromCellId, replaceCommand.toCellId); }
         }
         else if (command.GetType() == typeof(RotationCommand))
         {
-            VisualizeRotate((RotationCommand) command);
+            RotationCommand rotationCommand = (RotationCommand)command;
+            if (revert) { VisualizeRotate(rotationCommand.fromCellId, rotationCommand.oldCharacter); }
+            else { VisualizeRotate(rotationCommand.fromCellId, rotationCommand.newCharacter); }
         }
         else
         {
@@ -86,10 +100,10 @@ public class PieceHandler : MonoBehaviour
         }
     }
 
-    private void VisualizeMove(MoveCommand moveCommand)
+    private void VisualizeMove(int fromCellid, int toCellId)
     {
-        int[] fromXY = Matrix.Instance.GetCoordinates(moveCommand.fromCellId);
-        int[] toXY = Matrix.Instance.GetCoordinates(moveCommand.toCellId);
+        int[] fromXY = Matrix.Instance.GetCoordinates(fromCellid);
+        int[] toXY = Matrix.Instance.GetCoordinates(toCellId);
 
         Vector2 fromPosition = new Vector2(fromXY[0], fromXY[1]);
         Vector2 toPosition = new Vector2(toXY[0], toXY[1]);
@@ -99,10 +113,10 @@ public class PieceHandler : MonoBehaviour
         OnMoveEvent?.Invoke(touchedPiece.id, toPosition);
     }
 
-    private void VisualizeReplace(ReplaceCommand replaceCommand)
+    private void VisualizeReplace(int fromCellid, int toCellId)
     {
-        int[] fromXY = Matrix.Instance.GetCoordinates(replaceCommand.fromCellId);
-        int[] toXY = Matrix.Instance.GetCoordinates(replaceCommand.toCellId);
+        int[] fromXY = Matrix.Instance.GetCoordinates(fromCellid);
+        int[] toXY = Matrix.Instance.GetCoordinates(toCellId);
 
         Vector2 fromPosition = new Vector2(fromXY[0], fromXY[1]);
         Vector2 toPosition = new Vector2(toXY[0], toXY[1]);
@@ -114,17 +128,17 @@ public class PieceHandler : MonoBehaviour
         OnMoveEvent?.Invoke(targetPiece.id, fromPosition);
     }
 
-    public void VisualizeRotate(RotationCommand rotationCommand)
+    public void VisualizeRotate(int fromCellId, int characterValue)
     {
-        int[] fromXY = Matrix.Instance.GetCoordinates(rotationCommand.fromCellId);
+        int[] fromXY = Matrix.Instance.GetCoordinates(fromCellId);
 
         Vector2 fromPosition = new Vector2(fromXY[0], fromXY[1]);
 
         Piece touchedPiece = GetClickedPiece(fromPosition);
 
-        int degrees = RotateValidator.GetDegrees(rotationCommand.newCharacter);
+        int degrees = RotateValidator.GetDegrees(characterValue);
 
-        touchedPiece.character = rotationCommand.newCharacter;
+        touchedPiece.character = characterValue;
 
         OnRotateEvent?.Invoke(touchedPiece.id, degrees);
     }
@@ -145,6 +159,11 @@ public class PieceHandler : MonoBehaviour
     private void DoRotate(int fromCellId, int newCharacter)
     {
         Executor.Instance.Execute(new RotationCommand(fromCellId, newCharacter));
+    }
+
+    private void DoRevert()
+    {
+        Executor.Instance.Revert();
     }
     #endregion
 

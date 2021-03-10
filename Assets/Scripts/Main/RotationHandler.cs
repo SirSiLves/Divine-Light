@@ -62,6 +62,10 @@ public class RotationHandler : MonoBehaviour
             initialDegree = RotateValidator.GetDegrees(rotatingCharacter);
             isRotating = true;
         }
+        else
+        {
+            Executor.Instance.RemoveLastHistoryEntry();
+        }
 
         int currentDegrees = RotateValidator.GetDegrees(rotatingCharacter);
         int newDegrees = RotateValidator.GetNewDegrees(rotatingCharacter, currentDegrees);
@@ -70,8 +74,6 @@ public class RotationHandler : MonoBehaviour
         UpdateBoard(rotatingCharacter);
 
         HandleMenuButtons(newDegrees);
-
-        Executor.Instance.RemoveLastHistoryEntry();
     }
 
     private void UpdateBoard(int characterValue)
@@ -108,20 +110,12 @@ public class RotationHandler : MonoBehaviour
     {
         DisableRotation();
 
-        initialDegree = 0;
-
-        UpdateBoard(rotatingCharacter);
-
         PlayerHandler.Instance.TogglePlaying();
     }
 
 
     public void Cancel()
     {
-        int characterValue = RotateValidator.GetNewCharacter(rotatingCharacter, initialDegree);
-
-        UpdateBoard(characterValue);
-
         Executor.Instance.RemoveLastHistoryEntry();
 
         CellHandler.Instance.MarkupPossibleFields(ClickHandler.Instance.prepareMove);
@@ -148,6 +142,8 @@ public class RotationHandler : MonoBehaviour
         SetButtonState(disabled, false);
 
         isRotating = false;
+        initialDegree = 0;
+        rotatingCharacter = 0;
     }
 
 

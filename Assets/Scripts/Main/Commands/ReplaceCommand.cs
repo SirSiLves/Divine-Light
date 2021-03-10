@@ -37,7 +37,9 @@ public class ReplaceCommand : ICommand
 
     public void Revert()
     {
-
+        // update matrix with old position
+        matrix.ChangePiece(fromCellId, characterValue1);
+        matrix.ChangePiece(toCellId, characterValue2);
     }
 
 

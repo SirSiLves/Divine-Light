@@ -36,15 +36,19 @@ public class Executor
     public void Execute(ICommand command)
     {
         command.Execute();
-
         Historicize(command);
     }
 
     public void Revert()
     {
-        //TODO
-    }
+        if (commands.Count == 0) { return; }
 
+        ICommand command = GetLastCommand();
+        command.Revert();
+        RemoveLastHistoryEntry();
+
+        Matrix.PrintMatrixToConsole();
+    }
 
     private void Historicize(ICommand command)
     {
@@ -60,7 +64,15 @@ public class Executor
 
     public ICommand GetLastCommand()
     {
-        return commands.Last();
+        try
+        {
+            return commands.Last();
+        }
+        catch(Exception e)
+        {
+            Debug.LogWarning("All moves reverted");
+            return null;
+        }
     }
 
 

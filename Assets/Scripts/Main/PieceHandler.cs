@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class PieceHandler : MonoBehaviour
@@ -8,6 +9,7 @@ public class PieceHandler : MonoBehaviour
 
     public event Action<int, Vector2> OnMoveEvent;
     public event Action<int, int> OnRotateEvent;
+    public event Action<int, bool> OnDestroyEvent;
 
 
     #region PIECE_HANDLER_SINGLETON_SETUP
@@ -61,6 +63,13 @@ public class PieceHandler : MonoBehaviour
         Visualize(false);
     }
 
+    internal void HandleDestroy(Piece piece)
+    {
+        int pieceCellId = Matrix.ConvertPostionToCellId(piece.transform.position);
+
+        DoDestroy(pieceCellId);
+        Visualize(false);
+    }
 
     internal void HandleRevert()
     {
@@ -70,7 +79,7 @@ public class PieceHandler : MonoBehaviour
     #endregion
 
 
-    #region VISUALIZE LAST MOVE FROM HISTORY
+    #region VISUALIZE LAST MOVE FROM COMMAND HISTORY
     public void Visualize(bool revert)
     {
         ICommand command = Executor.Instance.GetLastCommand();
@@ -94,6 +103,12 @@ public class PieceHandler : MonoBehaviour
             if (revert) { VisualizeRotate(rotationCommand.fromCellId, rotationCommand.oldCharacter); }
             else { VisualizeRotate(rotationCommand.fromCellId, rotationCommand.newCharacter); }
         }
+        else if(command.GetType() == typeof(DestroyCommand))
+        {
+            DestroyCommand destroyCommand = (DestroyCommand)command;
+            if (revert) { VisualizeDestroy(destroyCommand.pieceCellId, destroyCommand.characterValue, false); }
+            else { VisualizeDestroy(destroyCommand.pieceCellId, destroyCommand.characterValue, true); }
+        }
         else
         {
             throw new Exception("Visualize command was not found: " + command.GetType());
@@ -108,7 +123,7 @@ public class PieceHandler : MonoBehaviour
         Vector2 fromPosition = new Vector2(fromXY[0], fromXY[1]);
         Vector2 toPosition = new Vector2(toXY[0], toXY[1]);
 
-        Piece touchedPiece = GetClickedPiece(fromPosition);
+        Piece touchedPiece = GetPieceFromPosition(fromPosition);
 
         OnMoveEvent?.Invoke(touchedPiece.id, toPosition);
     }
@@ -121,8 +136,8 @@ public class PieceHandler : MonoBehaviour
         Vector2 fromPosition = new Vector2(fromXY[0], fromXY[1]);
         Vector2 toPosition = new Vector2(toXY[0], toXY[1]);
 
-        Piece touchedPiece = GetClickedPiece(fromPosition);
-        Piece targetPiece = GetClickedPiece(toPosition);
+        Piece touchedPiece = GetPieceFromPosition(fromPosition);
+        Piece targetPiece = GetPieceFromPosition(toPosition);
 
         OnMoveEvent?.Invoke(touchedPiece.id, toPosition);
         OnMoveEvent?.Invoke(targetPiece.id, fromPosition);
@@ -134,13 +149,32 @@ public class PieceHandler : MonoBehaviour
 
         Vector2 fromPosition = new Vector2(fromXY[0], fromXY[1]);
 
-        Piece touchedPiece = GetClickedPiece(fromPosition);
+        Piece touchedPiece = GetPieceFromPosition(fromPosition);
 
         int degrees = RotateValidator.GetDegrees(characterValue);
 
         touchedPiece.character = characterValue;
 
         OnRotateEvent?.Invoke(touchedPiece.id, degrees);
+    }
+
+    public void VisualizeDestroy(int pieceCellId, int characterValue, bool destroy)
+    {
+        int[] fromXY = Matrix.Instance.GetCoordinates(pieceCellId);
+
+        Vector2 piecePosition = new Vector2(fromXY[0], fromXY[1]);
+
+        if(destroy)
+        {
+            Piece destroyedPiece = GetPieceFromPosition(piecePosition);
+            OnDestroyEvent?.Invoke(destroyedPiece.id, destroy);
+        }
+        else
+        {
+            //revive
+            Piece destroyedPiece = GetDisabledPieces(piecePosition, characterValue);
+            OnDestroyEvent?.Invoke(destroyedPiece.id, destroy);
+        }
     }
     #endregion
 
@@ -165,18 +199,15 @@ public class PieceHandler : MonoBehaviour
     {
         Executor.Instance.Revert();
     }
+    private void DoDestroy(int pieceCellId)
+    {
+        Executor.Instance.Execute(new DestroyCommand(pieceCellId));
+    }
     #endregion
 
 
-    //TODO
-    private void Destroy()
-    {
 
-    }
-
-
-
-    private static Piece GetClickedPiece(Vector2 clickedPosition)
+    private static Piece GetPieceFromPosition(Vector2 clickedPosition)
     {
         Piece[] pieces = FindObjectsOfType<Piece>();
 
@@ -184,6 +215,18 @@ public class PieceHandler : MonoBehaviour
             piece.transform.position.y == clickedPosition.y && piece.transform.position.x == clickedPosition.x
         );
     }
+
+
+    private static Piece GetDisabledPieces(Vector2 piecePosition, int character)
+    {
+        return Array.Find(Resources.FindObjectsOfTypeAll<Piece>().ToArray(), piece =>
+            !piece.gameObject.activeSelf && piece.character == character &&
+            piece.transform.position.y == piecePosition.y &&
+            piece.transform.position.x == piecePosition.x
+        );
+    }
+
+
 
 }
 

@@ -100,7 +100,7 @@ public class PlayerHandler : MonoBehaviour
             controller.transform.gameObject.SetActive(false);
         });
 
-        //RemoveDestroyed();
+        RemoveDestroyed();
         ChangePlayer();
         LightUpFrame(false);
         isLightOn = false;
@@ -114,19 +114,20 @@ public class PlayerHandler : MonoBehaviour
     }
 
 
-    //private void RemoveDestroyed()
-    //{
-    //    Matrix matrix = FindObjectOfType<GameManager>().matrix;
+    private void RemoveDestroyed()
+    {
+        Matrix matrix = Matrix.Instance;
 
-    //    Array.ForEach(piecesToDestroy.ToArray(), piece =>
-    //    {
-    //        FindObjectOfType<GameManager>().executor.Execute(new DestroyCommand(piece, matrix));
-    //    });
+        Array.ForEach(piecesToDestroy.ToArray(), piece =>
+        {
+            //FindObjectOfType<GameManager>().executor.Execute(new DestroyCommand(piece, matrix));
+            PieceHandler.Instance.HandleDestroy(piece);
+        });
 
-    //    piecesToDestroy.Clear();
+        piecesToDestroy.Clear();
 
-    //    Matrix.PrintMatrixToConsole(matrix.GetMatrix());
-    //}
+        Matrix.PrintMatrixToConsole();
+    }
 
 
     public void ChangePlayer()

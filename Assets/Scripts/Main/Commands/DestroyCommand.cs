@@ -5,31 +5,32 @@ using UnityEngine;
 public class DestroyCommand : ICommand
 {
 
-    private Piece destroyedPiece;
+    public int pieceCellId { get; private set; }
+    public int characterValue { get; private set; }
+
     private Matrix matrix;
 
 
-    public DestroyCommand(Piece destroyedPiece, Matrix matrix)
+    public DestroyCommand(int pieceCellId)
     {
-        this.destroyedPiece = destroyedPiece;
-        this.matrix = matrix;
-    }
+        this.pieceCellId = pieceCellId;
 
+        matrix = Matrix.Instance;
+        characterValue = matrix.GetCharacter(pieceCellId);
+    }
 
 
     public void Execute()
     {
         // remove piece from matrix
-        int cellId = matrix.GetCellId(destroyedPiece.transform.position.y, destroyedPiece.transform.position.x);
-        matrix.ChangePiece(cellId, 0);
-
-        destroyedPiece.transform.gameObject.SetActive(false);
+        matrix.ChangePiece(pieceCellId, 0);
     }
 
 
     public void Revert()
     {
-
+        // add piece on matrix
+        matrix.ChangePiece(pieceCellId, characterValue);
     }
 
 

@@ -20,6 +20,23 @@ public class Piece : MonoBehaviour
     {
         PieceHandler.Instance.OnMoveEvent += Instance_OnMoveEvent;
         PieceHandler.Instance.OnRotateEvent += Instance_OnRotateEvent;
+        PieceHandler.Instance.OnDestroyEvent += Instance_OnDestroyEvent;
+    }
+
+    private void Instance_OnDestroyEvent(int pieceId, bool destroy)
+    {
+        if(pieceId == id)
+        {
+            if (destroy)
+            {
+                gameObject.SetActive(false);
+            }
+            else
+            {
+                //TODO REVIEW
+                gameObject.SetActive(true);
+            }
+        }
     }
 
     private void OnDestroy()

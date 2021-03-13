@@ -40,6 +40,11 @@ public class MoveCommand : ICommand
         matrix.ChangePiece(fromCellId, characterValue);
     }
 
+    public string GetDescription()
+    {
+        //move, cell, piece
+        return "M:" + " C:" + fromCellId.ToString() + ":" + toCellId + " P:" + characterValue;
+    }
 
 
 }

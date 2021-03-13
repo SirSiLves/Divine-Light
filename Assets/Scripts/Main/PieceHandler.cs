@@ -45,23 +45,23 @@ public class PieceHandler : MonoBehaviour
         Visualize(false);
     }
 
-    internal void HandleReplace(PrepareMove prepareMove)
+    internal void HandleSwap(PrepareMove prepareMove)
     {
         int fromCellId = Matrix.ConvertPostionToCellId(prepareMove.fromPosition);
         int toCellId = Matrix.ConvertPostionToCellId(prepareMove.toPosition);
 
-        DoReplace(fromCellId, toCellId);
+        DoSwap(fromCellId, toCellId);
         Visualize(false);
     }
 
-    internal void HandleRotate(PrepareMove prepareMove)
-    {
-        int fromCellId = Matrix.ConvertPostionToCellId(prepareMove.fromPosition);
-        int newCharacterValue = prepareMove.characterValue;
+    //internal void HandleRotate(PrepareMove prepareMove)
+    //{
+    //    int fromCellId = Matrix.ConvertPostionToCellId(prepareMove.fromPosition);
+    //    int newCharacterValue = prepareMove.characterValue;
 
-        DoRotate(fromCellId, newCharacterValue);
-        Visualize(false);
-    }
+    //    DoRotate(fromCellId, newCharacterValue);
+    //    Visualize(false);
+    //}
 
     internal void HandleDestroy(Piece piece)
     {
@@ -91,11 +91,11 @@ public class PieceHandler : MonoBehaviour
             if(revert) { VisualizeMove(moveCommand.toCellId, moveCommand.fromCellId); }
             else { VisualizeMove(moveCommand.fromCellId, moveCommand.toCellId); }
         }
-        else if (command.GetType() == typeof(ReplaceCommand))
+        else if (command.GetType() == typeof(SwapCommand))
         {
-            ReplaceCommand replaceCommand = (ReplaceCommand)command;
-            if (revert) { VisualizeReplace(replaceCommand.toCellId, replaceCommand.fromCellId); }
-            else { VisualizeReplace(replaceCommand.fromCellId, replaceCommand.toCellId); }
+            SwapCommand swapCommand = (SwapCommand)command;
+            if (revert) { VisualizeSwap(swapCommand.toCellId, swapCommand.fromCellId); }
+            else { VisualizeSwap(swapCommand.fromCellId, swapCommand.toCellId); }
         }
         else if (command.GetType() == typeof(RotationCommand))
         {
@@ -106,8 +106,8 @@ public class PieceHandler : MonoBehaviour
         else if(command.GetType() == typeof(DestroyCommand))
         {
             DestroyCommand destroyCommand = (DestroyCommand)command;
-            if (revert) { VisualizeDestroy(destroyCommand.pieceCellId, destroyCommand.characterValue, false); }
-            else { VisualizeDestroy(destroyCommand.pieceCellId, destroyCommand.characterValue, true); }
+            if (revert) { VisualizeDestroy(destroyCommand.fromCellId, destroyCommand.characterValue, false); }
+            else { VisualizeDestroy(destroyCommand.fromCellId, destroyCommand.characterValue, true); }
         }
         else
         {
@@ -128,7 +128,7 @@ public class PieceHandler : MonoBehaviour
         OnMoveEvent?.Invoke(touchedPiece.id, toPosition);
     }
 
-    private void VisualizeReplace(int fromCellid, int toCellId)
+    private void VisualizeSwap(int fromCellid, int toCellId)
     {
         int[] fromXY = Matrix.Instance.GetCoordinates(fromCellid);
         int[] toXY = Matrix.Instance.GetCoordinates(toCellId);
@@ -143,7 +143,7 @@ public class PieceHandler : MonoBehaviour
         OnMoveEvent?.Invoke(targetPiece.id, fromPosition);
     }
 
-    public void VisualizeRotate(int fromCellId, int characterValue)
+    internal void VisualizeRotate(int fromCellId, int characterValue)
     {
         int[] fromXY = Matrix.Instance.GetCoordinates(fromCellId);
 
@@ -158,7 +158,7 @@ public class PieceHandler : MonoBehaviour
         OnRotateEvent?.Invoke(touchedPiece.id, degrees);
     }
 
-    public void VisualizeDestroy(int pieceCellId, int characterValue, bool destroy)
+    private void VisualizeDestroy(int pieceCellId, int characterValue, bool destroy)
     {
         int[] fromXY = Matrix.Instance.GetCoordinates(pieceCellId);
 
@@ -185,12 +185,12 @@ public class PieceHandler : MonoBehaviour
         Executor.Instance.Execute(new MoveCommand(fromCellId, toCellId));
     }
 
-    private void DoReplace(int fromCellId, int toCellId)
+    private void DoSwap(int fromCellId, int toCellId)
     {
-        Executor.Instance.Execute(new ReplaceCommand(fromCellId, toCellId));
+        Executor.Instance.Execute(new SwapCommand(fromCellId, toCellId));
     }
 
-    private void DoRotate(int fromCellId, int newCharacter)
+    internal void DoRotate(int fromCellId, int newCharacter)
     {
         Executor.Instance.Execute(new RotationCommand(fromCellId, newCharacter));
     }

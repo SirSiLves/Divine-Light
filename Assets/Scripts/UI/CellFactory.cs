@@ -11,7 +11,7 @@ public class CellFactory : MonoBehaviour
     internal void Create(int y, int x)
     {
         Cell newCell = Instantiate(cell, transform);
-        newCell.transform.parent = transform;
+        newCell.transform.SetParent(transform);
         newCell.transform.position = new Vector3(
             transform.position.x + x, transform.position.y + y, newCell.transform.parent.position.z
             );

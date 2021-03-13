@@ -58,6 +58,7 @@ public class PieceFactory : MonoBehaviour
         {
             case 1:
                 newPiece = CreatePiece(sun);
+                DisableLight(newPiece);
                 break;
             case 2:
                 newPiece = CreatePiece(king);
@@ -87,6 +88,12 @@ public class PieceFactory : MonoBehaviour
 
         piece.name = piece.ToString();
         return piece;
+    }
+
+    private void DisableLight(Piece piece)
+    {
+        Transform lightTransform = piece.transform.Find("Light");
+        lightTransform.gameObject.SetActive(false);
     }
 
 

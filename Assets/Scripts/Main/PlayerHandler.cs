@@ -3,9 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using System;
-
-
-
+using System.Linq;
 
 public class PlayerHandler : MonoBehaviour
 {
@@ -120,7 +118,6 @@ public class PlayerHandler : MonoBehaviour
 
         Array.ForEach(piecesToDestroy.ToArray(), piece =>
         {
-            //FindObjectOfType<GameManager>().executor.Execute(new DestroyCommand(piece, matrix));
             PieceHandler.Instance.HandleDestroy(piece);
         });
 
@@ -140,7 +137,8 @@ public class PlayerHandler : MonoBehaviour
 
     public void UpdatePlayingDisplay()
     {
-        Canvas canvas = GameObject.FindObjectOfType<Canvas>();
+        Canvas canvas = Array.Find(FindObjectsOfType<Canvas>().ToArray(), c => c.name.ToString() == "Main Canvas");
+
         Transform textform = canvas.transform.Find("Playing Player");
         Text textComponent = textform.GetComponent<Text>();
 

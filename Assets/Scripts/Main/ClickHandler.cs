@@ -63,10 +63,10 @@ public class ClickHandler : MonoBehaviour
 
                 int character = Matrix.Instance.GetCharacter(Matrix.ConvertPostionToCellId(clickPosition));
 
-                // replace
+                // swap
                 if (character != 0)
                 {
-                    PieceHandler.Instance.HandleReplace(prepareMove);
+                    PieceHandler.Instance.HandleSwap(prepareMove);
                 }
                 // normal move
                 else

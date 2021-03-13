@@ -36,5 +36,11 @@ public class RotationCommand : ICommand
     }
 
 
+    public string GetDescription()
+    {
+        // rotate, cell, piece
+        return "R:" + " C:" + fromCellId.ToString() + " P:" + oldCharacter + ":" + newCharacter;
+    }
+
 
 }

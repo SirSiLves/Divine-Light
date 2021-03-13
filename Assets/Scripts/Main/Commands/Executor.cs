@@ -68,7 +68,7 @@ public class Executor
         {
             return commands.Last();
         }
-        catch(Exception e)
+        catch(Exception)
         {
             Debug.LogWarning("All moves reverted");
             return null;

@@ -23,10 +23,12 @@ public class LightController : MonoBehaviour
 
     private void OnEnable()
     {
-        CollectPoints();
-        StartCoroutine("DrawLight");
-        StartCoroutine("SwitchColor");
-
+        if (PlayerHandler.Instance.isLightOn)
+        {
+            CollectPoints();
+            StartCoroutine("DrawLight");
+            StartCoroutine("SwitchColor");
+        }
     }
 
 

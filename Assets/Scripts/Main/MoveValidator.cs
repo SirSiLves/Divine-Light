@@ -56,8 +56,8 @@ public class MoveValidator
         // cell is not around the touched figure
         if (!ValidateCellsAround(xFromCellId, yFromCellId, y, x)) { return false; }
 
-        // not allowed to replace
-        if (!ValidateReplace(y, x, character)) { return false; }
+        // not allowed to swap
+        if (!ValidateSwap(y, x, character)) { return false; }
 
         // target cell is a safe zone from other player
         int enemyIndex = PlayerHandler.GetEnemyIndex(character);
@@ -93,14 +93,14 @@ public class MoveValidator
     }
 
 
-    private static bool ValidateReplace(int y, int x, int character)
+    private static bool ValidateSwap(int y, int x, int character)
     {
         int cellOccupied = Matrix.Instance.GetMatrix()[y][x];
 
         //empy cell
         if (cellOccupied == 0) { return true; }
 
-        //reflactor is allowed to replace, but only with an angler or wall
+        //reflactor is allowed to swap, but only with an angler or wall
         return character % 10 == 4 && (cellOccupied % 10 == 3 || cellOccupied % 10 == 5);
     }
 

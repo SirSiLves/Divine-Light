@@ -5,7 +5,7 @@ using UnityEngine;
 public class DestroyCommand : ICommand
 {
 
-    public int pieceCellId { get; private set; }
+    public int fromCellId { get; private set; }
     public int characterValue { get; private set; }
 
     private Matrix matrix;
@@ -13,7 +13,7 @@ public class DestroyCommand : ICommand
 
     public DestroyCommand(int pieceCellId)
     {
-        this.pieceCellId = pieceCellId;
+        fromCellId = pieceCellId;
 
         matrix = Matrix.Instance;
         characterValue = matrix.GetCharacter(pieceCellId);
@@ -23,15 +23,20 @@ public class DestroyCommand : ICommand
     public void Execute()
     {
         // remove piece from matrix
-        matrix.ChangePiece(pieceCellId, 0);
+        matrix.ChangePiece(fromCellId, 0);
     }
 
 
     public void Revert()
     {
         // add piece on matrix
-        matrix.ChangePiece(pieceCellId, characterValue);
+        matrix.ChangePiece(fromCellId, characterValue);
     }
 
+    public string GetDescription()
+    {
+        // destroy, cell, piece
+        return "D:" + " C:" + fromCellId.ToString() + " P:" + characterValue;
+    }
 
 }

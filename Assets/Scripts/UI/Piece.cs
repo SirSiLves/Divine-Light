@@ -23,22 +23,6 @@ public class Piece : MonoBehaviour
         PieceHandler.Instance.OnDestroyEvent += Instance_OnDestroyEvent;
     }
 
-    private void Instance_OnDestroyEvent(int pieceId, bool destroy)
-    {
-        if(pieceId == id)
-        {
-            if (destroy)
-            {
-                gameObject.SetActive(false);
-            }
-            else
-            {
-                //TODO REVIEW
-                gameObject.SetActive(true);
-            }
-        }
-    }
-
     private void OnDestroy()
     {
         PieceHandler.Instance.OnMoveEvent -= Instance_OnMoveEvent;
@@ -58,6 +42,24 @@ public class Piece : MonoBehaviour
         if (id == this.id)
         {
             transform.position = new Vector2(toPsition.x, toPsition.y);
+        }
+    }
+
+    private void Instance_OnDestroyEvent(int pieceId, bool destroy)
+    {
+        if (pieceId == id)
+        {
+            if (destroy)
+            {
+                //destroy
+                //TODO PLAY SOME DESTROY EFFECTS
+                gameObject.SetActive(false);
+            }
+            else
+            {
+                //revive
+                gameObject.SetActive(true);
+            }
         }
     }
 

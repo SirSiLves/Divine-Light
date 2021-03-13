@@ -9,7 +9,6 @@ using UnityEngine.Events;
 public class RotationHandler : MonoBehaviour
 {
 
-    [SerializeField] Color disabled, active;
     public bool isRotating { get; set; }
     private int rotatingCharacter;
     private int initialDegree;
@@ -62,10 +61,6 @@ public class RotationHandler : MonoBehaviour
             initialDegree = RotateValidator.GetDegrees(rotatingCharacter);
             isRotating = true;
         }
-        else
-        {
-            Executor.Instance.RemoveLastHistoryEntry();
-        }
 
         int currentDegrees = RotateValidator.GetDegrees(rotatingCharacter);
         int newDegrees = RotateValidator.GetNewDegrees(rotatingCharacter, currentDegrees);
@@ -81,7 +76,10 @@ public class RotationHandler : MonoBehaviour
         PrepareMove prepareMove = ClickHandler.Instance.prepareMove;
         prepareMove.characterValue = characterValue;
 
-        PieceHandler.Instance.HandleRotate(prepareMove);
+        int fromCellId = Matrix.ConvertPostionToCellId(prepareMove.fromPosition);
+        int newCharacterValue = prepareMove.characterValue;
+
+        PieceHandler.Instance.VisualizeRotate(fromCellId, newCharacterValue);
     }
 
     private void HandleMenuButtons(int degrees)
@@ -92,17 +90,15 @@ public class RotationHandler : MonoBehaviour
         }
         else
         {
-            SetButtonState(active, true);
+            SetButtonState(true);
         }
     }
 
 
-    public void SetButtonState(Color color, bool enabled)
+    public void SetButtonState(bool enabled)
     {
-        confirm.GetComponent<Text>().color = color;
-        confirm.GetComponent<Button>().enabled = enabled;
-        abbort.GetComponent<Text>().color = color;
-        abbort.GetComponent<Button>().enabled = enabled;
+        confirm.GetComponent<Button>().interactable = enabled;
+        abbort.GetComponent<Button>().interactable = enabled;
     }
 
 
@@ -110,25 +106,30 @@ public class RotationHandler : MonoBehaviour
     {
         DisableRotation();
 
+        // update matrix and command list
+        PrepareMove prepareMove = ClickHandler.Instance.prepareMove;
+        int fromCellId = Matrix.ConvertPostionToCellId(prepareMove.fromPosition);
+        int newCharacterValue = prepareMove.characterValue;
+        PieceHandler.Instance.DoRotate(fromCellId, newCharacterValue);
+
         PlayerHandler.Instance.TogglePlaying();
     }
 
 
     public void Cancel()
     {
-        Executor.Instance.RemoveLastHistoryEntry();
+        UpdateBoard(RotateValidator.GetNewCharacter(rotatingCharacter, initialDegree));
 
         CellHandler.Instance.MarkupPossibleFields(ClickHandler.Instance.prepareMove);
 
-        SetButtonState(disabled, false);
+        SetButtonState(false);
 
         isRotating = false;
     }
 
     public void ActivateRotate()
     {
-        rotation.GetComponent<Image>().color = active;
-        rotation.GetComponent<Button>().enabled = true;
+        rotation.GetComponent<Button>().interactable = true;
     }
 
 
@@ -136,10 +137,9 @@ public class RotationHandler : MonoBehaviour
     {
         CellHandler.Instance.ResetMarkup();
 
-        rotation.GetComponent<Image>().color = disabled;
-        rotation.GetComponent<Button>().enabled = false;
+        rotation.GetComponent<Button>().interactable = false;
 
-        SetButtonState(disabled, false);
+        SetButtonState(false);
 
         isRotating = false;
         initialDegree = 0;

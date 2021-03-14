@@ -42,7 +42,8 @@ public class PieceHandler : MonoBehaviour
         int toCellId = Matrix.ConvertPostionToCellId(prepareMove.toPosition);
 
         DoMove(fromCellId, toCellId);
-        Visualize();
+        ICommand command = Executor.Instance.GetLastCommand();
+        VisualizeCommand(command);
     }
 
     internal void HandleSwap(PrepareMove prepareMove)
@@ -51,7 +52,8 @@ public class PieceHandler : MonoBehaviour
         int toCellId = Matrix.ConvertPostionToCellId(prepareMove.toPosition);
 
         DoSwap(fromCellId, toCellId);
-        Visualize();
+        ICommand command = Executor.Instance.GetLastCommand();
+        VisualizeCommand(command);
     }
 
     internal void HandleDestroy(Piece piece)
@@ -59,7 +61,8 @@ public class PieceHandler : MonoBehaviour
         int pieceCellId = Matrix.ConvertPostionToCellId(piece.transform.position);
 
         DoDestroy(pieceCellId);
-        Visualize();
+        ICommand command = Executor.Instance.GetLastCommand();
+        VisualizeCommand(command);
     }
 
     internal void HandleRevert(ICommand command)
@@ -70,10 +73,9 @@ public class PieceHandler : MonoBehaviour
     #endregion
 
 
-    #region VISUALIZE LAST MOVE FROM COMMAND HISTORY
-    public void Visualize()
+    #region VISUALIZE COMMAND HISTORY
+    public void VisualizeCommand(ICommand command)
     {
-        ICommand command = Executor.Instance.GetLastCommand();
         if (command == null) { return; }
 
         if (command.GetType() == typeof(MoveCommand))
@@ -95,10 +97,6 @@ public class PieceHandler : MonoBehaviour
         {
             DestroyCommand destroyCommand = (DestroyCommand)command;
             VisualizeDestroy(destroyCommand.fromCellId, destroyCommand.characterValue);
-        }
-        else
-        {
-            throw new Exception("Visualize command was not found: " + command.GetType());
         }
     }
 
@@ -190,7 +188,6 @@ public class PieceHandler : MonoBehaviour
     {
         Executor.Instance.Revert();
     }
-
     #endregion
 
 
@@ -227,12 +224,6 @@ public class PieceHandler : MonoBehaviour
                 pieces.Remove(piece); // to prevent move same figure twice
             }
         });
-
-        //// disable all destroyed
-        //if (pieces.Count > 0)
-        //{
-        //    Array.ForEach(pieces.ToArray(), p => p.gameObject.SetActive(false));
-        //}
     }
     #endregion
 

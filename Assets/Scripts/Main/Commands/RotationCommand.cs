@@ -30,9 +30,6 @@ public class RotationCommand : ICommand
 
     public void Revert()
     {
-        // upate matrix with rotation value
-        //Matrix.ChangePiece(Matrix.Instance.GetMatrix(), fromCellId, oldCharacter);
-
         Matrix.Instance.SetMatrix(formerMatrix);
     }
 

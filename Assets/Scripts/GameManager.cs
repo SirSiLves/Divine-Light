@@ -42,6 +42,7 @@ public class GameManager : MonoBehaviour
         boardFactory.CreateDefaultSetUp(matrix);
 
         executor = Executor.Instance;
+        executor.Execute(new InitializeCommand(PlayerHandler.Instance.GetIsPlayingIndex()));
     }
 
 

@@ -36,10 +36,6 @@ public class SwapCommand : ICommand
 
     public void Revert()
     {
-        // update matrix with old position
-        //Matrix.ChangePiece(Matrix.Instance.GetMatrix(), fromCellId, characterValue1);
-        //Matrix.ChangePiece(Matrix.Instance.GetMatrix(), toCellId, characterValue2);
-
         Matrix.Instance.SetMatrix(formerMatrix);
     }
 

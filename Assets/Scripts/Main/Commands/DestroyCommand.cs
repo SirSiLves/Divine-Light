@@ -28,9 +28,6 @@ public class DestroyCommand : ICommand
 
     public void Revert()
     {
-        // add piece on matrix
-        //Matrix.ChangePiece(Matrix.Instance.GetMatrix(), fromCellId, characterValue);
-
         Matrix.Instance.SetMatrix(formerMatrix);
     }
 

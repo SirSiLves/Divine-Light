@@ -47,6 +47,14 @@ public class ClickHandler : MonoBehaviour
         if (RotationHandler.Instance.isRotating) { return; }
         if (clickPosition.x < 0 || clickPosition.y < 0 || clickPosition.x > 9 || clickPosition.y > 7) { return; } // click is outside from grid
 
+        if (RewindHandler.Instance.isRewinding)
+        {
+            RewindHandler.Instance.DisableHistoryMode();
+            RotationHandler.Instance.DisableRotation();
+            prepareMove = null;
+            return;
+        }
+
         if (prepareMove == null)
         {
             InitializePrepare(clickPosition);

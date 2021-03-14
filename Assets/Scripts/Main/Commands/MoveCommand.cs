@@ -33,10 +33,6 @@ public class MoveCommand : ICommand
 
     public void Revert()
     {
-        // update matrix with old position
-        //Matrix.ChangePiece(Matrix.Instance.GetMatrix(), toCellId, 0);
-        //Matrix.ChangePiece(Matrix.Instance.GetMatrix(), fromCellId, characterValue);
-
         Matrix.Instance.SetMatrix(formerMatrix);
     }
 

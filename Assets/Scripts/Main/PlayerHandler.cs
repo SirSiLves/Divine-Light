@@ -69,7 +69,6 @@ public class PlayerHandler : MonoBehaviour
     IEnumerator TurnOnLight()
     {
         isLightOn = true;
-        LightUpFrame(true);
 
         yield return new WaitForSeconds(0.2f);
 
@@ -100,15 +99,7 @@ public class PlayerHandler : MonoBehaviour
 
         RemoveDestroyed();
         ChangePlayer();
-        LightUpFrame(false);
         isLightOn = false;
-    }
-
-    private void LightUpFrame(bool state)
-    {
-        BoardFactory boardFactory = FindObjectOfType<BoardFactory>();
-        Transform textform = boardFactory.transform.Find("LightUpFrame");
-        textform.gameObject.SetActive(state);
     }
 
 

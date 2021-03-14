@@ -62,7 +62,7 @@ public class PlayerHandler : MonoBehaviour
         StartCoroutine("TurnOnLight");
         StartCoroutine("TurnOffLight");
 
-        Matrix.PrintMatrixToConsole();
+        Matrix.PrintMatrixToConsole(Matrix.Instance.GetMatrix());
     }
 
 
@@ -123,7 +123,7 @@ public class PlayerHandler : MonoBehaviour
 
         piecesToDestroy.Clear();
 
-        Matrix.PrintMatrixToConsole();
+        Matrix.PrintMatrixToConsole(Matrix.Instance.GetMatrix());
     }
 
 

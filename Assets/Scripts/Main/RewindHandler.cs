@@ -108,7 +108,7 @@ public class RewindHandler : MonoBehaviour
     public void Rewind()
     {
         ICommand command = Executor.Instance.GetLastCommand();
-        if(command == null) { return; }
+        if (command == null) { return; }
         else if (command.GetType() == typeof(DestroyCommand))
         {
             RewindLoop(2);
@@ -124,9 +124,11 @@ public class RewindHandler : MonoBehaviour
 
     private void RewindLoop(int times)
     {
-        while(times > 0)
+        while (times > 0)
         {
-            PieceHandler.Instance.HandleRevert();
+            ICommand command = Executor.Instance.GetLastCommand();
+            PieceHandler.Instance.HandleRevert(command);
+
             times--;
         }
     }

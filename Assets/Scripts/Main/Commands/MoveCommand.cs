@@ -4,15 +4,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-
 public class MoveCommand : ICommand
 {
 
     public int characterValue { get; private set; }
     public int fromCellId { get; private set; }
     public int toCellId { get; private set; }
-    
-    private Matrix matrix { get; set; }
+    private int[][] formerMatrix { get; set; }
 
 
     public MoveCommand(int fromCellId, int toCellId)
@@ -20,24 +18,26 @@ public class MoveCommand : ICommand
         this.fromCellId = fromCellId;
         this.toCellId = toCellId;
 
-        matrix = Matrix.Instance;
-        characterValue = matrix.GetCharacter(fromCellId);
+        formerMatrix = Matrix.Clone(Matrix.Instance.GetMatrix());
+        characterValue = Matrix.GetCharacter(Matrix.Instance.GetMatrix(), fromCellId);
     }
 
 
     public void Execute()
     {
         // update matrix with new position
-        matrix.ChangePiece(fromCellId, 0);
-        matrix.ChangePiece(toCellId, characterValue);
+        Matrix.ChangePiece(Matrix.Instance.GetMatrix(), fromCellId, 0);
+        Matrix.ChangePiece(Matrix.Instance.GetMatrix(), toCellId, characterValue);
     }
 
 
     public void Revert()
     {
         // update matrix with old position
-        matrix.ChangePiece(toCellId, 0);
-        matrix.ChangePiece(fromCellId, characterValue);
+        //Matrix.ChangePiece(Matrix.Instance.GetMatrix(), toCellId, 0);
+        //Matrix.ChangePiece(Matrix.Instance.GetMatrix(), fromCellId, characterValue);
+
+        Matrix.Instance.SetMatrix(formerMatrix);
     }
 
     public string GetDescription()
@@ -46,5 +46,9 @@ public class MoveCommand : ICommand
         return "M:" + " C:" + fromCellId.ToString() + ":" + toCellId + " P:" + characterValue;
     }
 
+    public int[][] GetFormerMatrix()
+    {
+        return formerMatrix;
+    }
 
 }

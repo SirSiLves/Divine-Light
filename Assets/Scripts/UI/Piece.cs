@@ -45,26 +45,20 @@ public class Piece : MonoBehaviour
         }
     }
 
-    private void Instance_OnDestroyEvent(int pieceId, bool destroy)
+    private void Instance_OnDestroyEvent(int pieceId)
     {
         if (pieceId == id)
         {
-            if (destroy)
-            {
-                //destroy
-                //TODO PLAY SOME DESTROY EFFECTS
-                gameObject.SetActive(false);
-            }
-            else
-            {
-                //revive
-                gameObject.SetActive(true);
-            }
+            //TODO PLAY SOME DESTROY EFFECTS
+            gameObject.SetActive(false);
         }
     }
 
     public void DrawPiece(int y, int x)
     {
+        // if it was deactivated from privious game
+        transform.gameObject.SetActive(true);
+
         playerIndex = PlayerHandler.GetPlayerIndex(character);
 
         Color playerColor = playerIndex == 0 ? PlayerHandler.Instance.player1.GetFigure() : PlayerHandler.Instance.player2.GetFigure();
@@ -80,6 +74,7 @@ public class Piece : MonoBehaviour
 
         int rotation = RotateValidator.GetDegrees(character);
         transform.Rotate(0, 0, rotation);
+
     }
 
 

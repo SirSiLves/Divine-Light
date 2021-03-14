@@ -39,7 +39,7 @@ public class Matrix
     }
 
 
-    public void ChangePiece(int cellId, int character)
+    public static void ChangePiece(int[][] matrix, int cellId, int character)
     {
         int index = 0;
         for (int y = 0; y < matrix.Length; y++)
@@ -57,7 +57,7 @@ public class Matrix
         }
     }
 
-    public int[] GetCoordinates(int cellId)
+    public static int[] GetCoordinates(int[][]matrix, int cellId)
     {
         int index = 0;
         for (int y = 0; y < matrix.Length; y++)
@@ -77,7 +77,7 @@ public class Matrix
     }
 
 
-    public int GetCellId(float positionY, float positionX)
+    public static int GetCellId(int[][] matrix, float positionY, float positionX)
     {       
 
         int index = 0;
@@ -97,7 +97,7 @@ public class Matrix
         throw new Exception("Position not found, something went wrong!");
     }
 
-    public int GetCellId(int[] coordinate)
+    public static int GetCellId(int[] coordinate)
     {
         int x = coordinate[0];
         int y = coordinate[1];
@@ -111,7 +111,7 @@ public class Matrix
     }
 
 
-    public int GetCharacter(int cellId)
+    public static int GetCharacter(int[][] matrix, int cellId)
     {
         int index = 0;
         for(int y = 0; y < matrix.Length; y++)
@@ -131,10 +131,8 @@ public class Matrix
     }
 
 
-    public static void PrintMatrixToConsole()
+    public static void PrintMatrixToConsole(int[][] matrix)
     {
-        int[][] matrix = Matrix.Instance.GetMatrix();
-
         string line = "";
 
         for(int y = matrix.Length - 1; y >= 0; y--)
@@ -173,4 +171,22 @@ public class Matrix
         return Int32.Parse(y + "" + x);
     }
 
+
+
+    public static int[][] Clone(int[][] matrix)
+    {
+        int[][] clone = new int[matrix.Length][];
+
+        for (int y = 0; y < matrix.Length; y++)
+        {
+            clone[y] = new int[matrix[y].Length];
+
+            for (int x = 0; x < matrix[y].Length; x++)
+            {
+                clone[y][x] = matrix[y][x];
+            }
+        }
+
+        return clone;
+    }
 }

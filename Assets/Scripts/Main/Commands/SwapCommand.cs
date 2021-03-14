@@ -12,8 +12,7 @@ public class SwapCommand : ICommand
     public int characterValue2 { get; private set; }
     public int fromCellId { get; private set; }
     public int toCellId { get; private set; }
-
-    private Matrix matrix { get; set; }
+    private int[][] formerMatrix { get; set; }
 
 
     public SwapCommand(int fromCellId, int toCellId)
@@ -21,25 +20,27 @@ public class SwapCommand : ICommand
         this.fromCellId = fromCellId;
         this.toCellId = toCellId;
 
-        matrix = Matrix.Instance;
-        characterValue1 = matrix.GetCharacter(fromCellId);
-        characterValue2 = matrix.GetCharacter(toCellId);
+        formerMatrix = Matrix.Clone(Matrix.Instance.GetMatrix());
+        characterValue1 = Matrix.GetCharacter(Matrix.Instance.GetMatrix(), fromCellId);
+        characterValue2 = Matrix.GetCharacter(Matrix.Instance.GetMatrix(), toCellId);
     }
 
 
     public void Execute()
     {
         // update matrix with new position
-        matrix.ChangePiece(toCellId, characterValue1);
-        matrix.ChangePiece(fromCellId, characterValue2);
+        Matrix.ChangePiece(Matrix.Instance.GetMatrix(), toCellId, characterValue1);
+        Matrix.ChangePiece(Matrix.Instance.GetMatrix(), fromCellId, characterValue2);
     }
 
 
     public void Revert()
     {
         // update matrix with old position
-        matrix.ChangePiece(fromCellId, characterValue1);
-        matrix.ChangePiece(toCellId, characterValue2);
+        //Matrix.ChangePiece(Matrix.Instance.GetMatrix(), fromCellId, characterValue1);
+        //Matrix.ChangePiece(Matrix.Instance.GetMatrix(), toCellId, characterValue2);
+
+        Matrix.Instance.SetMatrix(formerMatrix);
     }
 
     public string GetDescription()
@@ -48,5 +49,10 @@ public class SwapCommand : ICommand
         return "S:" + " C:" + fromCellId.ToString() + ":" + toCellId + " P:" + characterValue1 + ":" + characterValue2;
     }
 
+
+    public int[][] GetFormerMatrix()
+    {
+        return formerMatrix;
+    }
 
 }

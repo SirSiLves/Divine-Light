@@ -7,36 +7,42 @@ public class DestroyCommand : ICommand
 
     public int fromCellId { get; private set; }
     public int characterValue { get; private set; }
-
-    private Matrix matrix;
+    private int[][] formerMatrix { get; set; }
 
 
     public DestroyCommand(int pieceCellId)
     {
         fromCellId = pieceCellId;
 
-        matrix = Matrix.Instance;
-        characterValue = matrix.GetCharacter(pieceCellId);
+        formerMatrix = Matrix.Clone(Matrix.Instance.GetMatrix());
+        characterValue = Matrix.GetCharacter(Matrix.Instance.GetMatrix(), pieceCellId);
     }
 
 
     public void Execute()
     {
         // remove piece from matrix
-        matrix.ChangePiece(fromCellId, 0);
+        Matrix.ChangePiece(Matrix.Instance.GetMatrix(), fromCellId, 0);
     }
 
 
     public void Revert()
     {
         // add piece on matrix
-        matrix.ChangePiece(fromCellId, characterValue);
+        //Matrix.ChangePiece(Matrix.Instance.GetMatrix(), fromCellId, characterValue);
+
+        Matrix.Instance.SetMatrix(formerMatrix);
     }
 
     public string GetDescription()
     {
         // destroy, cell, piece
         return "D:" + " C:" + fromCellId.ToString() + " P:" + characterValue;
+    }
+
+    public int[][] GetFormerMatrix()
+    {
+        return formerMatrix;
     }
 
 }

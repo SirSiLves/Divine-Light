@@ -57,7 +57,7 @@ public class RotationHandler : MonoBehaviour
 
         if (!isRotating)
         {
-            rotatingCharacter = Matrix.Instance.GetCharacter(ClickHandler.Instance.prepareMove.FromCellId());
+            rotatingCharacter = Matrix.GetCharacter(Matrix.Instance.GetMatrix(), ClickHandler.Instance.prepareMove.FromCellId());
             initialDegree = RotateValidator.GetDegrees(rotatingCharacter);
             isRotating = true;
         }

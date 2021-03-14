@@ -61,7 +61,7 @@ public class ClickHandler : MonoBehaviour
                 CellHandler.Instance.ResetMarkup();
                 RotationHandler.Instance.DisableRotation();
 
-                int character = Matrix.Instance.GetCharacter(Matrix.ConvertPostionToCellId(clickPosition));
+                int character = Matrix.GetCharacter(Matrix.Instance.GetMatrix(), Matrix.ConvertPostionToCellId(clickPosition));
 
                 // swap
                 if (character != 0)
@@ -91,7 +91,7 @@ public class ClickHandler : MonoBehaviour
         RotationHandler.Instance.DisableRotation();
         CellHandler.Instance.ResetMarkup();
 
-        int character = Matrix.Instance.GetCharacter(Matrix.ConvertPostionToCellId(clickPosition));
+        int character = Matrix.GetCharacter(Matrix.Instance.GetMatrix(), Matrix.ConvertPostionToCellId(clickPosition));
 
         // no piece found
         if (character == 0) { return; }

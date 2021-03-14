@@ -55,7 +55,7 @@ public class BoardFactory : MonoBehaviour
             }
         }
 
-        Matrix.PrintMatrixToConsole();
+        Matrix.PrintMatrixToConsole(Matrix.Instance.GetMatrix());
 
     }
 

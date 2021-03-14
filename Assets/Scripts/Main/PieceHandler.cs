@@ -9,7 +9,7 @@ public class PieceHandler : MonoBehaviour
 
     public event Action<int, Vector2> OnMoveEvent;
     public event Action<int, int> OnRotateEvent;
-    public event Action<int, bool> OnDestroyEvent;
+    public event Action<int> OnDestroyEvent;
 
 
     #region PIECE_HANDLER_SINGLETON_SETUP
@@ -42,7 +42,7 @@ public class PieceHandler : MonoBehaviour
         int toCellId = Matrix.ConvertPostionToCellId(prepareMove.toPosition);
 
         DoMove(fromCellId, toCellId);
-        Visualize(false);
+        Visualize();
     }
 
     internal void HandleSwap(PrepareMove prepareMove)
@@ -51,36 +51,27 @@ public class PieceHandler : MonoBehaviour
         int toCellId = Matrix.ConvertPostionToCellId(prepareMove.toPosition);
 
         DoSwap(fromCellId, toCellId);
-        Visualize(false);
+        Visualize();
     }
-
-    //internal void HandleRotate(PrepareMove prepareMove)
-    //{
-    //    int fromCellId = Matrix.ConvertPostionToCellId(prepareMove.fromPosition);
-    //    int newCharacterValue = prepareMove.characterValue;
-
-    //    DoRotate(fromCellId, newCharacterValue);
-    //    Visualize(false);
-    //}
 
     internal void HandleDestroy(Piece piece)
     {
         int pieceCellId = Matrix.ConvertPostionToCellId(piece.transform.position);
 
         DoDestroy(pieceCellId);
-        Visualize(false);
+        Visualize();
     }
 
-    internal void HandleRevert()
+    internal void HandleRevert(ICommand command)
     {
-        Visualize(true);
         DoRevert();
+        DrawMatrix(command.GetFormerMatrix());
     }
     #endregion
 
 
     #region VISUALIZE LAST MOVE FROM COMMAND HISTORY
-    public void Visualize(bool revert)
+    public void Visualize()
     {
         ICommand command = Executor.Instance.GetLastCommand();
         if (command == null) { return; }
@@ -88,26 +79,22 @@ public class PieceHandler : MonoBehaviour
         if (command.GetType() == typeof(MoveCommand))
         {
             MoveCommand moveCommand = (MoveCommand)command;
-            if(revert) { VisualizeMove(moveCommand.toCellId, moveCommand.fromCellId); }
-            else { VisualizeMove(moveCommand.fromCellId, moveCommand.toCellId); }
+            VisualizeMove(moveCommand.fromCellId, moveCommand.toCellId);
         }
         else if (command.GetType() == typeof(SwapCommand))
         {
             SwapCommand swapCommand = (SwapCommand)command;
-            if (revert) { VisualizeSwap(swapCommand.toCellId, swapCommand.fromCellId); }
-            else { VisualizeSwap(swapCommand.fromCellId, swapCommand.toCellId); }
+            VisualizeSwap(swapCommand.fromCellId, swapCommand.toCellId);
         }
         else if (command.GetType() == typeof(RotationCommand))
         {
             RotationCommand rotationCommand = (RotationCommand)command;
-            if (revert) { VisualizeRotate(rotationCommand.fromCellId, rotationCommand.oldCharacter); }
-            else { VisualizeRotate(rotationCommand.fromCellId, rotationCommand.newCharacter); }
+            VisualizeRotate(rotationCommand.fromCellId, rotationCommand.newCharacter);
         }
         else if(command.GetType() == typeof(DestroyCommand))
         {
             DestroyCommand destroyCommand = (DestroyCommand)command;
-            if (revert) { VisualizeDestroy(destroyCommand.fromCellId, destroyCommand.characterValue, false); }
-            else { VisualizeDestroy(destroyCommand.fromCellId, destroyCommand.characterValue, true); }
+            VisualizeDestroy(destroyCommand.fromCellId, destroyCommand.characterValue);
         }
         else
         {
@@ -117,8 +104,10 @@ public class PieceHandler : MonoBehaviour
 
     private void VisualizeMove(int fromCellid, int toCellId)
     {
-        int[] fromXY = Matrix.Instance.GetCoordinates(fromCellid);
-        int[] toXY = Matrix.Instance.GetCoordinates(toCellId);
+        Matrix matrix = Matrix.Instance;
+
+        int[] fromXY = Matrix.GetCoordinates(matrix.GetMatrix(), fromCellid);
+        int[] toXY = Matrix.GetCoordinates(matrix.GetMatrix(), toCellId);
 
         Vector2 fromPosition = new Vector2(fromXY[0], fromXY[1]);
         Vector2 toPosition = new Vector2(toXY[0], toXY[1]);
@@ -130,8 +119,10 @@ public class PieceHandler : MonoBehaviour
 
     private void VisualizeSwap(int fromCellid, int toCellId)
     {
-        int[] fromXY = Matrix.Instance.GetCoordinates(fromCellid);
-        int[] toXY = Matrix.Instance.GetCoordinates(toCellId);
+        Matrix matrix = Matrix.Instance;
+
+        int[] fromXY = Matrix.GetCoordinates(matrix.GetMatrix(), fromCellid);
+        int[] toXY = Matrix.GetCoordinates(matrix.GetMatrix(), toCellId);
 
         Vector2 fromPosition = new Vector2(fromXY[0], fromXY[1]);
         Vector2 toPosition = new Vector2(toXY[0], toXY[1]);
@@ -145,7 +136,9 @@ public class PieceHandler : MonoBehaviour
 
     internal void VisualizeRotate(int fromCellId, int characterValue)
     {
-        int[] fromXY = Matrix.Instance.GetCoordinates(fromCellId);
+        Matrix matrix = Matrix.Instance;
+
+        int[] fromXY = Matrix.GetCoordinates(matrix.GetMatrix(), fromCellId);
 
         Vector2 fromPosition = new Vector2(fromXY[0], fromXY[1]);
 
@@ -158,23 +151,16 @@ public class PieceHandler : MonoBehaviour
         OnRotateEvent?.Invoke(touchedPiece.id, degrees);
     }
 
-    private void VisualizeDestroy(int pieceCellId, int characterValue, bool destroy)
+    private void VisualizeDestroy(int pieceCellId, int characterValue)
     {
-        int[] fromXY = Matrix.Instance.GetCoordinates(pieceCellId);
+        Matrix matrix = Matrix.Instance;
+
+        int[] fromXY = Matrix.GetCoordinates(matrix.GetMatrix(), pieceCellId);
 
         Vector2 piecePosition = new Vector2(fromXY[0], fromXY[1]);
 
-        if(destroy)
-        {
-            Piece destroyedPiece = GetPieceFromPosition(piecePosition);
-            OnDestroyEvent?.Invoke(destroyedPiece.id, destroy);
-        }
-        else
-        {
-            //revive
-            Piece destroyedPiece = GetDisabledPieces(piecePosition, characterValue);
-            OnDestroyEvent?.Invoke(destroyedPiece.id, destroy);
-        }
+        Piece destroyedPiece = GetPieceFromPosition(piecePosition);
+        OnDestroyEvent?.Invoke(destroyedPiece.id);
     }
     #endregion
 
@@ -195,13 +181,58 @@ public class PieceHandler : MonoBehaviour
         Executor.Instance.Execute(new RotationCommand(fromCellId, newCharacter));
     }
 
+    private void DoDestroy(int pieceCellId)
+    {
+        Executor.Instance.Execute(new DestroyCommand(pieceCellId));
+    }
+
     private void DoRevert()
     {
         Executor.Instance.Revert();
     }
-    private void DoDestroy(int pieceCellId)
+
+    #endregion
+
+
+    #region VISUALIZE BOARD FROM MATRIX
+    public void DrawMatrix(int[][] matrix)
     {
-        Executor.Instance.Execute(new DestroyCommand(pieceCellId));
+        List<Piece> pieces = Resources.FindObjectsOfTypeAll<Piece>().ToList();
+        List<Cell> cells = FindObjectsOfType<Cell>().ToList();
+
+        // disable all
+        Array.ForEach(pieces.ToArray(), p => p.gameObject.SetActive(false));
+
+        // load matrix
+        Array.ForEach(cells.ToArray(), cell =>
+        {
+            int character = Matrix.GetCharacter(matrix, cell.GetCellId());
+            if (character != 0)
+            {
+
+                Piece piece = pieces.Find(p =>
+                {
+                    // reset rotation value
+                    int pieceNormalized = p.character - p.character % 100 + p.character % 10;
+                    int characterNormalized = character - character % 100 + character % 10;
+
+                    return pieceNormalized == characterNormalized;
+                });
+
+                piece.gameObject.SetActive(true);
+
+                OnMoveEvent?.Invoke(piece.id, cell.transform.position);
+                OnRotateEvent?.Invoke(piece.id, RotateValidator.GetDegrees(character));
+
+                pieces.Remove(piece); // to prevent move same figure twice
+            }
+        });
+
+        //// disable all destroyed
+        //if (pieces.Count > 0)
+        //{
+        //    Array.ForEach(pieces.ToArray(), p => p.gameObject.SetActive(false));
+        //}
     }
     #endregion
 

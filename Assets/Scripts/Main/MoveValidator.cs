@@ -9,8 +9,9 @@ public class MoveValidator
     public static List<int> CollectPossibleCellIds(int fromCellId)
     {
         List<int> cellIds = new List<int>();
+        int[][] matrix = Matrix.Instance.GetMatrix();
 
-        int character = Matrix.Instance.GetCharacter(fromCellId);
+        int character = Matrix.GetCharacter(matrix, fromCellId);
 
 
         //// player is rotating
@@ -24,14 +25,13 @@ public class MoveValidator
         //if (PlayerHandler.Instance.isPlayingIndex == 1 && character < 100) { return cellIds; }
 
 
-        int[][] rawMatrix = Matrix.Instance.GetMatrix();
         int cellId = 0;
 
-        for (int y = 0; y < rawMatrix.Length; y++)
+        for (int y = 0; y < matrix.Length; y++)
         {
-            for (int x = 0; x < rawMatrix[y].Length; x++)
+            for (int x = 0; x < matrix[y].Length; x++)
             {
-                if (Validate(fromCellId, character, y, x))
+                if (Validate(matrix, fromCellId, character, y, x))
                 {
                     cellIds.Add(cellId);
                 }
@@ -44,9 +44,9 @@ public class MoveValidator
     }
 
 
-    private static bool Validate(int fromCellId, int character, int y, int x)
+    private static bool Validate(int[][] matrix, int fromCellId, int character, int y, int x)
     {
-        int[] xy = Matrix.Instance.GetCoordinates(fromCellId);
+        int[] xy = Matrix.GetCoordinates(matrix, fromCellId);
         int xFromCellId = xy[0];
         int yFromCellId = xy[1];
 

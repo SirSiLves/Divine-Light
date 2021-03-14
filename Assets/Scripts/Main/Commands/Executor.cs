@@ -47,7 +47,7 @@ public class Executor
         command.Revert();
         RemoveLastHistoryEntry();
 
-        Matrix.PrintMatrixToConsole();
+        Matrix.PrintMatrixToConsole(Matrix.Instance.GetMatrix());
     }
 
     private void Historicize(ICommand command)

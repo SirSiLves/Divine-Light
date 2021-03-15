@@ -37,5 +37,4 @@ public class InitializeCommand : ICommand
         return formerMatrix;
     }
 
-
 }

@@ -6,7 +6,7 @@ using UnityEngine;
 public class CellFactory : MonoBehaviour
 {
     [SerializeField] Cell cell;
-    [SerializeField] public Color possibleFields, defaultFields, highlightedFields;
+    [SerializeField] public Color possibleFields, defaultFields, highlightedFields, historyFromFields, historyToFields, deathFields;
 
     internal void Create(int y, int x)
     {

@@ -66,8 +66,8 @@ public class Piece : MonoBehaviour
 
         transform.position = new Vector2(transform.position.x + x, transform.position.y + y);
 
-        // size
-        transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
+        //// size
+        //transform.localScale = new Vector3(0.1f, 0.1f, 0.1f);
 
         // position in opject tree
         transform.parent = transform;

@@ -64,11 +64,11 @@ public class Executor
 
     public ICommand GetLastCommand()
     {
-        try
+        if (commands.Count() > 1)
         {
             return commands.Last();
         }
-        catch(Exception)
+        else
         {
             Debug.LogWarning("All moves reverted");
             return null;
@@ -81,4 +81,17 @@ public class Executor
         return commands;
     }
 
+
+    public ICommand GetCommandBefore(ICommand command)
+    {
+        if (commands.Count() > 3)
+        {
+            int index = commands.FindIndex(c => c == command);
+            return commands.ElementAt(index - 1);
+        }
+        else
+        {
+            return null;
+        }
+    }
 }

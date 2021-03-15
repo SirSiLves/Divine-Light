@@ -66,7 +66,6 @@ public class ClickHandler : MonoBehaviour
             if (prepareMove.possibleCells.Contains(prepareMove.ToCellId()))
             {
                 //move can be executed
-                CellHandler.Instance.ResetMarkup();
                 RotationHandler.Instance.DisableRotation();
 
                 int character = Matrix.GetCharacter(Matrix.Instance.GetMatrix(), Matrix.ConvertPostionToCellId(clickPosition));
@@ -82,6 +81,7 @@ public class ClickHandler : MonoBehaviour
                     PieceHandler.Instance.HanldeMove(prepareMove);
                 }
 
+                CellHandler.Instance.ResetMarkup();
                 PlayerHandler.Instance.TogglePlaying();
                 prepareMove = null;
             }

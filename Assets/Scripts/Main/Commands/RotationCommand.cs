@@ -46,5 +46,4 @@ public class RotationCommand : ICommand
         return formerMatrix;
     }
 
-
 }

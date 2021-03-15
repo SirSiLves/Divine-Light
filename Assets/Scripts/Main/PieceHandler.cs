@@ -35,6 +35,7 @@ public class PieceHandler : MonoBehaviour
     }
     #endregion
 
+
     #region UI INPUT HANDLING
     internal void HanldeMove(PrepareMove prepareMove)
     {
@@ -73,7 +74,7 @@ public class PieceHandler : MonoBehaviour
     #endregion
 
 
-    #region VISUALIZE COMMAND HISTORY
+    #region VISUALIZE COMMAND
     public void VisualizeCommand(ICommand command)
     {
         if (command == null) { return; }
@@ -191,7 +192,7 @@ public class PieceHandler : MonoBehaviour
     #endregion
 
 
-    #region VISUALIZE BOARD FROM MATRIX
+    #region VISUALIZE BOARD FROM MATRIX STATE
     public void DrawMatrix(int[][] matrix)
     {
         List<Piece> pieces = Resources.FindObjectsOfTypeAll<Piece>().ToList();

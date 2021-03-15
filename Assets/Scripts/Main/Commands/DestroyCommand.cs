@@ -42,4 +42,5 @@ public class DestroyCommand : ICommand
         return formerMatrix;
     }
 
+
 }

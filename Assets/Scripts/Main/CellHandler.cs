@@ -41,9 +41,41 @@ public class CellHandler : MonoBehaviour
     }
 
 
+    public void MarkupHistoryField(ICommand command)
+    {
+        // markup last field from history
+        if (command == null) { return; }
+        if (command.GetType() == typeof(InitializeCommand)) { return; }
+        if (command.GetType() == typeof(MoveCommand))
+        {
+            MoveCommand moveCommand = (MoveCommand)command;
+            SendMarkupEvent(moveCommand.fromCellId, cellFactory.historyFromFields);
+            SendMarkupEvent(moveCommand.toCellId, cellFactory.historyToFields);
+        }
+        else if (command.GetType() == typeof(SwapCommand))
+        {
+            SwapCommand swapCommand = (SwapCommand)command;
+            SendMarkupEvent(swapCommand.fromCellId, cellFactory.historyFromFields);
+            SendMarkupEvent(swapCommand.toCellId, cellFactory.historyToFields);
+        }
+        else if (command.GetType() == typeof(RotationCommand))
+        {
+            RotationCommand rotationCommand = (RotationCommand)command;
+            SendMarkupEvent(rotationCommand.fromCellId, cellFactory.historyFromFields);
+        }
+        else if (command.GetType() == typeof(DestroyCommand))
+        {
+            DestroyCommand destroyCommand = (DestroyCommand)command;
+            SendMarkupEvent(destroyCommand.fromCellId, cellFactory.deathFields);
+
+            ICommand commandBefore = Executor.Instance.GetCommandBefore(command);
+            MarkupHistoryField(commandBefore);
+        }
+    }
+
     public void MarkupPossibleFields(PrepareMove prepareMove)
     {
-        // Markup possible cells
+        // markup possible cells
         Array.ForEach(prepareMove.possibleCells.ToArray(), id =>
         {
             SendMarkupEvent(id, cellFactory.possibleFields);
@@ -52,7 +84,7 @@ public class CellHandler : MonoBehaviour
 
     public void MarkupTouchedField(PrepareMove prepareMove)
     {
-        // Markup clicked cell
+        // markup clicked cell
         SendMarkupEvent(prepareMove.FromCellId(), cellFactory.highlightedFields);
     }
 

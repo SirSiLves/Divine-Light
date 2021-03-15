@@ -51,6 +51,7 @@ public class RewindHandler : MonoBehaviour
 
     void Start()
     {
+        // TODO Serialized Fields..
         revertButton = transform.Find("Revert Button");
         buttonListContent = transform.Find("History Canvas").Find("HistoryButtonScrollList").Find("ButtonListViewport").Find("ButtonListContent");
         buttonListContentRect = buttonListContent.GetComponent<RectTransform>();
@@ -160,6 +161,7 @@ public class RewindHandler : MonoBehaviour
     public void EnableHistoryMode(ICommand command)
     {
         CellHandler.Instance.ResetMarkup();
+        CellHandler.Instance.MarkupHistoryField(command);
 
         PieceHandler.Instance.DrawMatrix(command.GetFormerMatrix());
         PieceHandler.Instance.VisualizeCommand(command);
